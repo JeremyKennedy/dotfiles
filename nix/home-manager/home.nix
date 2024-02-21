@@ -7,11 +7,16 @@
   home.homeDirectory = "/home/jeremy";
 
   home.packages = with pkgs; [
-    # code
+    # development
     alejandra # nix formatter
     any-nix-shell # nix shell manager for fish
-    cht-sh # cheat.sh
+    cht-sh # command cheatsheet
     glow # markdown previewer in terminal
+    jetbrains-toolbox # jetbrains ide manager
+    jetbrains.datagrip
+    jetbrains.webstorm
+    smartgithg # git client
+    vscode # code editor
 
     # utils
     busybox # swiss army knife of embedded Linux
@@ -35,6 +40,30 @@
 
     # programs
     gparted # partition editor for graphically managing your disk partitions
+
+    # productivity
+    bitwarden # password manager
+    filezilla # ftp client
+    firefox
+    kate # text editor
+    kcalc
+    obsidian # note taking
+    parsec-bin
+
+    # media
+    spotify
+
+    # chat
+    discord
+    telegram-desktop
+
+    # gaming
+    gamemode
+    steamtinkerlaunch
+    winetricks
+
+    # design
+    unstable.bambu-studio
   ];
 
   programs.git = {
