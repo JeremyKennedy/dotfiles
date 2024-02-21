@@ -118,9 +118,6 @@
     git
   ];
 
-  # seems to not work
-  nixpkgs.config.fortune.withOffensive = true;
-
   # enable kde connect
   programs.kdeconnect.enable = true;
 
