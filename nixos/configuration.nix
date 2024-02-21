@@ -88,25 +88,36 @@
     description = "Jeremy";
     extraGroups = ["networkmanager" "wheel" "ftp" "adbusers"];
     packages = with pkgs; [
+      # productivity
+      bitwarden
+      filezilla
       firefox
       kate
-      bitwarden
-      vscode
-      spotify
-      discord
-      filezilla
-      obsidian
-      telegram-desktop
-      jetbrains-toolbox
-      jetbrains.webstorm
-      jetbrains.datagrip
-      smartgithg
       kcalc
-      gamemode
-      winetricks
-      unstable.bambu-studio
-      steamtinkerlaunch
+      obsidian
       parsec-bin
+
+      # development
+      jetbrains-toolbox
+      jetbrains.datagrip
+      jetbrains.webstorm
+      smartgithg
+      vscode
+
+      # media
+      spotify
+
+      # chat
+      discord
+      telegram-desktop
+
+      # gaming
+      gamemode
+      steamtinkerlaunch
+      winetricks
+
+      # design
+      unstable.bambu-studio
     ];
   };
 
