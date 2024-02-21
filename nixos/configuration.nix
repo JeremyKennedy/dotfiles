@@ -95,8 +95,6 @@
       spotify
       discord
       filezilla
-      steam-tui
-      steamcmd
       obsidian
       telegram-desktop
       nextcloud-client
@@ -110,10 +108,6 @@
       unstable.bambu-studio
       steamtinkerlaunch
       parsec-bin
-      (wineWowPackages.full.override {
-        wineRelease = "staging";
-        mingwSupport = true;
-      })
     ];
   };
 
