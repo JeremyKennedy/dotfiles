@@ -132,6 +132,11 @@
     enable = true;
   };
 
+  services.nextcloud-client = {
+    enable = true;
+    startInBackground = true;
+  };
+
   # programs to consider
   # firefox vscode
 
