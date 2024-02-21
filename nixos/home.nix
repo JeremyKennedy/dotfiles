@@ -86,7 +86,12 @@
         fortune | cowsay -n | lolcat
       end
     '';
-    shellAbbrs = {ls = "eza";};
+    shellAbbrs = {
+      gh = "ghq";
+      g = "git";
+      v = "nvim";
+      e = "eza";
+    };
     plugins = [
       {
         name = "z";
