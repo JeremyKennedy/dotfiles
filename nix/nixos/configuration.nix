@@ -117,38 +117,6 @@
     isNormalUser = true;
     description = "Jeremy";
     extraGroups = ["networkmanager" "wheel" "ftp" "adbusers"];
-    packages = with pkgs; [
-      # productivity
-      bitwarden
-      filezilla
-      firefox
-      kate
-      kcalc
-      obsidian
-      parsec-bin
-
-      # development
-      jetbrains-toolbox
-      jetbrains.datagrip
-      jetbrains.webstorm
-      smartgithg
-      vscode
-
-      # media
-      spotify
-
-      # chat
-      discord
-      telegram-desktop
-
-      # gaming
-      gamemode
-      steamtinkerlaunch
-      winetricks
-
-      # design
-      unstable.bambu-studio
-    ];
   };
 
   # List packages installed in system profile. To search, run:
