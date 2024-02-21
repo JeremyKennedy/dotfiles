@@ -1,3 +1,4 @@
+# https://github.com/Misterio77/nix-starter-configs/blob/main/standard/flake.nix
 {
   description = "Main NixOS config file";
 
@@ -17,39 +18,36 @@
     nixpkgs,
     nixpkgs-unstable,
     home-manager,
-  }: let
-    system = "x86_64-linux";
-    overlay-unstable = final: prev: {
-      unstable = import nixpkgs-unstable {
-        inherit system;
-        config.allowUnfree = true;
-      };
-    };
+  } @ inputs: let
+    inherit (self) outputs;
+    # Supported systems for your flake packages, shell, etc.
+    systems = [
+      "x86_64-linux"
+    ];
+    # This is a function that generates an attribute by calling a function you
+    # pass to it, with each system as an argument
+    forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
-    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
+    # Your custom packages
+    # Accessible through 'nix build', 'nix shell', etc
+    packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
+
+    # Formatter for your nix files, available through 'nix fmt'
+    # Other options beside 'alejandra' include 'nixpkgs-fmt'
+    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+
+    # Your custom packages and modifications, exported as overlays
+    overlays = import ./overlays {inherit inputs;};
+
+    # # Reusable nixos modules you might want to export
+    # # These are usually stuff you would upstream into nixpkgs
+    # nixosModules = import ./modules/nixos;
+
     nixosConfigurations = {
       JeremyDesktop = nixpkgs.lib.nixosSystem {
-        inherit system;
+        specialArgs = {inherit inputs outputs;};
         modules = [
-          ({
-            config,
-            pkgs,
-            ...
-          }: {nixpkgs.overlays = [overlay-unstable];})
-
-          ./configuration.nix
-
-          # make home-manager as a module of nixos
-          # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-
-            home-manager.users.jeremy = import ./home.nix;
-
-            # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
-          }
+          ./nixos/configuration.nix
         ];
       };
     };
