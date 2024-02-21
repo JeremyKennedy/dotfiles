@@ -121,25 +121,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim
-    cht-sh
-    wget
-    htop
-    gotop
-    nnn
-    ripgrep
-    bitwarden-cli
-    gparted
     git
-    any-nix-shell
-    fortune
-    cowsay
-    lolcat
-    gh
-    direnv
-    fzf
-    tmux
-    busybox
-    alejandra
   ];
 
   # seems to not work
