@@ -140,11 +140,6 @@
 
   # enable fish
   programs.fish.enable = true;
-  # appears to not work
-  programs.fish.promptInit = ''
-    any-nix-shell fish --info-right | source
-  '';
-  programs.fish.interactiveShellInit = ''direnv hook fish | source'';
   users.defaultUserShell = pkgs.fish;
   environment.shells = with pkgs; [fish];
 
