@@ -97,7 +97,6 @@
       filezilla
       obsidian
       telegram-desktop
-      nextcloud-client
       jetbrains-toolbox
       jetbrains.webstorm
       jetbrains.datagrip
