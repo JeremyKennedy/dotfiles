@@ -38,7 +38,6 @@
 
     # utils
     busybox
-    eza # A modern replacement for ‘ls’
     fzf # A command-line fuzzy finder
     nnn # terminal file manager
     ripgrep # recursively searches directories for a regex pattern
@@ -99,6 +98,11 @@
     enable = true;
     viAlias = true;
     vimAlias = true;
+  };
+
+  programs.eza = {
+    enable = true;
+    enableAliases = true;
   };
 
   # alacritty - a cross-platform, GPU-accelerated terminal emulator
