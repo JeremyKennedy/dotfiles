@@ -1,20 +1,20 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, ... }:
-
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  config,
+  pkgs,
+  ...
+}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
-  nixpkgs.config.permittedInsecurePackages = 
-    [
-      "nodejs-16.20.2"
-      "electron-25.9.0"
-    ];
+  nixpkgs.config.permittedInsecurePackages = [
+    "nodejs-16.20.2"
+    "electron-25.9.0"
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -86,7 +86,7 @@
   users.users.jeremy = {
     isNormalUser = true;
     description = "Jeremy";
-    extraGroups = [ "networkmanager" "wheel" "ftp" "adbusers" ];
+    extraGroups = ["networkmanager" "wheel" "ftp" "adbusers"];
     packages = with pkgs; [
       firefox
       kate
@@ -141,7 +141,7 @@
   ];
 
   # seems to not work
-  nixpkgs.config.fortune.withOffensive = true; 
+  nixpkgs.config.fortune.withOffensive = true;
 
   # enable kde connect
   programs.kdeconnect.enable = true;
@@ -161,14 +161,14 @@
   '';
   programs.fish.interactiveShellInit = ''direnv hook fish | source'';
   users.defaultUserShell = pkgs.fish;
-  environment.shells = with pkgs; [ fish ];
+  environment.shells = with pkgs; [fish];
 
   # enable starship (applies to all shells)
   programs.starship.enable = true;
-  
+
   # enable flatpak
   services.flatpak.enable = true;
-  
+
   # Enable OpenGL
   hardware.opengl = {
     enable = true;
@@ -180,7 +180,6 @@
   services.xserver.videoDrivers = ["nvidia"];
 
   hardware.nvidia = {
-
     # Modesetting is needed most of the time
     modesetting.enable = true;
 
@@ -189,14 +188,14 @@
     powerManagement.enable = true;
 
     # Use the NVidia open source kernel module (which isn't “nouveau”).
-    # Support is limited to the Turing and later architectures. Full list of 
-    # supported GPUs is at: 
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
+    # Support is limited to the Turing and later architectures. Full list of
+    # supported GPUs is at:
+    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
     # Only available from driver 515.43.04+
     open = false;
 
     # Enable the Nvidia settings menu,
-	  # accessible via `nvidia-settings`.
+    # accessible via `nvidia-settings`.
     nvidiaSettings = true;
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
@@ -215,7 +214,6 @@
     #    sha256 = "1jgdrczy70jlg9ybi1z8mm9q5vg78rf66dknfppbww573nfn179g";
     #  };
     #});
-    
   };
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -225,7 +223,6 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
 
   # List services that you want to enable:
 
@@ -251,11 +248,11 @@
 
   # ftp user
   users.users.ftp = {
-    isNormalUser  = false;
+    isNormalUser = false;
     isSystemUser = true;
-    home  = "/home/ftp";
+    home = "/home/ftp";
     group = "ftp";
-    description  = "FTP user";
+    description = "FTP user";
     #extraGroups  = [ "wheel" "networkmanager" ];
     #openssh.authorizedKeys.keys  = [ "ssh-dss AAAAB3Nza... alice@foobar" ];
   };
@@ -267,7 +264,7 @@
     enable = true;
     writeEnable = true;
     localUsers = true;
-    userlist = [ "ftp" ];
+    userlist = ["ftp"];
     userlistEnable = true;
     extraConfig = ''
       pasv_enable=Yes
@@ -277,12 +274,15 @@
   };
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 
+  networking.firewall.allowedTCPPorts = [
     3000 # dev server
     21 # ftp
   ];
-  networking.firewall.allowedTCPPortRanges = [ 
-    { from = 51000; to = 51999; } # ftp
+  networking.firewall.allowedTCPPortRanges = [
+    {
+      from = 51000;
+      to = 51999;
+    } # ftp
   ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
@@ -297,7 +297,7 @@
   system.stateVersion = "23.05"; # Did you read the comment?
 
   # enable the experimental nix command
-  nix.settings.experimental-features = [ 
+  nix.settings.experimental-features = [
     "nix-command"
     "flakes"
   ];
