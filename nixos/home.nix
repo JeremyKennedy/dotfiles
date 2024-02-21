@@ -27,7 +27,6 @@
   #   "Xft.dpi" = 172;
   # };
 
-  # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
     # code
     alejandra
@@ -66,23 +65,34 @@
     gparted
   ];
 
-  # basic configuration of git, please change to your own
   programs.git = {
     enable = true;
     userName = "Jeremy Kennedy";
     userEmail = "me@jeremyk.net";
   };
 
-  # starship - an customizable prompt for any shell
   programs.starship = {
     enable = true;
-    # custom settings
     settings = {
-      # add_newline = false;
-      # aws.disabled = true;
-      # gcloud.disabled = true;
-      # line_break.disabled = true;
     };
+  };
+
+  programs.fish = {
+    enable = true;
+    interactiveShellInit = ''
+      any-nix-shell fish --info-right | source
+
+      function fish_greeting
+        fortune | cowsay -n | lolcat
+      end
+    '';
+    shellAbbrs = {ls = "eza";};
+    plugins = [
+      {
+        name = "z";
+        src = pkgs.fishPlugins.z.src;
+      }
+    ];
   };
 
   # alacritty - a cross-platform, GPU-accelerated terminal emulator
@@ -97,22 +107,6 @@
   #     };
   #     scrolling.multiplier = 5;
   #     selection.save_to_clipboard = true;
-  #   };
-  # };
-
-  # programs.bash = {
-  #   enable = true;
-  #   enableCompletion = true;
-  #   # TODO add your cusotm bashrc here
-  #   bashrcExtra = ''
-  #     export PATH="$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin"
-  #   '';
-
-  #   # set some aliases, feel free to add more or remove some
-  #   shellAliases = {
-  #     k = "kubectl";
-  #     urldecode = "python3 -c 'import sys, urllib.parse as ul; print(ul.unquote_plus(sys.stdin.read()))'";
-  #     urlencode = "python3 -c 'import sys, urllib.parse as ul; print(ul.quote_plus(sys.stdin.read()))'";
   #   };
   # };
 
