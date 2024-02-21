@@ -102,12 +102,12 @@
       nextcloud-client
       jetbrains-toolbox
       jetbrains.webstorm
+      jetbrains.datagrip
       smartgithg
       kcalc
       gamemode
       winetricks
       unstable.bambu-studio
-      cht-sh
       steamtinkerlaunch
       parsec-bin
       (wineWowPackages.full.override {
@@ -121,6 +121,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim
+    cht-sh
     wget
     htop
     gotop
@@ -138,6 +139,7 @@
     fzf
     tmux
     busybox
+    alejandra
   ];
 
   # seems to not work
