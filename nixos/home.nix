@@ -50,7 +50,7 @@
 
     # misc
     cowsay # configurable talking cow
-    fortune # print a random, hopefully interesting, adage
+    (fortune.override {withOffensive = true;}) # print a random, hopefully interesting, adage
     lolcat # rainbowify your terminal
     neofetch # system information tool
 
@@ -76,7 +76,7 @@
       any-nix-shell fish --info-right | source
 
       function fish_greeting
-        fortune | cowsay -n | lolcat
+        fortune -a | cowsay -n | lolcat
       end
     '';
     shellAbbrs = {
