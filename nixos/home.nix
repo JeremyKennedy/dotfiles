@@ -29,26 +29,26 @@
 
   home.packages = with pkgs; [
     # code
-    alejandra
-    any-nix-shell
-    cht-sh
-    direnv
-    gh
+    alejandra # nix formatter
+    any-nix-shell # nix shell manager for fish
+    cht-sh # cheat.sh
+    direnv # environment switcher based on directory
+    gh # GitHub CLI
     glow # markdown previewer in terminal
 
     # utils
-    busybox
+    busybox # swiss army knife of embedded Linux
     fzf # A command-line fuzzy finder
     nnn # terminal file manager
     ripgrep # recursively searches directories for a regex pattern
-    tmux
-    wget
+    tmux # terminal multiplexer
+    wget # non-interactive network downloader
     ghq # manage remote repository clones
 
     # archives
-    p7zip
-    unzip
-    zip
+    p7zip # 7z file archiver with high compression ratio
+    unzip # list, test and extract compressed files in a ZIP archive
+    zip # package and compress archive files
 
     # monitoring
     btop # replacement of htop/nmon
@@ -56,13 +56,13 @@
     iotop # io monitoring
 
     # misc
-    cowsay
-    fortune
-    lolcat
-    neofetch
+    cowsay # configurable talking cow
+    fortune # print a random, hopefully interesting, adage
+    lolcat # rainbowify your terminal
+    neofetch # system information tool
 
     # programs
-    gparted
+    gparted # partition editor for graphically managing your disk partitions
   ];
 
   programs.git = {
