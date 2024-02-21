@@ -43,6 +43,7 @@
     ripgrep # recursively searches directories for a regex pattern
     tmux
     wget
+    ghq # manage remote repository clones
 
     # archives
     p7zip
