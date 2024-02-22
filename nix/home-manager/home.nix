@@ -3,161 +3,147 @@
   pkgs,
   ...
 }: {
-  home.username = "jeremy";
-  home.homeDirectory = "/home/jeremy";
+  home = {
+    username = "jeremy";
+    homeDirectory = "/home/jeremy";
 
-  home.packages = with pkgs; [
-    # development
-    alejandra # nix formatter
-    any-nix-shell # nix shell manager for fish
-    cht-sh # command cheatsheet
-    glow # markdown previewer in terminal
-    jetbrains-toolbox # jetbrains ide manager
-    jetbrains.datagrip
-    jetbrains.webstorm
-    smartgithg # git client
-    vscode # code editor
+    # This value determines the home Manager release that your
+    # configuration is compatible with. This helps avoid breakage
+    # when a new home Manager release introduces backwards
+    # incompatible changes.
+    #
+    # You can update home Manager without changing this value. See
+    # the home Manager release notes for a list of state version
+    # changes in each release.
+    stateVersion = "23.11";
 
-    # utils
-    busybox # swiss army knife of embedded Linux
-    wget # non-interactive network downloader
-    ghq # manage remote repository clones
+    packages = with pkgs; [
+      # development
+      alejandra # nix formatter
+      any-nix-shell # nix shell manager for fish
+      cht-sh # command cheatsheet
+      glow # markdown previewer in terminal
+      jetbrains-toolbox # jetbrains ide manager
+      jetbrains.datagrip
+      jetbrains.webstorm
+      smartgithg # git client
+      vscode # code editor
 
-    # archives
-    p7zip # 7z file archiver with high compression ratio
-    unzip # list, test and extract compressed files in a ZIP archive
-    zip # package and compress archive files
+      # utils
+      busybox # swiss army knife of embedded Linux
+      wget # non-interactive network downloader
+      ghq # manage remote repository clones
 
-    # monitoring
-    iftop # network monitoring
-    iotop # io monitoring
+      # archives
+      p7zip # 7z file archiver with high compression ratio
+      unzip # list, test and extract compressed files in a ZIP archive
+      zip # package and compress archive files
 
-    # misc
-    cowsay # configurable talking cow
-    (fortune.override {withOffensive = true;}) # print a random, hopefully interesting, adage
-    lolcat # rainbowify your terminal
-    neofetch # system information tool
+      # monitoring
+      iftop # network monitoring
+      iotop # io monitoring
 
-    # programs
-    gparted # partition editor for graphically managing your disk partitions
+      # misc
+      cowsay # configurable talking cow
+      (fortune.override {withOffensive = true;}) # print a random, hopefully interesting, adage
+      lolcat # rainbowify your terminal
+      neofetch # system information tool
 
-    # productivity
-    bitwarden # password manager
-    filezilla # ftp client
-    firefox
-    kate # text editor
-    kcalc
-    obsidian # note taking
-    parsec-bin
+      # programs
+      gparted # partition editor for graphically managing your disk partitions
 
-    # media
-    spotify
+      # productivity
+      bitwarden # password manager
+      filezilla # ftp client
+      firefox
+      kate # text editor
+      kcalc
+      obsidian # note taking
+      parsec-bin
 
-    # chat
-    discord
-    telegram-desktop
+      # media
+      spotify
 
-    # gaming
-    gamemode
-    steamtinkerlaunch
-    winetricks
+      # chat
+      discord
+      telegram-desktop
 
-    # design
-    unstable.bambu-studio
-  ];
+      # gaming
+      gamemode
+      steamtinkerlaunch
+      winetricks
 
-  programs.git = {
-    enable = true;
-    userName = "Jeremy Kennedy";
-    userEmail = "me@jeremyk.net";
-  };
-
-  programs.starship = {
-    enable = true;
-    settings = {
-    };
-  };
-
-  programs.fish = {
-    enable = true;
-    interactiveShellInit = ''
-      any-nix-shell fish --info-right | source
-
-      function fish_greeting
-        fortune -a | cowsay -n | lolcat
-      end
-    '';
-    shellAbbrs = {
-      gh = "ghq";
-      g = "git";
-      v = "nvim";
-      e = "eza";
-    };
-    plugins = [
-      {
-        name = "z";
-        src = pkgs.fishPlugins.z.src;
-      }
+      # design
+      unstable.bambu-studio
     ];
   };
 
-  programs.neovim = {
-    enable = true;
-    viAlias = true;
-    vimAlias = true;
+  programs = {
+    git = {
+      enable = true;
+      userName = "Jeremy Kennedy";
+      userEmail = "me@jeremyk.net";
+    };
+
+    starship = {
+      enable = true;
+      settings = {
+      };
+    };
+
+    fish = {
+      enable = true;
+      interactiveShellInit = ''
+        any-nix-shell fish --info-right | source
+
+        function fish_greeting
+          fortune -a | cowsay -n | lolcat
+        end
+      '';
+      shellAbbrs = {
+        gh = "ghq";
+        g = "git";
+        v = "nvim";
+        e = "eza";
+      };
+      plugins = [
+        {
+          name = "z";
+          src = pkgs.fishPlugins.z.src;
+        }
+      ];
+    };
+
+    neovim = {
+      enable = true;
+      viAlias = true;
+      vimAlias = true;
+    };
+
+    eza = {
+      enable = true;
+      enableAliases = true;
+    };
+
+    ripgrep.enable = true;
+    fzf.enable = true;
+    btop.enable = true;
+    tmux.enable = true;
+    nnn.enable = true;
+    direnv.enable = true;
+    gh.enable = true;
+    home-manager.enable = true;
+    
+    # programs to consider
+    # firefox vscode
   };
 
-  programs.eza = {
-    enable = true;
-    enableAliases = true;
+  services = {
+    nextcloud-client = {
+      enable = true;
+      startInBackground = true;
+    };
   };
-
-  programs.ripgrep = {
-    enable = true;
-  };
-
-  programs.fzf = {
-    enable = true;
-  };
-
-  programs.btop = {
-    enable = true;
-  };
-
-  programs.tmux = {
-    enable = true;
-  };
-
-  programs.nnn = {
-    enable = true;
-  };
-
-  programs.direnv = {
-    enable = true;
-  };
-
-  programs.gh = {
-    enable = true;
-  };
-
-  services.nextcloud-client = {
-    enable = true;
-    startInBackground = true;
-  };
-
-  # programs to consider
-  # firefox vscode
-
-  # This value determines the home Manager release that your
-  # configuration is compatible with. This helps avoid breakage
-  # when a new home Manager release introduces backwards
-  # incompatible changes.
-  #
-  # You can update home Manager without changing this value. See
-  # the home Manager release notes for a list of state version
-  # changes in each release.
-  home.stateVersion = "23.11";
 
   # Let home Manager install and manage itself.
-  programs.home-manager.enable = true;
 }
