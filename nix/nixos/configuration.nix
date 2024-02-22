@@ -176,6 +176,10 @@
     device = "192.168.1.240:/mnt/user/general";
     fsType = "nfs";
   };
+  fileSystems."/mnt/tower/backups" = {
+    device = "192.168.1.240:/mnt/user/backups";
+    fsType = "nfs";
+  };
 
   # Enable the OpenSSH daemon.
   services.openssh = {
