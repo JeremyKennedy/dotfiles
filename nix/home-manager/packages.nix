@@ -50,7 +50,8 @@
 
       # media
       spotify
-
+      kmplayer
+      
       # chat
       discord
       telegram-desktop
