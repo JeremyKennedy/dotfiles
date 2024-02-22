@@ -38,6 +38,7 @@
 
       # programs
       gparted # partition editor for graphically managing your disk partitions
+      vorta
 
       # productivity
       bitwarden # password manager
