@@ -20,6 +20,7 @@
         e = "eza";
         nrs = "sudo nixos-rebuild switch";
         nrsu = "sudo nixos-rebuild switch";
+        tower = "ssh tower.lan";
       };
       plugins = [
         {
