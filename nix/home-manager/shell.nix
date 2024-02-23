@@ -19,8 +19,14 @@
         v = "nvim";
         e = "eza";
         nrs = "sudo nixos-rebuild switch";
-        nrsu = "sudo nixos-rebuild switch";
+        nrsu = "sudo nixos-rebuild switch --upgrade";
+        t = "ssh tower.lan";
         tower = "ssh tower.lan";
+        tdl = "ssh tower.lan docker logs -f";
+        tdu = "ssh tower.lan docker start";
+        tdd = "ssh tower.lan docker stop";
+        tdr = "ssh tower.lan docker restart";
+        tde = "ssh tower.lan docker exec -it";
       };
       plugins = [
         {
