@@ -26,7 +26,7 @@
         tdu = "ssh tower.lan docker start";
         tdd = "ssh tower.lan docker stop";
         tdr = "ssh tower.lan docker restart";
-        tde = "ssh tower.lan docker exec -it";
+        tde = "ssh tower.lan docker -t exec -it";
       };
       plugins = [
         {
