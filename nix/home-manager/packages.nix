@@ -44,7 +44,6 @@
       bitwarden # password manager
       filezilla # ftp client
       firefox
-      kate # text editor
       kcalc
       obsidian # note taking
       parsec-bin
