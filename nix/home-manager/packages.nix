@@ -48,11 +48,12 @@
       kcalc
       obsidian # note taking
       parsec-bin
+      kemai
 
       # media
       spotify
       kmplayer
-      
+
       # chat
       discord
       telegram-desktop
