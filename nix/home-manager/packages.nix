@@ -64,6 +64,9 @@
 
       # design
       unstable.bambu-studio
+
+      # crypto
+      unstable.ledger-live-desktop
     ];
   };
 }
