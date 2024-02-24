@@ -32,8 +32,8 @@
         g = "git";
         v = "nvim";
         e = "eza";
-        nrs = "sudo nixos-rebuild switch";
-        nrsu = "sudo nixos-rebuild switch --upgrade";
+        nr = "sudo nixos-rebuild switch";
+        nru = "sudo nixos-rebuild switch --upgrade";
         t = "ssh tower.lan";
         tower = "ssh tower.lan";
         tdl = "ssh tower.lan docker logs -f";
