@@ -20,6 +20,7 @@
       busybox # swiss army knife of embedded Linux
       wget # non-interactive network downloader
       ghq # manage remote repository clones
+      fd # simple, fast and user-friendly alternative to find
 
       # archives
       p7zip # 7z file archiver with high compression ratio
