@@ -34,8 +34,8 @@
         e = "eza";
         nr = "sudo nixos-rebuild switch";
         nru = "sudo nixos-rebuild switch --upgrade";
-        t = "ssh tower.lan";
-        tower = "ssh tower.lan";
+        t = "ssh tower.lan -t fish";
+        tower = "ssh tower.lan -t fish";
         tdl = "ssh tower.lan docker logs -f";
         tdu = "ssh tower.lan docker start";
         tdd = "ssh tower.lan docker stop";
