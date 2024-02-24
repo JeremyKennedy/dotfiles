@@ -57,5 +57,15 @@
       settings = {
       };
     };
+
+    fzf = {
+      enable = true;
+      enableFishIntegration = true;
+      defaultCommand = "${pkgs.ripgrep}/bin/rg --files --follow";
+      # ctrl-t
+      fileWidgetCommand = "${pkgs.ripgrep}/bin/rg --files --follow";
+      # alt-c
+      changeDirWidgetCommand = "${pkgs.fd}/bin/fd --type d";
+    };
   };
 }

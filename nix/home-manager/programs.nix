@@ -22,7 +22,6 @@
     };
 
     ripgrep.enable = true;
-    fzf.enable = true;
     btop.enable = true;
     tmux.enable = true;
     nnn.enable = true;
