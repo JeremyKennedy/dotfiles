@@ -119,7 +119,7 @@
   users.users.jeremy = {
     isNormalUser = true;
     description = "Jeremy";
-    extraGroups = ["networkmanager" "wheel" "ftp" "adbusers"];
+    extraGroups = ["networkmanager" "wheel" "ftp" "adbusers" "docker"];
   };
 
   # List packages installed in system profile. To search, run:
@@ -128,6 +128,9 @@
     vim
     git
   ];
+
+  # docker
+  virtualisation.docker.enable = true;
 
   # enable kde connect
   programs.kdeconnect.enable = true;
