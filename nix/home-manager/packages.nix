@@ -49,6 +49,7 @@
       obsidian # note taking
       parsec-bin
       kemai
+      libreoffice
 
       # media
       spotify
