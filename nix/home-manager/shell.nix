@@ -19,6 +19,9 @@
 
         # init any-nix-shell integration
         ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
+
+        # don't add spaces at end of abbrs unless explicitly defined in the abbr
+        bind " " expand-abbr or self-insert
       '';
       # https://github.com/nix-community/home-manager/commit/f80df90c105d081a49d123c34a57ead9dac615b9
       # this will come with a future release of home-manager,
@@ -28,19 +31,22 @@
       #   ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
       # '';
       shellAbbrs = {
-        gh = "ghq";
-        g = "git";
-        v = "nvim";
-        e = "eza";
+        gh = "ghq ";
+        g = "git ";
+        v = "nvim ";
+        e = "eza ";
         nr = "sudo nixos-rebuild switch";
         nru = "sudo nixos-rebuild switch --upgrade";
         t = "ssh tower.lan -t fish";
         tower = "ssh tower.lan -t fish";
-        tdl = "ssh tower.lan docker logs -f";
-        tdu = "ssh tower.lan docker start";
-        tdd = "ssh tower.lan docker stop";
-        tdr = "ssh tower.lan docker restart";
-        tde = "ssh tower.lan docker -t exec -it";
+        tdl = "ssh tower.lan docker logs -f ";
+        tdu = "ssh tower.lan docker start ";
+        tdd = "ssh tower.lan docker stop ";
+        tdr = "ssh tower.lan docker restart ";
+        tde = "ssh tower.lan -t docker exec -it ";
+        run = "nix run nixpkgs#";
+        shell = "nix shell nixpkgs#";
+
       };
       plugins = [
         {
