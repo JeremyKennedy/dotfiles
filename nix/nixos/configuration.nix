@@ -132,6 +132,7 @@
 
   # docker
   virtualisation.docker.enable = true;
+  virtualisation.docker.enableNvidia = true;
 
   # enable kde connect
   programs.kdeconnect.enable = true;
