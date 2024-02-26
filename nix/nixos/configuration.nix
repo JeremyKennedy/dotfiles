@@ -211,6 +211,12 @@
 
   programs.adb.enable = true;
 
+  services.earlyoom = {
+    enable = true;
+    freeMemThreshold = 5;
+    enableNotifications = true;
+  };
+
   # ftp server
   services.vsftpd = {
     enable = true;
