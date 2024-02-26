@@ -28,6 +28,7 @@
     direnv.enable = true;
     gh.enable = true;
     home-manager.enable = true;
+    broot.enable = true;
 
     # programs to consider
     # firefox vscode
