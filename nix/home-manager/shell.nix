@@ -35,6 +35,8 @@
         g = "git ";
         v = "nvim ";
         e = "eza ";
+        tree = "tre ";
+
         nr = "sudo nixos-rebuild switch";
         nru = "sudo nixos-rebuild switch --upgrade";
         t = "ssh tower.lan -t fish";
