@@ -39,6 +39,7 @@
 
         nr = "sudo nixos-rebuild switch";
         nru = "sudo nixos-rebuild switch --upgrade";
+
         t = "ssh tower.lan -t fish";
         tower = "ssh tower.lan -t fish";
         tdl = "ssh tower.lan docker logs -f ";
@@ -46,9 +47,11 @@
         tdd = "ssh tower.lan docker stop ";
         tdr = "ssh tower.lan docker restart ";
         tde = "ssh tower.lan -t docker exec -it ";
+
         run = "nix run nixpkgs#";
         shell = "nix shell nixpkgs#";
 
+        modown = "sudo chmod 777 -R . ; sudo chown -R jeremy:users . ; ll";
       };
       plugins = [
         {
@@ -69,11 +72,11 @@
     fzf = {
       enable = true;
       enableFishIntegration = true;
-      defaultCommand = "${pkgs.ripgrep}/bin/rg --files --follow";
+      defaultCommand = "${pkgs.ripgrep}/bin/rg --files --follow 2> /dev/null";
       # ctrl-t
-      fileWidgetCommand = "${pkgs.ripgrep}/bin/rg --files --follow";
+      fileWidgetCommand = "${pkgs.ripgrep}/bin/rg --files --follow 2> /dev/null";
       # alt-c
-      changeDirWidgetCommand = "${pkgs.fd}/bin/fd --type d";
+      changeDirWidgetCommand = "${pkgs.fd}/bin/fd --type d 2> /dev/null";
     };
   };
 }
