@@ -56,6 +56,7 @@
       # media
       spotify
       kmplayer
+      ardour
 
       # chat
       discord
