@@ -68,10 +68,10 @@
       winetricks
 
       # design
-      unstable.bambu-studio
+      bambu-studio
 
       # crypto
-      unstable.ledger-live-desktop
+      ledger-live-desktop
     ];
   };
 }
