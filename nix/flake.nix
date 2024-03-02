@@ -5,8 +5,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
 
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     home-manager = {
@@ -18,6 +18,7 @@
   outputs = {
     self,
     nixpkgs,
+    nixpkgs-stable,
     nixpkgs-unstable,
     nixpkgs-master,
     home-manager,
