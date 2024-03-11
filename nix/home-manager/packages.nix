@@ -15,6 +15,7 @@
       jetbrains.webstorm
       smartgithg # git client
       vscode # code editor
+      git-crypt # transparent file encryption in git
 
       # utils
       busybox # swiss army knife of embedded Linux
