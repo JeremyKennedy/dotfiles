@@ -10,18 +10,6 @@
       userEmail = "me@jeremyk.net";
     };
 
-    neovim = {
-      enable = true;
-      viAlias = true;
-      vimAlias = true;
-      defaultEditor = true;
-    };
-
-    eza = {
-      enable = true;
-      enableAliases = true;
-    };
-
     ripgrep.enable = true;
     btop.enable = true;
     tmux.enable = true;

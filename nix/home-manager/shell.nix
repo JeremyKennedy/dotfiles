@@ -71,6 +71,37 @@
       };
     };
 
+    alacritty = {
+      enable = true;
+      settings = {
+        window = {
+          dimensions = {
+            columns = 120;
+            lines = 40;
+          };
+          opacity = 0.9;
+          decorations = "none";
+        };
+      };
+    };
+
+    zellij = {
+      enable = true;
+      enableFishIntegration = true;
+    };
+
+    neovim = {
+      enable = true;
+      viAlias = true;
+      vimAlias = true;
+      defaultEditor = true;
+    };
+
+    eza = {
+      enable = true;
+      enableAliases = true;
+    };
+
     fzf = {
       enable = true;
       enableFishIntegration = true;
