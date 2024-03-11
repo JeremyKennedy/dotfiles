@@ -8,6 +8,7 @@
     ./packages.nix
     ./programs.nix
     ./services.nix
+    ./hass-cli.nix
   ];
 
   home = {
