@@ -52,6 +52,8 @@
         shell = "nix shell nixpkgs#";
 
         modown = "sudo chmod 777 -R . ; sudo chown -R jeremy:users . ; ll";
+
+        ha = "hass-cli ";
       };
       plugins = [
         {
