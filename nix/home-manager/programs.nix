@@ -8,6 +8,7 @@
       enable = true;
       userName = "Jeremy Kennedy";
       userEmail = "me@jeremyk.net";
+      delta.enable = true;
     };
 
     ripgrep.enable = true;
