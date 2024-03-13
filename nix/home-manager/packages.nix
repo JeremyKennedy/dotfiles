@@ -18,7 +18,7 @@
       git-crypt # transparent file encryption in git
 
       # utils
-      busybox # swiss army knife of embedded Linux
+      killall # kill processes by name
       wget # non-interactive network downloader
       ghq # manage remote repository clones
       fd # simple, fast and user-friendly alternative to find
