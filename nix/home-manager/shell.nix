@@ -31,11 +31,11 @@
       #   ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
       # '';
       shellAbbrs = {
-        gh = "ghq";
         g = "git";
         v = "nvim";
         e = "eza";
         tree = "tre";
+        co = "gh copilot";
 
         nr = "sudo nixos-rebuild switch";
         nru = "sudo nixos-rebuild switch --upgrade";
