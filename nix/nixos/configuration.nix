@@ -222,6 +222,8 @@
     '';
   };
 
+  services.mullvad-vpn.enable = true;
+
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [
     3000 # dev server
