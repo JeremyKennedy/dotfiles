@@ -73,6 +73,7 @@
 
       # crypto
       ledger-live-desktop
+      mullvad-vpn
     ];
   };
 }
