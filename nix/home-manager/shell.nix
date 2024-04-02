@@ -99,7 +99,7 @@
 
     eza = {
       enable = true;
-      enableAliases = true;
+      enableFishIntegration = true;
     };
 
     fzf = {
