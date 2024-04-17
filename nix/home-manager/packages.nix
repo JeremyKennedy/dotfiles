@@ -24,6 +24,7 @@
       fd # simple, fast and user-friendly alternative to find
       tre-command # tree command, improved
       xsel # command line interface to X selections
+      nvd
 
       # archives
       p7zip # 7z file archiver with high compression ratio
