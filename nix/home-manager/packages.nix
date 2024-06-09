@@ -63,11 +63,14 @@
       # chat
       discord
       telegram-desktop
+      zoom-us
 
       # gaming
       gamemode
       steamtinkerlaunch
+      wine
       winetricks
+      lutris
 
       # design
       bambu-studio
