@@ -49,6 +49,7 @@
       bitwarden # password manager
       filezilla # ftp client
       firefox
+      google-chrome
       kcalc
       obsidian # note taking
       parsec-bin
@@ -67,6 +68,7 @@
 
       # gaming
       gamemode
+      mangohud
       steamtinkerlaunch
       wine
       winetricks
