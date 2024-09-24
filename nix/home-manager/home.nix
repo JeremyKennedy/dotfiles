@@ -9,6 +9,7 @@
     ./programs.nix
     ./services.nix
     ./hass-cli.nix
+    ./chatgpt-cli.nix
   ];
 
   home = {
