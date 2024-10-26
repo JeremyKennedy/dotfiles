@@ -228,6 +228,7 @@
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [
     3000 # dev server
+    8080 # web host
     21 # ftp
   ];
   networking.firewall.allowedTCPPortRanges = [
