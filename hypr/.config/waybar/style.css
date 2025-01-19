@@ -49,7 +49,6 @@ tooltip {
 
 #window,
 #clock,
-#pulseaudio,
 #network,
 #workspaces,
 #tray,
@@ -61,11 +60,6 @@ tooltip {
   margin: 3px 0px;
   margin-top: 10px;
   border: 1px solid #181825;
-}
-
-#tray {
-  border-radius: 10px;
-  margin-right: 10px;
 }
 
 #workspaces {
@@ -85,38 +79,40 @@ tooltip {
 #clock {
   color: #fab387;
   border-radius: 10px;
-  margin-right: 10px;
-}
-
-#network {
-  color: #f9e2af;
-  border-radius: 10px 0px 0px 10px;
-  border-right: 0px;
-  margin-right: 0px;
-}
-
-#pulseaudio {
-  color: #89b4fa;
-  border-radius: 10px 0px 0px 10px;
-  border-left: 0px;
-  border-right: 0px;
+  margin-left: 3px;
+  margin-right: 3px;
 }
 
 #cpu {
   color: #94e2d5;
-  border-left: 0px;
-  border-right: 0px;
+  border-radius: 10px 0 0 10px;
+  margin-left: 3px;
+  margin-right: 0;
 }
 
 #memory {
   color: #94e2d5;
-  border-left: 0px;
-  border-right: 0px;
+  border-radius: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 #temperature {
   color: #94e2d5;
-  border-left: 0px;
-  border-radius: 0px 10px 10px 0px;
-  margin-right: 10px;
+  border-radius: 0 10px 10px 0;
+  margin-left: 0;
+  margin-right: 3px;
+}
+
+#network {
+  color: #f9e2af;
+  border-radius: 10px;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+#tray {
+  border-radius: 10px;
+  margin-left: 3px;
+  margin-right: 3px;
 }
