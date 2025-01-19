@@ -13,6 +13,11 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      # build with your own instance of nixpkgs
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -22,6 +27,7 @@
     nixpkgs-unstable,
     nixpkgs-master,
     home-manager,
+    hyprland
   } @ inputs: let
     inherit (self) outputs;
     # Supported systems for your flake packages, shell, etc.
@@ -53,6 +59,8 @@
       JeremyDesktop = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs secrets;};
         modules = [
+          hyprland.nixosModules.default
+          {programs.hyprland.enable = true;}
           ./nixos/configuration.nix
         ];
       };
