@@ -99,7 +99,7 @@
 
   # Enable sound with pipewire.
   # sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -137,7 +137,7 @@
 
   # docker
   virtualisation.docker.enable = true;
-  virtualisation.docker.enableNvidia = true;
+  hardware.nvidia-container-toolkit.enable = true;
 
   # enable kde connect
   programs.kdeconnect.enable = true;
