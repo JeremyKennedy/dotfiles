@@ -15,6 +15,7 @@
       jetbrains.webstorm
       smartgithg # git client
       vscode # code editor
+      code-cursor
       git-crypt # transparent file encryption in git
 
       # utils

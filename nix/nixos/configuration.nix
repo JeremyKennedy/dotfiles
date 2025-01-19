@@ -76,7 +76,7 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_CA.UTF-8";
 
-  # Disable X.
+  # Disable X11 (since we're using Wayland/Hyprland)
   services.xserver.enable = false;
 
   programs.hyprland = {
@@ -85,30 +85,65 @@
   };
 
   environment.systemPackages = with pkgs; [
+    # Core utilities
     vim
     git
     kitty
-    # Wayland utilities
-    waybar # Status bar
-    dunst # Notification daemon
-    rofi-wayland # Application launcher
-    swww # Wallpaper daemon
+    stow
+
+    # Essential Wayland utilities
+    waybar # Status bar with Hyprland support
+    wofi # Application launcher
+    dunst # Notifications
     swaylock-effects # Screen locker
     wl-clipboard # Clipboard manager
+
+    # Screenshot and color utilities
     grim # Screenshot utility
     slurp # Screen area selection
-    wlsunset # Blue light filter
+    hyprpicker # Color picker
+
+    # System utilities
+    polkit-kde-agent # Authentication agent
+    inotify-tools # Watch for file changes
+    networkmanagerapplet # Network tray
+    pavucontrol # Audio control
     brightnessctl # Brightness control
-    pamixer # PulseAudio CLI
+    pamixer # Audio CLI
   ];
 
-  # Configure XDG portal for screen sharing
+  # # XDG Portal configuration
   # xdg.portal = {
   #   enable = true;
+  #   wlr.enable = false;
   #   extraPortals = [pkgs.xdg-desktop-portal-hyprland];
+  #   config = {
+  #     common = {
+  #       default = ["hyprland"];
+  #     };
+  #     hyprland = {
+  #       default = ["hyprland"];
+  #       "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+  #     };
+  #   };
   # };
 
-  # Remove SDDM and use greetd instead
+  # # Make sure xdg-desktop-portal-hyprland can find the hyprland binary
+  # environment.sessionVariables.HYPRLAND_SHARE = "${pkgs.hyprland}/share";
+
+  # Essential services
+  services.dbus.enable = true;
+
+  # NVIDIA-specific environment variables
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1"; # Electron apps
+    WLR_NO_HARDWARE_CURSORS = "1"; # Fix cursor rendering
+    XDG_SESSION_TYPE = "wayland";
+    GBM_BACKEND = "nvidia-drm";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+  };
+
+  # Simple login manager
   services.greetd = {
     enable = true;
     settings = {
@@ -117,12 +152,6 @@
         user = "greeter";
       };
     };
-  };
-
-  # Configure keymap in X11
-  services.xserver = {
-    xkb.layout = "us";
-    xkb.variant = "";
   };
 
   # Enable CUPS to print documents.
@@ -281,4 +310,8 @@
 
     trusted-users = ["root" "jeremy"];
   };
+
+  fonts.packages = with pkgs; [
+    nerd-fonts.jetbrains-mono
+  ];
 }
