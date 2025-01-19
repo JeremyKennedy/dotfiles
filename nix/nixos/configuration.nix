@@ -79,11 +79,45 @@
   # Disable X.
   services.xserver.enable = false;
 
-  # Enable the KDE Plasma Desktop Environment with Wayland.
-  services.displayManager.sddm.enable = true;
-  services.displayManager.sddm.wayland.enable = true;
-  services.desktopManager.plasma6.enable = true;
-  services.displayManager.defaultSession = "plasma";
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
+
+  environment.systemPackages = with pkgs; [
+    vim
+    git
+    kitty
+    # Wayland utilities
+    waybar # Status bar
+    dunst # Notification daemon
+    rofi-wayland # Application launcher
+    swww # Wallpaper daemon
+    swaylock-effects # Screen locker
+    wl-clipboard # Clipboard manager
+    grim # Screenshot utility
+    slurp # Screen area selection
+    wlsunset # Blue light filter
+    brightnessctl # Brightness control
+    pamixer # PulseAudio CLI
+  ];
+
+  # Configure XDG portal for screen sharing
+  # xdg.portal = {
+  #   enable = true;
+  #   extraPortals = [pkgs.xdg-desktop-portal-hyprland];
+  # };
+
+  # Remove SDDM and use greetd instead
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+        user = "greeter";
+      };
+    };
+  };
 
   # Configure keymap in X11
   services.xserver = {
@@ -117,11 +151,7 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  # Enable automatic login for the user.
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "jeremy";
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.jeremy = {
     isNormalUser = true;
     description = "Jeremy";
@@ -130,11 +160,6 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-  ];
-
   # docker
   virtualisation.docker.enable = true;
   hardware.nvidia-container-toolkit.enable = true;
