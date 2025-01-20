@@ -84,6 +84,27 @@
 
       # waybar: mpris
       playerctl
+
+      # Add Wayland utilities section
+      waybar
+      wofi
+      dunst
+      swaylock-effects
+      wl-clipboard
+      grim
+      slurp
+      hyprpicker
+      lm_sensors
+      dolphin
+
+      # System utilities
+      stow # symlink manager
+      lxqt-policykit # Authentication agent
+      inotify-tools # Watch for file changes
+
+      # Cursor themes
+      bibata-cursors
+      hyprcursor
     ];
   };
 }
