@@ -89,11 +89,13 @@
   # Essential services
   services.dbus.enable = true;
 
-  # NVIDIA-specific environment variables
   environment.sessionVariables = {
+    # Wayland
     NIXOS_OZONE_WL = "1"; # Electron apps
     WLR_NO_HARDWARE_CURSORS = "1"; # Fix cursor rendering
     XDG_SESSION_TYPE = "wayland";
+
+    # NVIDIA
     GBM_BACKEND = "nvidia-drm";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
   };
