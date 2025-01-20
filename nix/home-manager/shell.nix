@@ -75,12 +75,12 @@
       enable = true;
       settings = {
         window = {
-          dimensions = {
-            columns = 120;
-            lines = 40;
-          };
-          opacity = 0.9;
-          decorations = "none";
+          # dimensions = {
+          #   columns = 120;
+          #   lines = 40;
+          # };
+          # opacity = 0.9;
+          # decorations = "none";
         };
       };
     };
