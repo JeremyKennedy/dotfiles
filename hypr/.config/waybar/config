@@ -1,7 +1,7 @@
 {
   "layer": "top",
   "position": "bottom",
-  "height": 30,
+  "height": 36,
   "spacing": 4,
   "modules-left": [
     "hyprland/workspaces",
@@ -67,7 +67,7 @@
     "format-muted": "MUTED {volume}%",
     "max-length": 100,
     "scroll-step": 10,
-    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-click": "/run/current-system/sw/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
     "on-click-right": "pavucontrol",
     "tooltip": false
   }
