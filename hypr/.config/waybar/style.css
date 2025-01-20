@@ -48,6 +48,8 @@ tooltip {
   border-radius: 10px;
 }
 
+#mpris,
+#wireplumber,
 #window,
 #clock,
 #network,
@@ -61,6 +63,7 @@ tooltip {
   margin: 3px 0px;
   margin-top: 10px;
   border: 1px solid #181825;
+  border-radius: 10px;
 }
 
 #workspaces {
