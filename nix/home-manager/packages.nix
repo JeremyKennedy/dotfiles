@@ -80,12 +80,9 @@
 
       # crypto
       ledger-live-desktop
-      mullvad-vpn
+      # mullvad-vpn
 
-      # waybar: mpris
-      playerctl
-
-      # Add Wayland utilities section
+      # Wayland utilities
       waybar
       wofi
       dunst
@@ -97,6 +94,7 @@
       lm_sensors
       dolphin
       pavucontrol
+      playerctl
 
       # System utilities
       stow # symlink manager

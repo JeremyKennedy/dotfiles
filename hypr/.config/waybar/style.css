@@ -109,6 +109,7 @@ tooltip {
   border-radius: 10px;
   margin-left: 3px;
   margin-right: 3px;
+  min-width: 200px;
 }
 
 #tray {
