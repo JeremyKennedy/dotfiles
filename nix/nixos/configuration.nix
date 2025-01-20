@@ -13,8 +13,9 @@
   imports = [
     ./hardware-configuration.nix
     ./nvidia.nix
-    ./ledger.nix
     ./filesystems.nix
+    ./network.nix
+    ./ledger.nix
     ./waybar.nix
 
     # Import home-manager's NixOS module
@@ -65,11 +66,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 20;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  networking.hostName = "JeremyDesktop"; # Define your hostname.
-
-  # Enable networking
-  networking.networkmanager.enable = true;
 
   # Set your time zone.
   time.timeZone = "America/Toronto";
@@ -187,45 +183,6 @@
   #   enableSSHSupport = true;
   # };
 
-  # Enable the OpenSSH daemon.
-  services.openssh = {
-    enable = true;
-    settings = {
-      # Forbid root login through SSH.
-      PermitRootLogin = "no";
-      # Use keys only. Remove if you want to SSH using password (not recommended)
-      PasswordAuthentication = false;
-      # Disable interactive authentication
-      KbdInteractiveAuthentication = false;
-    };
-    allowSFTP = true;
-  };
-
-  # ftp user
-  users.users.ftp = {
-    isNormalUser = false;
-    isSystemUser = true;
-    home = "/home/ftp";
-    group = "ftp";
-    description = "FTP user";
-    #extraGroups  = [ "wheel" "networkmanager" ];
-    #openssh.authorizedKeys.keys  = [ "ssh-dss AAAAB3Nza... alice@foobar" ];
-  };
-
-  # ftp server
-  services.vsftpd = {
-    enable = true;
-    writeEnable = true;
-    localUsers = true;
-    userlist = ["ftp"];
-    userlistEnable = true;
-    extraConfig = ''
-      pasv_enable=Yes
-      pasv_min_port=51000
-      pasv_max_port=51999
-    '';
-  };
-
   programs.adb.enable = true;
 
   services.earlyoom = {
@@ -233,22 +190,6 @@
     freeMemThreshold = 5;
     enableNotifications = true;
   };
-
-  services.mullvad-vpn.enable = false;
-
-  # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [
-    3000 # dev server
-    8080 # web host
-    21 # ftp
-  ];
-  networking.firewall.allowedTCPPortRanges = [
-    {
-      from = 51000;
-      to = 51999;
-    } # ftp
-  ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
