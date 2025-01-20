@@ -5,7 +5,7 @@
 }: {
   home = {
     packages = with pkgs; [
-      # development
+      # Development Tools
       alejandra # nix formatter
       any-nix-shell # nix shell manager for fish
       cht-sh # command cheatsheet
@@ -18,56 +18,67 @@
       code-cursor
       git-crypt # transparent file encryption in git
 
-      # utils
+      # System Tools & Utilities
       killall # kill processes by name
       wget # non-interactive network downloader
       ghq # manage remote repository clones
-      fd # simple, fast and user-friendly alternative to find
+      fd # simple, fast alternative to find
       tre-command # tree command, improved
       xsel # command line interface to X selections
       nvd # nixos version diff
+      stow # symlink manager
+      inotify-tools # Watch for file changes
+      lxqt.lxqt-policykit # Authentication agent
 
-      # archives
-      p7zip # 7z file archiver with high compression ratio
-      unzip # list, test and extract compressed files in a ZIP archive
-      zip # package and compress archive files
-
-      # monitoring
+      # Monitoring & System Info
       iftop # network monitoring
       iotop # io monitoring
-
-      # misc
-      cowsay # configurable talking cow
-      (fortune.override {withOffensive = true;}) # print a random, hopefully interesting, adage
-      lolcat # rainbowify your terminal
       neofetch # system information tool
+      lm_sensors
 
-      # programs
-      gparted # partition editor for graphically managing your disk partitions
-      vorta
+      # Archive Management
+      p7zip # 7z file archiver
+      unzip # extract ZIP archives
+      zip # create ZIP archives
 
-      # productivity
-      bitwarden # password manager
-      filezilla # ftp client
+      # Wayland Desktop Environment
+      waybar # status bar
+      wofi # application launcher
+      dunst # notification daemon
+      swaylock-effects # screen locker
+      wl-clipboard # clipboard manager
+      grim # screenshot utility
+      slurp # screen area selector
+      hyprpicker # color picker
+      hyprshot # screenshot tool
+      dolphin # file manager
+      pavucontrol # audio control
+      playerctl # media player control
+      bibata-cursors # cursor theme
+      hyprcursor
+
+      # Internet & Communication
       firefox
       google-chrome
+      discord
+      telegram-desktop
+      zoom-us
+      filezilla # ftp client
+
+      # Media & Entertainment
+      spotify
+      kmplayer
+      ardour
+
+      # Productivity & Office
+      bitwarden # password manager
       kcalc
       obsidian # note taking
       parsec-bin
       kemai
       # libreoffice
 
-      # media
-      spotify
-      kmplayer
-      ardour
-
-      # chat
-      discord
-      telegram-desktop
-      zoom-us
-
-      # gaming
+      # Gaming
       gamemode
       mangohud
       steamtinkerlaunch
@@ -75,36 +86,21 @@
       winetricks
       lutris
 
-      # design
+      # Creative & Design
       bambu-studio
 
-      # crypto
+      # Security & Privacy
       ledger-live-desktop
       # mullvad-vpn
 
-      # Wayland utilities
-      waybar
-      wofi
-      dunst
-      swaylock-effects
-      wl-clipboard
-      grim
-      slurp
-      hyprpicker
-      lm_sensors
-      dolphin
-      pavucontrol
-      playerctl
-      hyprshot
+      # Fun & Miscellaneous
+      cowsay # configurable talking cow
+      (fortune.override {withOffensive = true;}) # random adages
+      lolcat # rainbow text
 
-      # System utilities
-      stow # symlink manager
-      lxqt.lxqt-policykit # Authentication agent
-      inotify-tools # Watch for file changes
-
-      # Cursor themes
-      bibata-cursors
-      hyprcursor
+      # Backup & Disk Management
+      vorta
+      gparted # partition editor
     ];
   };
 }
