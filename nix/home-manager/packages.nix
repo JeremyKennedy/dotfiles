@@ -96,10 +96,11 @@
       hyprpicker
       lm_sensors
       dolphin
+      pavucontrol
 
       # System utilities
       stow # symlink manager
-      lxqt-policykit # Authentication agent
+      lxqt.lxqt-policykit # Authentication agent
       inotify-tools # Watch for file changes
 
       # Cursor themes
