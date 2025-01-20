@@ -46,6 +46,7 @@
       # hyprpolkitagent # polkit agent for Hyprland
       hyprshot # screenshot tool
       hyprcursor # cursor manager
+      hypridle # idle manager
       waybar # status bar
       wofi # application launcher
       dunst # notification daemon
