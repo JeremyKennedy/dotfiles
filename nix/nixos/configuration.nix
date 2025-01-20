@@ -18,6 +18,8 @@
     ./ledger.nix
     ./waybar.nix
     ./programs.nix
+    ./hyprland.nix
+    ./shell.nix
 
     # Import home-manager's NixOS module
     inputs.home-manager.nixosModules.home-manager
@@ -94,17 +96,6 @@
     XDG_SESSION_TYPE = "wayland";
     GBM_BACKEND = "nvidia-drm";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-  };
-
-  # Simple login manager
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
-        user = "greeter";
-      };
-    };
   };
 
   # Enable CUPS to print documents.
