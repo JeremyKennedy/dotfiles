@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   systemd.user.services.waybar = {
     description = "Waybar - Wayland bar for Sway and Wlroots based compositors";
-    wantedBy = ["hyprland-session.target"];
+    wantedBy = ["graphical-session.target"];
     partOf = ["graphical-session.target"];
     after = ["graphical-session.target"];
 
