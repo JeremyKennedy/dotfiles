@@ -95,6 +95,7 @@
       dolphin
       pavucontrol
       playerctl
+      hyprshot
 
       # System utilities
       stow # symlink manager
