@@ -81,6 +81,7 @@
 
   programs.hyprland = {
     enable = true;
+    withUWSM = true; # recommended for most users
     xwayland.enable = true;
   };
 
@@ -89,48 +90,7 @@
     vim
     git
     kitty
-    stow
-    lm_sensors
-
-    # Essential Wayland utilities
-    waybar # Status bar with Hyprland support
-    wofi # Application launcher
-    dunst # Notifications
-    swaylock-effects # Screen locker
-    wl-clipboard # Clipboard manager
-
-    # Screenshot and color utilities
-    grim # Screenshot utility
-    slurp # Screen area selection
-    hyprpicker # Color picker
-
-    # System utilities
-    polkit-kde-agent # Authentication agent
-    inotify-tools # Watch for file changes
-    networkmanagerapplet # Network tray
-    pavucontrol # Audio control
-    brightnessctl # Brightness control
-    pamixer # Audio CLI
   ];
-
-  # # XDG Portal configuration
-  # xdg.portal = {
-  #   enable = true;
-  #   wlr.enable = false;
-  #   extraPortals = [pkgs.xdg-desktop-portal-hyprland];
-  #   config = {
-  #     common = {
-  #       default = ["hyprland"];
-  #     };
-  #     hyprland = {
-  #       default = ["hyprland"];
-  #       "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
-  #     };
-  #   };
-  # };
-
-  # # Make sure xdg-desktop-portal-hyprland can find the hyprland binary
-  # environment.sessionVariables.HYPRLAND_SHARE = "${pkgs.hyprland}/share";
 
   # Essential services
   services.dbus.enable = true;

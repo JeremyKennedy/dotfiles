@@ -12,6 +12,14 @@
     ./chatgpt-cli.nix
   ];
 
+  home.pointerCursor = {
+    gtk.enable = true;
+    # x11.enable = true;
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Classic";
+    size = 24;
+  };
+
   home = {
     username = "jeremy";
     homeDirectory = "/home/jeremy";
