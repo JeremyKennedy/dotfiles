@@ -133,14 +133,7 @@
     wireplumber.enable = true;
     # If you want to use JACK applications, uncomment this
     #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.jeremy = {
@@ -218,14 +211,6 @@
     #openssh.authorizedKeys.keys  = [ "ssh-dss AAAAB3Nza... alice@foobar" ];
   };
 
-  programs.adb.enable = true;
-
-  services.earlyoom = {
-    enable = true;
-    freeMemThreshold = 5;
-    enableNotifications = true;
-  };
-
   # ftp server
   services.vsftpd = {
     enable = true;
@@ -240,7 +225,15 @@
     '';
   };
 
-  services.mullvad-vpn.enable = true;
+  programs.adb.enable = true;
+
+  services.earlyoom = {
+    enable = true;
+    freeMemThreshold = 5;
+    enableNotifications = true;
+  };
+
+  services.mullvad-vpn.enable = false;
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [

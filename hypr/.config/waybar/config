@@ -64,7 +64,7 @@
   },
   "wireplumber": {
     "format": "{volume}%",
-    "format-muted": " {volume}%",
+    "format-muted": "MUTED {volume}%",
     "max-length": 100,
     "scroll-step": 1,
     "on-click": "pavucontrol",
