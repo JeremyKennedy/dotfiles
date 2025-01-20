@@ -3,6 +3,9 @@
   pkgs,
   ...
 }: {
+  # Load nvidia driver for Xorg and Wayland
+  services.xserver.videoDrivers = ["nvidia"];
+
   hardware.nvidia = {
     # Modesetting is needed most of the time
     modesetting.enable = true;
