@@ -10,9 +10,9 @@
       any-nix-shell # nix shell manager for fish
       cht-sh # command cheatsheet
       glow # markdown previewer in terminal
-      jetbrains-toolbox # jetbrains ide manager
+      # jetbrains-toolbox # jetbrains ide manager
       jetbrains.datagrip
-      jetbrains.webstorm
+      # jetbrains.webstorm
       smartgithg # git client
       vscode # code editor
       code-cursor
@@ -41,21 +41,18 @@
       unzip # extract ZIP archives
       zip # create ZIP archives
 
-      # Wayland Desktop Environment
+      # Hyprland/Wayland Desktop Environment
+      hyprlock # modern screen locker for Hyprland
+      # hyprpolkitagent # polkit agent for Hyprland
+      hyprshot # screenshot tool
+      hyprcursor # cursor manager
       waybar # status bar
       wofi # application launcher
       dunst # notification daemon
-      swaylock-effects # screen locker
       wl-clipboard # clipboard manager
-      grim # screenshot utility
-      slurp # screen area selector
-      hyprpicker # color picker
-      hyprshot # screenshot tool
-      dolphin # file manager
       pavucontrol # audio control
       playerctl # media player control
       bibata-cursors # cursor theme
-      hyprcursor
 
       # Internet & Communication
       firefox
