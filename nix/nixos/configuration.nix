@@ -105,6 +105,8 @@
   services.avahi.nssmdns4 = true; # enables the mDNS NSS plug-in
   services.avahi.openFirewall = true; # opens the firewall for UDP port 5353
 
+  services.gnome.gnome-keyring.enable = true;
+
   # Enable sound with pipewire.
   # sound.enable = true;
   services.pulseaudio.enable = false;
