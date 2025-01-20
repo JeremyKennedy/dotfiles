@@ -17,6 +17,7 @@
     ./network.nix
     ./ledger.nix
     ./waybar.nix
+    ./programs.nix
 
     # Import home-manager's NixOS module
     inputs.home-manager.nixosModules.home-manager
@@ -76,12 +77,6 @@
   # Disable X11 (since we're using Wayland/Hyprland)
   services.xserver.enable = false;
 
-  programs.hyprland = {
-    enable = true;
-    withUWSM = true; # recommended for most users
-    xwayland.enable = true;
-  };
-
   environment.systemPackages = with pkgs; [
     # Core utilities
     vim
@@ -139,29 +134,9 @@
     extraGroups = ["networkmanager" "wheel" "ftp" "adbusers" "docker"];
   };
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   # docker
   virtualisation.docker.enable = true;
   hardware.nvidia-container-toolkit.enable = true;
-
-  # enable kde connect
-  programs.kdeconnect.enable = true;
-
-  # enable steam
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  };
-
-  # enable fish
-  programs.fish.enable = true;
-  users.defaultUserShell = pkgs.fish;
-  environment.shells = with pkgs; [fish];
-
-  # enable starship (applies to all shells)
-  programs.starship.enable = true;
 
   # enable flatpak
   services.flatpak.enable = true;
@@ -182,8 +157,6 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
-  programs.adb.enable = true;
 
   services.earlyoom = {
     enable = true;
