@@ -15,6 +15,7 @@
     ./nvidia.nix
     ./ledger.nix
     ./filesystems.nix
+    ./waybar.nix
 
     # Import home-manager's NixOS module
     inputs.home-manager.nixosModules.home-manager
