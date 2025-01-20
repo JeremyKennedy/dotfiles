@@ -83,7 +83,6 @@
     # Core utilities
     vim
     git
-    kitty
   ];
 
   # Essential services

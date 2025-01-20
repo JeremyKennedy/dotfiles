@@ -62,6 +62,7 @@
       telegram-desktop
       zoom-us
       filezilla # ftp client
+      nextcloud-client
 
       # Media & Entertainment
       spotify
