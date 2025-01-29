@@ -83,6 +83,8 @@
     # Core utilities
     vim
     git
+    # Game launchers
+    prismlauncher
   ];
 
   # Essential services
@@ -108,7 +110,6 @@
   services.gnome.gnome-keyring.enable = true;
 
   # Enable sound with pipewire.
-  # sound.enable = true;
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -116,9 +117,10 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    # Use the new wireplumber session manager
     wireplumber.enable = true;
     # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    jack.enable = true;
   };
 
   # Define a user account. Don't forget to set a password with 'passwd'.
