@@ -82,6 +82,9 @@
           # opacity = 0.9;
           # decorations = "none";
         };
+        env = {
+          TERM = "xterm-256color";
+        };
       };
     };
 
