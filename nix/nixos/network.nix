@@ -7,6 +7,8 @@
   networking = {
     hostName = "JeremyDesktop";
     networkmanager.enable = true;
+    nameservers = ["100.100.100.100" "192.168.1.230"];
+    search = ["sole-bigeye.ts.net"];
 
     # Open ports in the firewall.
     firewall = {
@@ -59,6 +61,11 @@
       KbdInteractiveAuthentication = false;
     };
     allowSFTP = true;
+  };
+
+  services.tailscale = {
+    enable = true;
+    openFirewall = true; # Allows traffic through Tailscale
   };
 
   services.mullvad-vpn.enable = false;
