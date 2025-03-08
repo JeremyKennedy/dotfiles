@@ -7,8 +7,16 @@
   networking = {
     hostName = "JeremyDesktop";
     networkmanager.enable = true;
-    nameservers = ["100.100.100.100" "192.168.1.230"];
+    networkmanager.dns = "none";
+    nameservers = [
+      "100.100.100.100"
+      "192.168.1.230"
+    ];
     search = ["sole-bigeye.ts.net"];
+
+    # These options are unnecessary when managing DNS ourselves
+    useDHCP = false;
+    dhcpcd.enable = false;
 
     # Open ports in the firewall.
     firewall = {
