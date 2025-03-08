@@ -83,8 +83,6 @@
     # Core utilities
     vim
     git
-    # Game launchers
-    prismlauncher
   ];
 
   # Essential services
