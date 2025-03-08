@@ -80,6 +80,7 @@
       # Gaming
       gamemode
       mangohud
+      prismlauncher
       steamtinkerlaunch
       wine
       winetricks
