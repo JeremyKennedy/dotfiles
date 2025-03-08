@@ -11,6 +11,10 @@
       ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
       Restart = "on-failure";
       RestartSec = 1;
+      Environment = [
+        "PATH=/run/wrappers/bin:/nix/var/nix/profiles/default/bin:$PATH"
+        "XDG_RUNTIME_DIR=/run/user/%U"
+      ];
     };
   };
 }
