@@ -100,6 +100,7 @@
       # Backup & Disk Management
       vorta
       gparted # partition editor
+      udiskie # automount disks
     ];
   };
 }
