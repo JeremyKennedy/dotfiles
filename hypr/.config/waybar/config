@@ -12,11 +12,11 @@
     "wireplumber"
   ],
   "modules-right": [
-    "clock",
     "cpu",
     "memory",
     "temperature",
     "network",
+    "clock",
     "tray"
   ],
   "hyprland/workspaces": {
