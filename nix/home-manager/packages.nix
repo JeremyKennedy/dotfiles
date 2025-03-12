@@ -51,6 +51,8 @@
       wofi # application launcher
       dunst # notification daemon
       wl-clipboard # clipboard manager
+      wl-clip-persist # clipboard manager
+      cliphist # clipboard manager
       pavucontrol # audio control
       playerctl # media player control
       bibata-cursors # cursor theme
