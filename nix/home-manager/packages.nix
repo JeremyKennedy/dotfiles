@@ -73,7 +73,7 @@
 
       # Productivity & Office
       bitwarden # password manager
-      kcalc
+      kdePackages.kcalc
       obsidian # note taking
       parsec-bin
       kemai
