@@ -14,7 +14,7 @@
     # Likely to cause problems on laptops and with screen tearing if disabled.
     powerManagement.enable = true;
 
-    # Use the NVidia open source kernel module (which isn't “nouveau”).
+    # Use the NVidia open source kernel module (which isn't "nouveau").
     # Support is limited to the Turing and later architectures. Full list of
     # supported GPUs is at:
     # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
@@ -25,15 +25,23 @@
     # accessible via `nvidia-settings`.
     nvidiaSettings = true;
 
-    # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    # Use the specific beta driver version 570.123.06
+    package = config.boot.kernelPackages.nvidiaPackages.stable.overrideAttrs {
+      src = pkgs.fetchurl {
+        url = "https://developer.download.nvidia.com/assets/gameworks/downloads/secure/Vulkan_Beta_Drivers/NVIDIA-Linux-x86_64-570.123.06.run?__token__=exp=1742479030~hmac=f6f740b0059f2cfb0d4bd6229a4d8bb51943e619f252d4f43f4bce91da7121ff";
+        sha256 = "sha256-3FwT5B51P+ktNM2UZw6nQDuS7EMpbfV0qkuRtohhNnk=";
+      };
+    };
+
+    # Comment out or remove the previous package line
+    # package = config.boot.kernelPackages.nvidiaPackages.beta;
 
     # force old nvidia
     #package = (config.boot.kernelPackages.nvidiaPackages.stable.overrideAttrs {
-    # src = pkgs.fetchurl {
-    #   url = "https://download.nvidia.com/XFree86/Linux-x86_64/525.125.06/NVIDIA-Linux-x86_64-525.125.06.run";
-    #   sha256 = "17av8nvxzn5af3x6y8vy5g6zbwg21s7sq5vpa1xc6cx8yj4mc9xm";
-    # };
+    #  src = pkgs.fetchurl {
+    #    url = "https://download.nvidia.com/XFree86/Linux-x86_64/525.125.06/NVIDIA-Linux-x86_64-525.125.06.run";
+    #    sha256 = "17av8nvxzn5af3x6y8vy5g6zbwg21s7sq5vpa1xc6cx8yj4mc9xm";
+    #  };
     #});
     #package = (config.boot.kernelPackages.nvidiaPackages.stable.overrideAttrs {
     #  src = pkgs.fetchurl {
