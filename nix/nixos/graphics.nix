@@ -21,9 +21,9 @@
   # '';
 
   # OpenGL and Vulkan (gaming support)
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
     extraPackages = with pkgs; [
       mesa # Base Mesa drivers
       amdvlk # AMD Vulkan driver
