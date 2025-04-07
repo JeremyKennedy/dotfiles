@@ -12,7 +12,7 @@
 }: {
   imports = [
     ./hardware-configuration.nix
-    ./nvidia.nix
+    ./graphics.nix
     ./filesystems.nix
     ./network.nix
     ./ledger.nix
