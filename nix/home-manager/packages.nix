@@ -92,6 +92,7 @@
 
       # Creative & Design
       bambu-studio
+      orca-slicer
 
       # Security & Privacy
       ledger-live-desktop
