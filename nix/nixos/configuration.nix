@@ -70,6 +70,7 @@
   boot.loader.systemd-boot.configurationLimit = 20;
   boot.loader.efi.canTouchEfiVariables = true;
 
+
   # Set your time zone.
   time.timeZone = "America/Toronto";
 
@@ -93,10 +94,6 @@
     NIXOS_OZONE_WL = "1"; # Electron apps
     WLR_NO_HARDWARE_CURSORS = "1"; # Fix cursor rendering
     XDG_SESSION_TYPE = "wayland";
-
-    # NVIDIA
-    GBM_BACKEND = "nvidia-drm";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
   };
 
   # Enable CUPS to print documents.
@@ -130,7 +127,6 @@
 
   # docker
   virtualisation.docker.enable = true;
-  hardware.nvidia-container-toolkit.enable = true;
 
   # enable flatpak
   services.flatpak.enable = true;
