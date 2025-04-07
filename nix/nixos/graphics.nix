@@ -23,13 +23,10 @@
   # OpenGL and Vulkan (gaming support)
   hardware.opengl = {
     enable = true;
-    driSupport = true;
     driSupport32Bit = true;
     extraPackages = with pkgs; [
       mesa # Base Mesa drivers
-      rocm-opencl-runtime # OpenCL support for compute workloads
       amdvlk # AMD Vulkan driver
-      libva-mesa-driver # VA-API support for hardware video acceleration
       vaapiVdpau # VDPAU bridge for video acceleration compatibility
     ];
     # 32-bit packages for Steam and other games
