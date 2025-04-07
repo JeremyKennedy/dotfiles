@@ -35,6 +35,8 @@
       iotop # io monitoring
       neofetch # system information tool
       lm_sensors
+      radeontop # AMD GPU usage monitoring utility
+      # corectrl # AMD GPU control and monitoring (similar to nvidia-settings)
 
       # Archive Management
       p7zip # 7z file archiver
