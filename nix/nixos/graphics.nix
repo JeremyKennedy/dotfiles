@@ -28,6 +28,8 @@
       mesa # Base Mesa drivers
       amdvlk # AMD Vulkan driver
       vaapiVdpau # VDPAU bridge for video acceleration compatibility
+      libvdpau-va-gl
+      mesa
     ];
     # 32-bit packages for Steam and other games
     extraPackages32 = with pkgs; [
