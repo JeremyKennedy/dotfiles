@@ -73,6 +73,11 @@
       kmplayer
       ardour
 
+      # Graphics
+      libva
+      libva-utils
+      vulkan-tools
+
       # Productivity & Office
       bitwarden # password manager
       kdePackages.kcalc
