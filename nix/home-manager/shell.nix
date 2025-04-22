@@ -88,10 +88,10 @@
       };
     };
 
-    zellij = {
-      enable = true;
-      enableFishIntegration = true;
-    };
+    # zellij = {
+    #   enable = true;
+    #   enableFishIntegration = true;
+    # };
 
     neovim = {
       enable = true;
