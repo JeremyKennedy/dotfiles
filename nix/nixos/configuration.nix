@@ -20,6 +20,7 @@
     ./programs.nix
     ./hyprland.nix
     ./shell.nix
+    ./scripts.nix
 
     # Import home-manager's NixOS module
     inputs.home-manager.nixosModules.home-manager
