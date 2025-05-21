@@ -15,6 +15,13 @@
 
     dunst = {
       enable = true;
+      settings = {
+        global = {
+          origin = "top-right";
+          monitor = 1;
+          font = "JetBrainsMono Nerd Font 12";
+        };
+      };
     };
   };
 }
