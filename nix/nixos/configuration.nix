@@ -121,6 +121,16 @@
     jack.enable = true;
   };
 
+  # Allow gamemode to run without sudo
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (action.id == "com.feralinteractive.GameMode" &&
+          subject.isInGroup("users")) {
+        return polkit.Result.YES;
+      }
+    });
+  '';
+
   # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.jeremy = {
     isNormalUser = true;
