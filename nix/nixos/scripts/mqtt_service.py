@@ -97,6 +97,12 @@ def handle_game_mode(payload):
             run_command([HYPRCTL, "keyword", "monitor", "HDMI-A-1, 3840x2160@144, 3840x880, 1"])
             logging.info("Enabled HDMI-A-1 monitor")
             
+            # Move cursor to bottom right of HDMI-A-1 (3840x2160 resolution at offset 3840x880)
+            cursor_x = 3840 + 3840 - 10  # Right edge of HDMI-A-1 minus small margin
+            cursor_y = 880 + 2160 - 10   # Bottom edge of HDMI-A-1 minus small margin
+            run_command([HYPRCTL, "dispatch", "movecursor", str(cursor_x), str(cursor_y)])
+            logging.info(f"Moved cursor to bottom right of HDMI-A-1 ({cursor_x}, {cursor_y})")
+            
             # Set volume to 80% and unmute
             run_command([WPCTL, "set-mute", "@DEFAULT_AUDIO_SINK@", "0"])
             run_command([WPCTL, "set-volume", "@DEFAULT_AUDIO_SINK@", "-l", "1.5", "0.8"])
