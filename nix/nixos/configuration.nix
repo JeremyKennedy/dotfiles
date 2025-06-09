@@ -131,6 +131,25 @@
     });
   '';
 
+  # Allow wheel group members to run specific commands without password
+  security.sudo.extraRules = [{
+    users = [ "jeremy" ];
+    commands = [
+      {
+        command = "/run/current-system/sw/bin/nixos-rebuild";
+        options = [ "NOPASSWD" ];
+      }
+      {
+        command = "/run/current-system/sw/bin/journalctl";
+        options = [ "NOPASSWD" ];
+      }
+      {
+        command = "/run/current-system/sw/bin/systemctl";
+        options = [ "NOPASSWD" ];
+      }
+    ];
+  }];
+
   # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.jeremy = {
     isNormalUser = true;
