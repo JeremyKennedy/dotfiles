@@ -9,7 +9,9 @@
       alejandra # nix formatter
       any-nix-shell # nix shell manager for fish
       cht-sh # command cheatsheet
+      claude-code # AI-powered code assistant
       glow # markdown previewer in terminal
+      uv # fast python package installer
       # jetbrains-toolbox # jetbrains ide manager
       jetbrains.datagrip
       # jetbrains.webstorm
