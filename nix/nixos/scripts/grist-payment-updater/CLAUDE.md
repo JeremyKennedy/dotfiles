@@ -106,6 +106,20 @@ The service.nix provides complete systemd integration:
 - Environment file management
 - Proper file permissions and security
 
+### Running Python Scripts
+For standalone development and testing:
+```bash
+# Use nix-shell with required packages
+nix-shell -p python3 python3Packages.httpx python3Packages.python-dateutil python3Packages.python-dotenv \
+  --run "python3 main.py"
+
+# Or enter the shell and run commands
+nix-shell -p python3 python3Packages.httpx python3Packages.python-dateutil python3Packages.python-dotenv
+python3 main.py
+```
+
+The script automatically loads `.env` file for standalone use via python-dotenv.
+
 ## API Details
 
 ### Authentication Headers
