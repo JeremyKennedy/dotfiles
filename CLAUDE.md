@@ -164,3 +164,8 @@ The configuration uses multiple nixpkgs channels:
 - `nixpkgs-master` - Master branch packages (accessible as `pkgs.master`)
 
 Custom overlays provide access to different package versions and custom packages from the `pkgs/` directory.
+
+### Best Practices
+
+- After making changes, always rebuild, commit, push, and check git status to ensure completion.
+```
