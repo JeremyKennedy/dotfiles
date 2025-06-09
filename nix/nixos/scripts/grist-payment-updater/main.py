@@ -77,7 +77,7 @@ class GristPaymentUpdater:
                 # String format
                 date = datetime.strptime(current_date, '%Y-%m-%d')
             else:
-                logger.warning(f"Unknown date format: {current_date} ({type(current_date)})")
+                logger.warning(f"Unknown date format: {current_date}")
                 return current_date
                 
             today = datetime.now().date()
@@ -158,13 +158,10 @@ class GristPaymentUpdater:
                 # Get current values
                 current_payment_date = fields.get('Next_Payment')
                 recurrence = fields.get('Recurrence')
-                
-                # Show first few records for debugging
-                if len(potential_updates) < 3:
-                    logger.info(f"Sample record {record_id}: Next_Payment={current_payment_date} ({type(current_payment_date)}), Recurrence={recurrence}")
+                expense_name = fields.get('Expense', 'Unknown')
                 
                 if not current_payment_date or not recurrence:
-                    logger.warning(f"Record {record_id} missing payment date or recurrence")
+                    logger.warning(f"Record {record_id} ({expense_name}) missing payment date or recurrence")
                     continue
                 
                 # Calculate new date
@@ -189,15 +186,16 @@ class GristPaymentUpdater:
                         'new': new_date,
                         'current_readable': current_readable,
                         'new_readable': new_readable,
-                        'recurrence': recurrence
+                        'recurrence': recurrence,
+                        'expense_name': expense_name
                     })
             
-            logger.info(f"Found {len(potential_updates)} records that need updating:")
-            for update in potential_updates[:10]:  # Show first 10
-                logger.info(f"  Record {update['id']}: {update['current_readable']} -> {update['new_readable']} ({update['recurrence']})")
-            
-            if len(potential_updates) > 10:
-                logger.info(f"  ... and {len(potential_updates) - 10} more")
+            if potential_updates:
+                logger.info(f"Found {len(potential_updates)} records that need updating:")
+                for update in potential_updates:
+                    logger.info(f"  {update['expense_name']}: {update['current_readable']} -> {update['new_readable']} ({update['recurrence']})")
+            else:
+                logger.info("No records need updating")
             
             # Actually perform updates
             updated_count = 0
