@@ -19,6 +19,10 @@ in
       User = "jeremy";
       Environment = [
         "XDG_RUNTIME_DIR=/run/user/1000"
+        "WAYLAND_DISPLAY=wayland-1"
+        "XDG_SESSION_TYPE=wayland"
+        "QT_QPA_PLATFORM=wayland"
+        "GDK_BACKEND=wayland"
         "PATH=/run/current-system/sw/bin:/home/jeremy/.nix-profile/bin"
       ];
       ExecStart = "${python}/bin/python3 /etc/mqtt-service/main.py";

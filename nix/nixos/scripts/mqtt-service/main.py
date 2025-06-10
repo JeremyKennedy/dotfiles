@@ -51,6 +51,7 @@ else:
 
 os.environ.update({
     'WAYLAND_DISPLAY': 'wayland-1',
+    'DISPLAY': ':0',
     'XDG_SESSION_TYPE': 'wayland',
     'QT_QPA_PLATFORM': 'wayland',
     'GDK_BACKEND': 'wayland',
@@ -94,19 +95,33 @@ def handle_game_mode(payload):
         
         if enable:
             # Enable HDMI-A-1 monitor
-            run_command([HYPRCTL, "keyword", "monitor", "HDMI-A-1, 3840x2160@144, 3840x880, 1"])
-            logging.info("Enabled HDMI-A-1 monitor")
+            try:
+                run_command([HYPRCTL, "keyword", "monitor", "HDMI-A-1, 3840x2160@144, 3840x880, 1"])
+                logging.info("Enabled HDMI-A-1 monitor")
+            except Exception as e:
+                logging.error(f"Failed to enable HDMI-A-1 monitor: {e}")
             
             # Move cursor to bottom right of HDMI-A-1 (3840x2160 resolution at offset 3840x880)
-            cursor_x = 3840 + 3840 - 10  # Right edge of HDMI-A-1 minus small margin
-            cursor_y = 880 + 2160 - 10   # Bottom edge of HDMI-A-1 minus small margin
-            run_command([HYPRCTL, "dispatch", "movecursor", str(cursor_x), str(cursor_y)])
-            logging.info(f"Moved cursor to bottom right of HDMI-A-1 ({cursor_x}, {cursor_y})")
+            try:
+                cursor_x = 3840 + 3840 - 10  # Right edge of HDMI-A-1 minus small margin
+                cursor_y = 880 + 2160 - 10   # Bottom edge of HDMI-A-1 minus small margin
+                run_command([HYPRCTL, "dispatch", "movecursor", str(cursor_x), str(cursor_y)])
+                logging.info(f"Moved cursor to bottom right of HDMI-A-1 ({cursor_x}, {cursor_y})")
+            except Exception as e:
+                logging.error(f"Failed to move cursor: {e}")
             
             # Set volume to 80% and unmute
-            run_command([WPCTL, "set-mute", "@DEFAULT_AUDIO_SINK@", "0"])
-            run_command([WPCTL, "set-volume", "@DEFAULT_AUDIO_SINK@", "-l", "1.5", "0.8"])
-            logging.info("Set volume to 80%")
+            try:
+                run_command([WPCTL, "set-mute", "@DEFAULT_AUDIO_SINK@", "0"])
+                logging.info("Unmuted audio")
+            except Exception as e:
+                logging.error(f"Failed to unmute audio: {e}")
+            
+            try:
+                run_command([WPCTL, "set-volume", "@DEFAULT_AUDIO_SINK@", "-l", "1.5", "0.8"])
+                logging.info("Set volume to 80%")
+            except Exception as e:
+                logging.error(f"Failed to set volume: {e}")
             
             # Kill parsec if running
             try:
@@ -115,13 +130,15 @@ def handle_game_mode(payload):
             except:
                 logging.info("parsecd not running")
             
-            # Launch Steam
+            # Launch Steam in background
             try:
-                subprocess.Popen(["steam"], 
+                # Start Steam with proper backgrounding using setsid
+                subprocess.Popen(["setsid", "steam"], 
                                env=os.environ.copy(),
                                stdout=subprocess.DEVNULL, 
-                               stderr=subprocess.DEVNULL)
-                logging.info("Launched Steam")
+                               stderr=subprocess.DEVNULL,
+                               start_new_session=True)
+                logging.info("Launched Steam in background")
             except Exception as e:
                 logging.error(f"Failed to launch Steam: {e}")
         else:
@@ -129,8 +146,8 @@ def handle_game_mode(payload):
             try:
                 run_command([HYPRCTL, "keyword", "monitor", "HDMI-A-1, disable"], check=False)
                 logging.info("Disabled HDMI-A-1 monitor")
-            except:
-                logging.info("HDMI-A-1 already disabled or not found")
+            except Exception as e:
+                logging.error(f"Failed to disable HDMI-A-1 monitor: {e}")
                 
     except Exception as e:
         logging.error(f"Game mode handler error: {e}")
