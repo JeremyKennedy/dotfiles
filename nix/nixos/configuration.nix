@@ -89,10 +89,13 @@
   services.dbus.enable = true;
 
   environment.sessionVariables = {
-    # Wayland
+    # Wayland environment
     NIXOS_OZONE_WL = "1"; # Electron apps
     WLR_NO_HARDWARE_CURSORS = "1"; # Fix cursor rendering
     XDG_SESSION_TYPE = "wayland";
+    WAYLAND_DISPLAY = "wayland-1";
+    QT_QPA_PLATFORM = "wayland";
+    GDK_BACKEND = "wayland";
   };
 
   # Enable CUPS to print documents.
