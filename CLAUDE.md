@@ -26,13 +26,34 @@ This is a NixOS/home-manager dotfiles repository using Nix flakes. The configura
 - `network.nix` - Network and firewall settings
 - `scripts.nix` - Custom scripts and systemd services
 - `waybar.nix` - Status bar configuration
+- `filesystems.nix` - Filesystem mounts and configuration
+- `ledger.nix` - Ledger-specific configuration
+- `programs.nix` - System-level program installations
+- `shell.nix` - System-level shell configuration
+- `hardware-configuration.nix` - Hardware-specific configuration
 
 **Home-manager modules** (user-specific):
 - `home.nix` - Main user configuration
 - `packages.nix` - User package definitions
-- `programs.nix` - Program-specific configurations
+- `programs.nix` - Program-specific configurations (Git, Ripgrep, Tmux, etc.)
 - `services.nix` - User services
-- `shell.nix` - Shell configuration
+- `shell.nix` - Shell configuration (Fish shell, Starship prompt, Alacritty terminal)
+- `chatgpt-cli.nix` - ChatGPT CLI configuration
+- `hass-cli.nix` - Home Assistant CLI configuration
+
+**Hyprland Configuration Files** (in `hypr/.config/hypr/`):
+- `hyprland.conf` - Main Hyprland window manager configuration
+- `hypridle.conf` - Idle management configuration
+- `hyprlock.conf` - Screen lock configuration
+
+**Key Programs Configured**:
+- **Shell**: Fish shell with custom abbreviations and z plugin
+- **Prompt**: Starship prompt
+- **Terminal**: Alacritty
+- **Editor**: Neovim (with vi/vim aliases)
+- **File utilities**: eza (ls replacement), fzf, ripgrep, broot, nnn
+- **Development**: Git (with delta diff viewer), direnv, tmux, GitHub CLI
+- **System monitoring**: btop
 
 ## Common Commands
 
