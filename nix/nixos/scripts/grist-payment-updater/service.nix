@@ -50,6 +50,7 @@ in
     text = ''
       GRIST_API_KEY=${secrets.grist.api_key}
       GRIST_PROXY_AUTH=${secrets.grist.proxy_auth}
+      DRY_RUN=false
     '';
     mode = "0600";
     user = "grist-updater";
