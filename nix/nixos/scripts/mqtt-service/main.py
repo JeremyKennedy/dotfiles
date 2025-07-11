@@ -42,13 +42,6 @@ def get_hyprland_signature():
     return None
 
 # Set environment variables for Wayland/Hyprland
-signature = get_hyprland_signature()
-if signature:
-    os.environ['HYPRLAND_INSTANCE_SIGNATURE'] = signature
-    logging.info(f"Found HYPRLAND_INSTANCE_SIGNATURE: {signature[:32]}...")
-else:
-    logging.warning("Could not find HYPRLAND_INSTANCE_SIGNATURE")
-
 os.environ.update({
     'WAYLAND_DISPLAY': 'wayland-1',
     'DISPLAY': ':0',
@@ -60,6 +53,14 @@ os.environ.update({
 def run_command(cmd, check=True):
     """Execute command with error handling and logging"""
     try:
+        # Set HYPRLAND_INSTANCE_SIGNATURE if running hyprctl
+        if cmd[0] == HYPRCTL:
+            signature = get_hyprland_signature()
+            if signature:
+                os.environ['HYPRLAND_INSTANCE_SIGNATURE'] = signature
+            else:
+                logging.warning("Could not find HYPRLAND_INSTANCE_SIGNATURE for hyprctl command")
+        
         result = subprocess.run(cmd, check=check, capture_output=True, text=True)
         logging.info(f"Command executed: {' '.join(cmd)}")
         return result
@@ -129,18 +130,6 @@ def handle_game_mode(payload):
                 logging.info("Killed parsecd")
             except:
                 logging.info("parsecd not running")
-            
-            # Launch Steam in background
-            try:
-                # Start Steam with proper backgrounding using setsid
-                subprocess.Popen(["setsid", "steam"], 
-                               env=os.environ.copy(),
-                               stdout=subprocess.DEVNULL, 
-                               stderr=subprocess.DEVNULL,
-                               start_new_session=True)
-                logging.info("Launched Steam in background")
-            except Exception as e:
-                logging.error(f"Failed to launch Steam: {e}")
         else:
             # Disable HDMI-A-1 monitor
             try:
