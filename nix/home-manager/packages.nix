@@ -8,6 +8,7 @@
       # Development Tools
       alejandra # nix formatter
       any-nix-shell # nix shell manager for fish
+      bun # fast all-in-one javascript runtime
       cht-sh # command cheatsheet
       claude-code # AI-powered code assistant
       glow # markdown previewer in terminal
@@ -15,10 +16,12 @@
       # jetbrains-toolbox # jetbrains ide manager
       jetbrains.datagrip
       # jetbrains.webstorm
+      devenv # dev environment manager
       smartgithg # git client
       vscode # code editor
       code-cursor
       git-crypt # transparent file encryption in git
+      jujutsu # modern version control system
 
       # System Tools & Utilities
       killall # kill processes by name
@@ -31,6 +34,10 @@
       stow # symlink manager
       inotify-tools # Watch for file changes
       lxqt.lxqt-policykit # Authentication agent
+      lsof # list open files
+      libnotify # Desktop notifications (provides notify-send)
+      jq # Command-line JSON processor
+      hcloud # Hetzner Cloud CLI
 
       # Monitoring & System Info
       iftop # network monitoring
@@ -74,6 +81,8 @@
       spotify
       kmplayer
       ardour
+      sox # Sound processing utility (play command)
+      sound-theme-freedesktop # System sounds
 
       # Graphics
       libva
