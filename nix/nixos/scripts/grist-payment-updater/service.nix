@@ -1,5 +1,5 @@
 # NixOS systemd service configuration for grist-payment-updater
-{ config, lib, pkgs, secrets, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   python = pkgs.python3.withPackages (ps: with ps; [
@@ -22,7 +22,13 @@ in
       User = "grist-updater";
       Group = "grist-updater";
       ExecStart = "${python}/bin/python3 /etc/grist-payment-updater/main.py";
-      EnvironmentFile = "/etc/grist-payment-updater/env";
+      RuntimeDirectory = "grist-payment-updater";
+      RuntimeDirectoryMode = "0700";
+    };
+    environment = {
+      DRY_RUN = "false";
+      GRIST_API_KEY_FILE = "${config.age.secrets.grist_api_key.path}";
+      GRIST_PROXY_AUTH_FILE = "${config.age.secrets.grist_proxy_auth.path}";
     };
   };
   
@@ -44,21 +50,4 @@ in
   };
   
   users.groups.grist-updater = {};
-  
-  # Create environment file with secrets
-  environment.etc."grist-payment-updater/env" = {
-    text = ''
-      GRIST_API_KEY=${secrets.grist.api_key}
-      GRIST_PROXY_AUTH=${secrets.grist.proxy_auth}
-      DRY_RUN=false
-    '';
-    mode = "0600";
-    user = "grist-updater";
-    group = "grist-updater";
-  };
-
-  # Create directory for environment file
-  systemd.tmpfiles.rules = [
-    "d /etc/grist-payment-updater 0750 root grist-updater -"
-  ];
 }

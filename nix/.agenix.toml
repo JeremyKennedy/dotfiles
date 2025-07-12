@@ -1,0 +1,15 @@
+[public_keys]
+# User key for jeremy
+users = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL7YCbzW2kMJxx2YIN2XLGpLZMNzcTjB6WWmvKPVjVnR me@jeremyk.net"]
+
+# System host key for JeremyDesktop
+systems = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINkcW6NRwi4Y28F8Zo9rDfwxc+qEt9kxKvLd++q5L2iu root@JeremyDesktop"]
+
+[[secrets]]
+file = "secrets/hass.age"
+
+[[secrets]]
+file = "secrets/chatgpt.age"
+
+[[secrets]]
+file = "secrets/grist.age"

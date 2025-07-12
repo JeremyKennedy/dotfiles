@@ -26,17 +26,19 @@ logger = logging.getLogger(__name__)
 
 class GristPaymentUpdater:
     def __init__(self, dry_run=True):
-        self.api_key = os.getenv('GRIST_API_KEY')
-        self.proxy_auth = os.getenv('GRIST_PROXY_AUTH')
+        # Read secrets directly from agenix file paths
+        try:
+            with open(os.getenv('GRIST_API_KEY_FILE'), 'r') as f:
+                self.api_key = f.read().strip()
+            with open(os.getenv('GRIST_PROXY_AUTH_FILE'), 'r') as f:
+                self.proxy_auth = f.read().strip()
+        except (TypeError, FileNotFoundError) as e:
+            raise ValueError(f"Failed to read secrets: {e}")
+        
         self.base_url = "https://grist.jeremyk.net"
         self.doc_id = "iDEabeoAf4nC"
         self.table_name = "Data"
         self.dry_run = dry_run
-        
-        if not self.api_key:
-            raise ValueError("GRIST_API_KEY environment variable is required")
-        if not self.proxy_auth:
-            raise ValueError("GRIST_PROXY_AUTH environment variable is required")
         
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",

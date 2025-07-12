@@ -7,7 +7,6 @@
   outputs,
   config,
   pkgs,
-  secrets,
   ...
 }: {
   imports = [
@@ -21,13 +20,14 @@
     ./hyprland.nix
     ./shell.nix
     ./scripts.nix
+    ./secrets.nix
 
     # Import home-manager's NixOS module
     inputs.home-manager.nixosModules.home-manager
   ];
 
   home-manager = {
-    extraSpecialArgs = {inherit inputs outputs secrets;};
+    extraSpecialArgs = {inherit inputs outputs;};
     users = {
       # Import your home-manager configuration
       jeremy = import ../home-manager/home.nix;
@@ -83,6 +83,7 @@
     # Core utilities
     vim
     git
+    inputs.agenix.packages.${pkgs.system}.default
   ];
 
   # Essential services
@@ -131,23 +132,25 @@
   '';
 
   # Allow wheel group members to run specific commands without password
-  security.sudo.extraRules = [{
-    users = [ "jeremy" ];
-    commands = [
-      {
-        command = "/run/current-system/sw/bin/nixos-rebuild";
-        options = [ "NOPASSWD" ];
-      }
-      {
-        command = "/run/current-system/sw/bin/journalctl";
-        options = [ "NOPASSWD" ];
-      }
-      {
-        command = "/run/current-system/sw/bin/systemctl";
-        options = [ "NOPASSWD" ];
-      }
-    ];
-  }];
+  security.sudo.extraRules = [
+    {
+      users = ["jeremy"];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/nixos-rebuild";
+          options = ["NOPASSWD"];
+        }
+        {
+          command = "/run/current-system/sw/bin/journalctl";
+          options = ["NOPASSWD"];
+        }
+        {
+          command = "/run/current-system/sw/bin/systemctl";
+          options = ["NOPASSWD"];
+        }
+      ];
+    }
+  ];
 
   # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.jeremy = {

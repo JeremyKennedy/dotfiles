@@ -17,6 +17,10 @@
       # build with your own instance of nixpkgs
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -25,7 +29,8 @@
     nixpkgs-stable,
     nixpkgs-master,
     home-manager,
-    hyprland
+    hyprland,
+    agenix,
   } @ inputs: let
     inherit (self) outputs;
     # Supported systems for your flake packages, shell, etc.
@@ -35,8 +40,6 @@
     # This is a function that generates an attribute by calling a function you
     # pass to it, with each system as an argument
     forAllSystems = nixpkgs.lib.genAttrs systems;
-    # Your secrets, like API keys, etc
-    secrets = builtins.fromJSON (builtins.readFile "${self}/secrets.json");
   in {
     # Your custom packages
     # Accessible through 'nix build', 'nix shell', etc
@@ -55,10 +58,11 @@
 
     nixosConfigurations = {
       JeremyDesktop = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs secrets;};
+        specialArgs = {inherit inputs outputs;};
         modules = [
           hyprland.nixosModules.default
           {programs.hyprland.enable = true;}
+          agenix.nixosModules.default
           ./nixos/configuration.nix
         ];
       };
