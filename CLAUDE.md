@@ -116,6 +116,9 @@ just check-host bee              # Check specific host
 # Build a host configuration without deploying
 just build bee
 
+# Dry-run build to check configuration syntax
+just check-host bee              # Check specific host configuration
+
 # SSH to a host
 just ssh bee
 

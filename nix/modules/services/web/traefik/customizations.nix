@@ -14,17 +14,6 @@ with lib; {
       };
     };
 
-    # LAN-only access
-    lan-only = {
-      ipWhiteList = {
-        sourceRange = [
-          "192.168.1.0/24" # Local network only
-          "127.0.0.1/32"
-          "::1/128"
-        ];
-      };
-    };
-
     # CORS headers - Allow cross-origin requests (use with caution)
     cors-allow-all = {
       headers = {

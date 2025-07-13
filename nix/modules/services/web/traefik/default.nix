@@ -17,17 +17,22 @@
   monitoring = import ./services/monitoring.nix {inherit lib;};
   network = import ./services/network.nix {inherit lib;};
   gaming = import ./services/gaming.nix {inherit lib;};
+  webhost = import ./services/webhost.nix {inherit lib;};
+  redirects = import ./services/redirects.nix {inherit lib;};
 
   # Import customizations from SWAG migration
   customizations = import ./customizations.nix {inherit lib;};
 
   # Combine all services
   services = {
-    inherit media productivity monitoring network gaming;
+    inherit media productivity monitoring network gaming webhost redirects;
   };
 
   # Generate configurations using helper functions
   configs = helpers.generateConfigs services;
+  
+  # Get redirect middleware from redirects service file
+  redirectMiddleware = redirects.middleware or {};
 in {
   services.traefik = {
     enable = true;
@@ -111,31 +116,7 @@ in {
     # Dynamic configuration
     dynamicConfigOptions = {
       http = {
-        routers =
-          {
-            # Bee-specific service routers
-            public-site-router = {
-              rule = "Host(`jeremyk.net`) || Host(`www.jeremyk.net`)";
-              service = "public-site";
-              middlewares = ["security-headers" "rate-limit"];
-              entryPoints = ["web" "websecure"];
-              tls = {
-                certResolver = "letsencrypt";
-              };
-            };
-
-            # Redirects from SWAG site-confs
-            meet-redirect = {
-              rule = "Host(`meet.jeremyk.net`)";
-              service = "noop@internal";
-              middlewares = ["meet-redirect-mw"];
-              entryPoints = ["web" "websecure"];
-              tls = {
-                certResolver = "letsencrypt";
-              };
-            };
-          }
-          // configs.routers;
+        routers = configs.routers;
 
         middlewares =
           {
@@ -178,17 +159,8 @@ in {
                 period = "1m";
               };
             };
-
-            # Redirect middleware for meet.jeremyk.net
-            meet-redirect-mw = {
-              redirectRegex = {
-                regex = "^https?://meet.jeremyk.net/(.*)";
-                replacement = "https://meet.google.com/geq-fmkx-bde";
-                permanent = false;
-              };
-            };
           }
-          // customizations.middleware;
+          // customizations.middleware // redirectMiddleware;
 
         # Services configuration
         services = configs.services;

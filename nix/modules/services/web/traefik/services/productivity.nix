@@ -19,10 +19,6 @@ in {
       host = tower;
       port = 8080;
     };
-    public-site = {
-      host = bee;
-      port = 8888;
-    }; # Bee service
     immich = {
       host = tower;
       port = 2283;

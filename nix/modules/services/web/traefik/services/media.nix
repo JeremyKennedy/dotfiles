@@ -10,7 +10,6 @@ in {
       extraHosts = ["jibbs.stream"];
       middlewares = ["cors-allow-all"];
       backend = {
-        passHostHeader = true;
         responseForwarding.flushInterval = "0s";
       };
     };
