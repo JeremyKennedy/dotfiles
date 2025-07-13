@@ -4,13 +4,31 @@
 
 This plan outlines the phased approach to refactor the existing single-host NixOS configuration into a multi-host setup supporting `jeremydesktop`, `bee`, `halo`, and `pi` hosts. The approach prioritizes maintaining desktop functionality while enabling declarative infrastructure management via Colmena.
 
+## Current Implementation Status
+
+### ✅ What's Been Done
+- **Multi-host flake structure** - All 4 hosts defined with proper architecture support
+- **Colmena deployment** - Ready for remote deployments (no buildOnTarget)
+- **Common modules** - base, shell, git, ssh, tailscale, hardware configurations
+- **Host configurations** - All hosts have basic configs with disko where needed
+- **Development environment** - devShell with colmena, nixos-anywhere, disko
+- **Baseline tracking** - Comprehensive system to ensure desktop remains unchanged
+- **Deployment scripts** - Both initial deployment and update scripts ready
+- **Claude Code** - Added to all hosts via common/base.nix
+
+### 🔄 Next Steps
+1. **Complete Phase 2** - Build and validate all host configurations
+2. **Phase 2.5** - Deploy bee with nixos-anywhere as first real test
+3. **Phase 3** - Extract more common configuration patterns
+4. **Phase 4** - Migrate home-manager programs to system level
+
 ## Task Completion Tracking
 
-**Overall Progress**: ⏳ In Progress (1/10 phases complete)
+**Overall Progress**: ⏳ In Progress (2/10 phases complete)
 
 ### Phase Status
 - [x] **Phase 1**: Refactor for Multi-Host (Desktop Unchanged) - 6/6 tasks ✅
-- [ ] **Phase 2**: Add Server Hosts Configuration - 0/7 tasks
+- [x] **Phase 2**: Add Server Hosts Configuration - 7/7 tasks ✅
 - [ ] **Phase 2.5**: Early Bee Deployment (Barebones) - 0/5 tasks
 - [ ] **Phase 3**: Extract and Share Common Configuration - 0/6 tasks
 - [ ] **Phase 4**: Move Home-Manager Programs to System Level - 0/6 tasks
@@ -22,8 +40,8 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 - [ ] **Phase 10**: DNS/Ingress Debug & Testing Utilities - 0/3 tasks
 
 ### Quick Reference - Current Task
-**Current**: Phase 2 - Adding server host configurations
-**Completed**: Added claude-code to all hosts via common/base.nix
+**Current**: Phase 2 complete! Ready for Phase 2.5 - Deploy bee with nixos-anywhere
+**Last Update**: All hosts validated - desktop/bee confirmed working, halo builds successfully
 
 ### Baseline Capture and Validation
 
@@ -71,7 +89,64 @@ All baseline files are stored in `nix/baselines/` (gitignored):
 - **Firewall**: Hetzner firewall handles `halo`, minimal NixOS firewall
 - **Deployment**: SSH over WAN initially, Tailscale later
 - **Security**: Uptime Kuma not publicly exposed
-- **Dev Environment**: Using `devenv.nix`
+- **Dev Environment**: Using Nix devShells (not devenv)
+
+## Secrets Management with Agenix
+
+### Adding New Hosts to Secrets
+When deploying a new host, you must add its SSH host key to enable secret decryption:
+
+```bash
+# 1. Get the host's SSH public key
+ssh root@<host-ip> 'cat /etc/ssh/ssh_host_ed25519_key.pub'
+
+# 2. Add to secrets.nix
+# Example: bee = "ssh-ed25519 AAAAC3Nza... root@bee";
+
+# 3. Add host to allSystems list
+# allSystems = [ jeremyDesktop bee ];
+
+# 4. Re-encrypt all secrets
+cd /home/jeremy/dotfiles/nix
+agenix --rekey
+
+# 5. Commit and push changes
+git add secrets.nix secrets/
+git commit -m "Add bee host key for secrets"
+git push
+```
+
+### Common Agenix Commands
+```bash
+# Edit a secret
+agenix -e secrets/hass_token.age
+
+# Create new secret
+agenix -e secrets/new_secret.age
+
+# Re-encrypt all secrets (after adding/removing keys)
+agenix --rekey
+
+# List all secrets
+ls -la secrets/*.age
+```
+
+## Tailscale Configuration
+
+### Post-Deployment Tailscale Setup
+```bash
+# Join network (interactive - will provide auth URL)
+ssh root@<host-ip> 'tailscale up'
+
+# Enable SSH over Tailscale (port 22 not required)
+ssh root@<host-ip> 'tailscale set --ssh'
+
+# Configure as exit node (for VPS hosts like halo)
+ssh root@<host-ip> 'tailscale set --advertise-exit-node'
+
+# Check status
+ssh root@<host-ip> 'tailscale status'
+```
 
 ## Desktop Rename Plan (JeremyDesktop → navi)
 
@@ -356,16 +431,16 @@ If changed, it will show:
 
 ## Phase 2: Add Server Hosts Configuration
 
-**Status**: ⏸️ Not Started
+**Status**: ✅ Complete (7/7 tasks done)
 
 ### Task List - Phase 2
-- [ ] **2.1**: Create common modules (`base.nix`, `ssh.nix`, `tailscale.nix`)
-- [ ] **2.2**: Configure halo (VPS) - port from `hetz-nix/`
-- [ ] **2.3**: Configure bee (Mini PC) - minimal initial config
-- [ ] **2.4**: Configure pi (Raspberry Pi) - placeholder
-- [ ] **2.5**: Copy disko configs from `hetz-nix/`
-- [ ] **2.6**: Test all configs build without errors
-- [ ] **2.7**: Verify desktop still unchanged
+- [x] **2.1**: Create common modules (`base.nix`, `ssh.nix`, `tailscale.nix`) ✅
+- [x] **2.2**: Configure halo (VPS) - port from `hetz-nix/` ✅
+- [x] **2.3**: Configure bee (Mini PC) - minimal initial config ✅
+- [x] **2.4**: Configure pi (Raspberry Pi) - placeholder ✅
+- [x] **2.5**: Copy disko configs from `hetz-nix/` ✅ (halo has disko.nix)
+- [x] **2.6**: Test all configs build without errors ✅
+- [x] **2.7**: Verify desktop still unchanged ✅
 
 ### 2.1 Create Common Modules
 
@@ -703,14 +778,32 @@ bee = nixpkgs.lib.nixosSystem {
 
 ```bash
 # Deploy bee with nixos-anywhere (barebones)
+./deploy-host.sh bee root@192.168.1.245
+
+# Or manually:
 nix run github:nix-community/nixos-anywhere -- \
   --flake .#bee \
-  root@<bee-ip>
+  root@192.168.1.245
 
-# Test SSH access
-ssh root@<bee-ip>
+# Post-deployment steps:
+# 1. Get host SSH key for agenix
+ssh root@192.168.1.245 'cat /etc/ssh/ssh_host_ed25519_key.pub'
 
-# Test colmena deployment
+# 2. Add the key to secrets.nix and update allSystems list
+# 3. Re-encrypt all secrets
+cd /home/jeremy/dotfiles/nix
+agenix --rekey
+
+# 4. Join Tailscale network
+ssh root@192.168.1.245 'tailscale up'
+
+# 5. Enable Tailscale SSH (optional - allows SSH via Tailscale without port 22)
+ssh root@192.168.1.245 'tailscale set --ssh'
+
+# 6. For exit node hosts (like halo), advertise exit node capability
+ssh root@192.168.1.245 'tailscale set --advertise-exit-node'
+
+# 7. Test colmena deployment
 colmena apply --on bee
 ```
 
