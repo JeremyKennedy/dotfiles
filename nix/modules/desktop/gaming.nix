@@ -16,19 +16,19 @@
     openFirewall = true;
     capSysAdmin = true; # Required for some streaming features
   };
-  
+
   # Gaming tools and utilities
   environment.systemPackages = with pkgs; [
     gamemode
     mangohud
     prismlauncher # Minecraft launcher
     steamtinkerlaunch
-    
+
     # Wine and compatibility layers
     wine
     winetricks
     lutris
-    
+
     # Remote gaming
     parsec-bin
   ];

@@ -21,7 +21,7 @@
       # System shortcuts
       alias nr='sudo nixos-rebuild switch'
       alias nru='sudo nixos-rebuild switch --upgrade'
-      
+
       # any-nix-shell integration
       ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
     '';
