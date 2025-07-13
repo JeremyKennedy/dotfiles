@@ -56,10 +56,7 @@
         ha = "hass-cli";
       };
       plugins = [
-        {
-          name = "z";
-          src = pkgs.fishPlugins.z.src;
-        }
+        # Removed z plugin - using zoxide from core instead
       ];
     };
 

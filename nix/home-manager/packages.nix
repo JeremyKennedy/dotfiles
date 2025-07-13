@@ -5,114 +5,29 @@
 }: {
   home = {
     packages = with pkgs; [
-      # Development Tools
-      alejandra # nix formatter
-      any-nix-shell # nix shell manager for fish
-      bun # fast all-in-one javascript runtime
-      cht-sh # command cheatsheet
-      claude-code # AI-powered code assistant
-      glow # markdown previewer in terminal
-      uv # fast python package installer
-      # jetbrains-toolbox # jetbrains ide manager
-      jetbrains.datagrip
-      # jetbrains.webstorm
-      devenv # dev environment manager
-      smartgithg # git client
-      vscode # code editor
-      code-cursor
-      git-crypt # transparent file encryption in git
-      jujutsu # modern version control system
-
-      # System Tools & Utilities
+      # System Tools & Utilities (unique to home-manager)
       killall # kill processes by name
-      wget # non-interactive network downloader
-      ghq # manage remote repository clones
-      fd # simple, fast alternative to find
-      tre-command # tree command, improved
       xsel # command line interface to X selections
       nvd # nixos version diff
-      stow # symlink manager
-      inotify-tools # Watch for file changes
-      lxqt.lxqt-policykit # Authentication agent
-      lsof # list open files
-      libnotify # Desktop notifications (provides notify-send)
-      jq # Command-line JSON processor
       hcloud # Hetzner Cloud CLI
 
-      # Monitoring & System Info
-      iftop # network monitoring
-      iotop # io monitoring
-      neofetch # system information tool
-      lm_sensors
+      # Monitoring & System Info (unique to home-manager)
       radeontop # AMD GPU usage monitoring utility
       # corectrl # AMD GPU control and monitoring (similar to nvidia-settings)
-
-      # Archive Management
-      p7zip # 7z file archiver
-      unzip # extract ZIP archives
-      zip # create ZIP archives
-
-      # Hyprland/Wayland Desktop Environment
-      hyprlock # modern screen locker for Hyprland
-      # hyprpolkitagent # polkit agent for Hyprland
-      hyprshot # screenshot tool
-      hyprcursor # cursor manager
-      hypridle # idle manager
-      waybar # status bar
-      wofi # application launcher
-      dunst # notification daemon
-      wl-clipboard # clipboard manager
-      wl-clip-persist # clipboard manager
-      cliphist # clipboard manager
-      pavucontrol # audio control
-      playerctl # media player control
-      bibata-cursors # cursor theme
-
-      # Internet & Communication
-      firefox
-      google-chrome
-      discord
-      telegram-desktop
-      zoom-us
-      filezilla # ftp client
-      nextcloud-client
-
-      # Media & Entertainment
-      spotify
-      kmplayer
-      ardour
-      sox # Sound processing utility (play command)
-      sound-theme-freedesktop # System sounds
 
       # Graphics
       libva
       libva-utils
       vulkan-tools
 
-      # Productivity & Office
-      bitwarden # password manager
-      kdePackages.kcalc
-      obsidian # note taking
-      parsec-bin
-      kemai
+      # Media utilities
+      sox # Sound processing utility (play command)
+      sound-theme-freedesktop # System sounds
+
+      # User-specific applications
+      nextcloud-client
+      kemai # personal productivity app
       # libreoffice
-
-      # Gaming
-      gamemode
-      mangohud
-      prismlauncher
-      steamtinkerlaunch
-      wine
-      winetricks
-      lutris
-
-      # Creative & Design
-      bambu-studio
-      orca-slicer
-
-      # Security & Privacy
-      ledger-live-desktop
-      # mullvad-vpn
 
       # Fun & Miscellaneous
       cowsay # configurable talking cow

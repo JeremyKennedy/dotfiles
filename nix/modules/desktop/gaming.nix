@@ -1,5 +1,5 @@
 # Gaming and streaming configuration
-{...}: {
+{pkgs, ...}: {
   # GameMode polkit rules - allows gamemode to run without sudo
   security.polkit.extraConfig = ''
     polkit.addRule(function(action, subject) {
@@ -16,4 +16,20 @@
     openFirewall = true;
     capSysAdmin = true; # Required for some streaming features
   };
+  
+  # Gaming tools and utilities
+  environment.systemPackages = with pkgs; [
+    gamemode
+    mangohud
+    prismlauncher # Minecraft launcher
+    steamtinkerlaunch
+    
+    # Wine and compatibility layers
+    wine
+    winetricks
+    lutris
+    
+    # Remote gaming
+    parsec-bin
+  ];
 }

@@ -25,16 +25,6 @@
   # Host-specific settings
   networking.hostName = "JeremyDesktop";
 
-  # Home-manager configuration
-  home-manager = {
-    extraSpecialArgs = {inherit inputs outputs;};
-    users = {
-      jeremy = import ../../home-manager/home.nix;
-    };
-    useGlobalPkgs = true;
-    useUserPackages = true;
-  };
-
   # Host-specific boot configuration
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 20;

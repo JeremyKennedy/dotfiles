@@ -3,12 +3,24 @@
   config,
   lib,
   pkgs,
+  inputs,
+  outputs,
   ...
 }: {
   imports = [
     ../modules/core # Core modules for ALL hosts
     ../modules/desktop # Desktop modules (graphics, hyprland, waybar, ledger)
   ];
+
+  # Home-manager configuration for desktop
+  home-manager = {
+    extraSpecialArgs = {inherit inputs outputs;};
+    users = {
+      jeremy = import ../home-manager/home.nix;
+    };
+    useGlobalPkgs = true;
+    useUserPackages = true;
+  };
 
   # Desktop-specific defaults
   services.xserver.enable = lib.mkDefault true;

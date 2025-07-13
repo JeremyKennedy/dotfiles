@@ -16,4 +16,12 @@
       };
     };
   };
+
+  # Hyprland-specific tools and utilities
+  environment.systemPackages = with pkgs; [
+    hyprlock # modern screen locker for Hyprland
+    hyprshot # screenshot tool
+    hyprcursor # cursor manager
+    hypridle # idle manager
+  ];
 }
