@@ -42,11 +42,7 @@
   # Modern hardware support
   hardware.enableRedistributableFirmware = lib.mkDefault true;
 
-  # CPU microcode updates (auto-detects Intel/AMD)
-  hardware.cpu.intel.updateMicrocode =
-    lib.mkDefault config.hardware.enableRedistributableFirmware;
-  hardware.cpu.amd.updateMicrocode =
-    lib.mkDefault config.hardware.enableRedistributableFirmware;
+  # CPU microcode updates are handled by host-specific hardware-configuration.nix files
 
   # Platform detection
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
