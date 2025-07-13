@@ -36,7 +36,7 @@ status:
 
 # Rebuild local desktop
 rebuild:
-    sudo nixos-rebuild switch --flake .#JeremyDesktop
+    sudo nixos-rebuild switch --flake .#navi
 
 # Emergency deploy when colmena fails
 deploy-direct host ip:
@@ -67,7 +67,7 @@ ssh host:
 info:
     @echo "System Information:"
     @echo "=================="
-    @for host in JeremyDesktop bee halo pi; do \
+    @for host in navi bee halo pi; do \
         echo -n "$$host: "; \
         nix eval --raw .#nixosConfigurations.$$host.config.system.stateVersion 2>/dev/null || echo "error"; \
     done

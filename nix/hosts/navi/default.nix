@@ -23,7 +23,7 @@
   ];
 
   # Host-specific settings
-  networking.hostName = "JeremyDesktop";
+  networking.hostName = "navi";
 
   # Host-specific boot configuration
   boot.loader.systemd-boot.enable = true;

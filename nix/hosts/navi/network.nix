@@ -1,4 +1,4 @@
-# Host-specific networking configuration for navi (JeremyDesktop)
+# Host-specific networking configuration for navi
 {
   config,
   pkgs,

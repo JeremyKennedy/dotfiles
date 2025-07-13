@@ -8,9 +8,9 @@
   imports = [
     # Use server profile
     ../../profiles/server.nix
-    # Host-specific (when available)
-    # ./disko.nix
-    # ./hardware-configuration.nix
+    # Host-specific
+    ./disko.nix
+    # ./hardware-configuration.nix (not needed with disko)
   ];
 
   networking.hostName = "pi";

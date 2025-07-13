@@ -69,7 +69,7 @@
         shellHook = ''
           echo "🔧 NixOS Homelab Dev Environment"
           echo "📦 Additional tools: colmena, nixos-anywhere, disko, just"
-          echo "🎯 Hosts: JeremyDesktop, bee, halo, pi"
+          echo "🎯 Hosts: navi, bee, halo, pi"
           echo ""
           echo "📋 Run 'just' to see available commands"
         '';
@@ -77,7 +77,7 @@
     });
 
     nixosConfigurations = {
-      JeremyDesktop = nixpkgs.lib.nixosSystem {
+      navi = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = [
           inputs.hyprland.nixosModules.default
@@ -123,7 +123,7 @@
         specialArgs = {inherit inputs outputs;};
       };
 
-      JeremyDesktop = {
+      navi = {
         deployment = {
           targetHost = "localhost";
           targetUser = "root";
