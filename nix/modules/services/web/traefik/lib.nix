@@ -50,7 +50,7 @@ with lib; rec {
     serviceMiddlewares = config.middlewares or [];
   in {
     rule = hostRule;
-    service = name;
+    service = config.service or name;
     middlewares = baseMiddlewares ++ serviceMiddlewares;
     entryPoints = ["web" "websecure"];
     tls = {certResolver = "letsencrypt";};

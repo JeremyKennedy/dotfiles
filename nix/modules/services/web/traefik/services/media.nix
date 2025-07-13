@@ -28,7 +28,7 @@ in {
       extraHosts = ["jibbs.stream"];
       middlewares = ["cors-allow-all"];
       backend = {
-        responseForwarding.flushInterval = "0s";
+        loadBalancer.responseForwarding.flushInterval = "0s";
       };
     };
     overseerr = {

@@ -17,7 +17,7 @@ with lib; {
     # CORS headers - Allow cross-origin requests (use with caution)
     cors-allow-all = {
       headers = {
-        accessControlAllowOrigin = "*";
+        accessControlAllowOriginList = ["*"];
         accessControlAllowMethods = ["GET" "POST" "PUT" "DELETE" "OPTIONS"];
         accessControlAllowHeaders = ["*"];
       };
