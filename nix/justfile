@@ -24,7 +24,7 @@ update:
 
 # Format all nix files
 fmt:
-    nix fmt
+    nix fmt .
 
 # Show deployment status
 status:
