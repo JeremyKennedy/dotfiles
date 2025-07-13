@@ -10,6 +10,7 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 - **Multi-host flake structure** - All 4 hosts defined with proper architecture support
 - **Colmena deployment** - Ready for remote deployments (no buildOnTarget)
 - **Common modules** - base, boot, performance, shell, git, ssh, tailscale, hardware, security
+- **Service modules** - Created `/modules/` directory for service-specific modules
 - **Host configurations** - All hosts have basic configs with disko where needed
 - **Development environment** - devShell with colmena, nixos-anywhere, disko
 - **Baseline tracking** - Comprehensive system to ensure desktop remains unchanged
@@ -18,19 +19,21 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 - **Initial deployments** - halo and bee successfully deployed and running
 - **Security** - Common fail2ban module added to all hosts
 - **Uptime Kuma** - Configured on halo (accessible via Tailscale)
+- **DNS/Network modules** - AdGuard, CoreDNS, and Traefik modules created in `/modules/`
 
 ### 🔄 Current Focus
-- **Phase 5** - DNS and Ingress Infrastructure on bee (CoreDNS, AdGuard, Traefik)
+- **Phase 5** - DNS and Ingress Infrastructure on bee ✅ COMPLETE
+- **Phase 6** - Full Deployment and Validation (Ready to deploy DNS services)
 
 ### 📝 Future Tasks
 1. **Phase 4** - Consolidate desktop config to use common modules (postponed)
-2. **Phase 6** - Full Deployment and Validation
+2. **Phase 6** - Deploy DNS services to bee (READY TO START)
 3. **Monitoring & Backups** - To be added after core services are working
 4. **Pi deployment** - After DNS services are moved to bee
 
 ## Task Completion Tracking
 
-**Overall Progress**: ⏳ In Progress (3.5/10 phases complete)
+**Overall Progress**: ⏳ In Progress (4.5/10 phases complete)
 
 ### Phase Status
 - [x] **Phase 1**: Refactor for Multi-Host (Desktop Unchanged) - 6/6 tasks ✅
@@ -38,16 +41,16 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 - [x] **Phase 2.5**: Early Bee Deployment (Barebones) - 5/5 tasks ✅
 - [x] **Phase 3**: Extract and Share Common Configuration - 6/6 tasks ✅
 - [ ] **Phase 4**: Move Home-Manager Programs to System Level - 0/6 tasks (POSTPONED)
-- [ ] **Phase 5**: DNS and Ingress Infrastructure - 0/7 tasks (CURRENT)
-- [ ] **Phase 6**: Full Deployment and Validation - 2/8 tasks (halo & bee deployed)
+- [x] **Phase 5**: DNS and Ingress Infrastructure - 7/7 tasks ✅ COMPLETE
+- [ ] **Phase 6**: Full Deployment and Validation - 2/8 tasks (halo & bee deployed, ready for DNS)
 - [ ] **Phase 7**: Ingress for Unraid Services (Bridge Mode) - 0/6 tasks
 - [ ] **Phase 8**: Secure Routing Boundaries - 1/5 tasks (security module done)
 - [ ] **Phase 9**: Observability and Health - 0/4 tasks
 - [ ] **Phase 10**: DNS/Ingress Debug & Testing Utilities - 0/3 tasks
 
 ### Quick Reference - Current Task
-**Current**: Phase 5 - DNS and Ingress Infrastructure (CoreDNS, AdGuard, Traefik on bee)
-**Last Update**: Security module added, halo and bee deployed, Uptime Kuma configured
+**Current**: Phase 6 - Deploy DNS/network services to bee (AdGuard, CoreDNS, Traefik modules ready)
+**Last Update**: Phase 5 complete - Created AdGuard, CoreDNS, and Traefik modules in hosts/common/
 
 ### Baseline Capture and Validation
 
@@ -209,15 +212,16 @@ ssh root@<host-ip> 'tailscale status'
 ```
 nix/
 ├── hosts/
-│   ├── common/
+│   ├── common/              # Modules shared by ALL hosts
 │   │   ├── base.nix         # Core nix settings, basic packages
+│   │   ├── boot.nix         # Boot configuration
+│   │   ├── performance.nix  # Performance optimizations
 │   │   ├── shell.nix        # Fish, starship, shell utilities
-│   │   ├── programs.nix     # Git, ripgrep, tmux, etc.
+│   │   ├── git.nix          # Git configuration
 │   │   ├── ssh.nix          # SSH configuration
 │   │   ├── tailscale.nix    # Tailscale with routing
-│   │   ├── dns.nix          # CoreDNS configuration
-│   │   ├── traefik.nix      # Traefik ingress controller
-│   │   └── adguard.nix      # AdGuard Home DNS filtering
+│   │   ├── hardware.nix     # Hardware configuration
+│   │   └── security.nix     # Security (fail2ban, firewall)
 │   ├── jeremydesktop/
 │   │   └── default.nix      # Wrapper for existing config
 │   ├── bee/
@@ -230,8 +234,12 @@ nix/
 │   │   └── hardware-configuration.nix
 │   └── pi/
 │       └── default.nix
-├── devenv.nix               # Development environment
-└── .envrc                   # direnv integration
+├── modules/                 # Service-specific modules (not all hosts)
+│   ├── adguard.nix         # AdGuard Home DNS filtering
+│   ├── dns.nix             # CoreDNS configuration
+│   └── traefik.nix         # Traefik ingress controller
+├── devenv.nix              # Development environment
+└── .envrc                  # direnv integration
 ```
 
 ### 1.2 Update flake.nix
@@ -1048,16 +1056,16 @@ Reduce home-manager to only GUI-specific applications:
 
 ## Phase 5: DNS and Ingress Infrastructure
 
-**Status**: ⏸️ Not Started
+**Status**: ✅ Complete
 
 ### Task List - Phase 5
-- [ ] **5.1**: Create CoreDNS module (`common/dns.nix`)
-- [ ] **5.2**: Create AdGuard Home module (`common/adguard.nix`)
-- [ ] **5.3**: Create Traefik module (`common/traefik.nix`)
-- [ ] **5.4**: Update bee config to include DNS/ingress services
-- [ ] **5.5**: Generate self-signed certificates for .home domain
-- [ ] **5.6**: Configure Tailscale IP assignment for bee
-- [ ] **5.7**: Test all services build successfully
+- [x] **5.1**: Create CoreDNS module (`common/dns.nix`) ✅
+- [x] **5.2**: Create AdGuard Home module (`common/adguard.nix`) ✅
+- [x] **5.3**: Create Traefik module (`common/traefik.nix`) ✅
+- [x] **5.4**: Update bee config to include DNS/ingress services ✅
+- [x] **5.5**: Generate self-signed certificates for .home domain ✅
+- [x] **5.6**: Configure Tailscale IP assignment for bee ✅
+- [x] **5.7**: Test all services build successfully ✅
 
 ### 5.1 CoreDNS Module
 

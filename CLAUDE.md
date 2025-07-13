@@ -8,8 +8,10 @@ This is a NixOS/home-manager dotfiles repository using Nix flakes. The configura
 
 ### Key Structure
 
-- `nix/flake.nix` - Main flake configuration defining the NixOS system "JeremyDesktop"
-- `nix/nixos/` - System-level NixOS configuration modules
+- `nix/flake.nix` - Main flake configuration defining all NixOS hosts (jeremydesktop, bee, halo, pi)
+- `nix/hosts/` - Host-specific configurations and common modules
+- `nix/modules/` - Service-specific modules (DNS, ingress, etc.)
+- `nix/nixos/` - System-level NixOS configuration modules (desktop)
 - `nix/home-manager/` - User-level home-manager configuration modules
 - `nix/overlays/` - Package overlays for stable/unstable/master nixpkgs
 - `nix/pkgs/` - Custom package definitions
@@ -185,6 +187,55 @@ The configuration uses multiple nixpkgs channels:
 - `nixpkgs-master` - Master branch packages (accessible as `pkgs.master`)
 
 Custom overlays provide access to different package versions and custom packages from the `pkgs/` directory.
+
+### Multi-Host Homelab Configuration
+
+This repository now supports multiple NixOS hosts as part of a homelab deployment:
+
+**Hosts**:
+- `jeremydesktop` - Main desktop workstation (x86_64)
+- `bee` - Mini PC for DNS/network services (x86_64)
+- `halo` - Hetzner VPS for remote services (x86_64)
+- `pi` - Raspberry Pi (aarch64)
+
+**Common Modules** (`nix/hosts/common/`) - Used by ALL hosts:
+- `base.nix` - Core NixOS settings and packages
+- `boot.nix` - Boot configuration
+- `performance.nix` - Performance tuning
+- `shell.nix` - Shell configuration (Fish, Starship)
+- `git.nix` - Git configuration
+- `ssh.nix` - SSH server configuration
+- `tailscale.nix` - Tailscale VPN configuration
+- `hardware.nix` - Hardware optimization
+- `security.nix` - Security settings (fail2ban)
+
+**Service Modules** (`nix/modules/`) - Service-specific, not all hosts:
+- `dns.nix` - CoreDNS configuration
+- `adguard.nix` - AdGuard Home DNS filtering
+- `traefik.nix` - Traefik reverse proxy
+
+**Deployment Commands**:
+```bash
+# Deploy to a specific host using Colmena
+colmena apply --on bee
+colmena apply --on halo
+
+# Deploy to all hosts
+colmena apply
+
+# Check host status
+colmena exec -- uname -a
+
+# Initial deployment with nixos-anywhere (for new hosts)
+nix run github:nix-community/nixos-anywhere -- --flake .#bee root@<ip-address>
+```
+
+**DNS and Network Services** (on bee):
+- **CoreDNS**: Primary DNS server handling .home domains and forwarding
+- **AdGuard Home**: DNS filtering and ad blocking (upstream for CoreDNS)
+- **Traefik**: Reverse proxy for internal services with automatic HTTPS
+
+All services are configured for Tailscale-only access by default, ensuring security through the VPN layer. The .home domain is used for internal services, with Traefik providing unified ingress.
 
 ### Best Practices
 
