@@ -114,7 +114,7 @@
           traefik-home = {
             rule = "Host(`traefik.home`)";
             service = "traefik-dashboard";
-            middlewares = ["tailscale-only"];
+            middlewares = ["tailscale-only" "security-headers"];
             entryPoints = ["web"];
           };
 
@@ -133,7 +133,7 @@
           adguard-home = {
             rule = "Host(`adguard.home`)";
             service = "adguard";
-            middlewares = ["tailscale-only"];
+            middlewares = ["tailscale-only" "security-headers"];
             entryPoints = ["web"];
           };
 
@@ -196,8 +196,8 @@
           # Rate limiting for public services
           rate-limit = {
             rateLimit = {
-              average = 100;
-              burst = 50;
+              average = 10;  # 10 req/min for static site
+              burst = 20;    # Allow small bursts
               period = "1m";
             };
           };
@@ -240,10 +240,13 @@
   services.traefik.dataDir = "/var/lib/traefik";
 
   # Firewall configuration
+  # SECURITY: Only ports 80 and 443 are exposed to the internet
+  # Port 9090 (dashboard) is restricted to Tailscale interface only
   networking.firewall = {
-    allowedTCPPorts = [80 443];
+    allowedTCPPorts = [80 443];  # Public ports
     
-    # Dashboard only accessible via Tailscale
+    # Dashboard port 9090 - Tailscale interface ONLY
+    # This ensures the dashboard is never exposed to the internet
     interfaces."tailscale0".allowedTCPPorts = [9090];
   };
 

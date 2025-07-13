@@ -8,12 +8,15 @@
 #
 # Initial setup: Create admin user via web interface
 #
+# IMPORTANT: DNS rewrites are configured declaratively under settings.filtering.rewrites
+# With mutableSettings = false, the configuration is fully managed by Nix.
+#
 # Features:
 # - DNS filtering and ad blocking
 # - DNSSEC support
 # - DoH/DoT upstream support
 # - Web interface on port 3000 (Tailscale only)
-# - DNS service on port 5353 (used by CoreDNS)
+# - DNS service on port 53 (primary DNS server)
 {
   config,
   pkgs,
@@ -22,13 +25,13 @@
 }: {
   services.adguardhome = {
     enable = true;
-    mutableSettings = true;
+    mutableSettings = false;
     host = "0.0.0.0";
     port = 3000;
     settings = {
       dns = {
         bind_hosts = ["0.0.0.0"];
-        port = 5353;
+        port = 53;
 
         # Upstream DNS servers
         upstream_dns = [
@@ -69,6 +72,18 @@
         parental_enabled = false;
         safebrowsing_enabled = true;
         safesearch_enabled = false;
+        
+        # DNS rewrites for local domains
+        rewrites = [
+          {
+            domain = "*.home";
+            answer = "100.74.102.74";
+          }
+          {
+            domain = "*.home.jeremyk.net";
+            answer = "100.74.102.74";
+          }
+        ];
       };
 
       # OISD big blocklist - comprehensive and well-maintained
@@ -93,8 +108,8 @@
 
   # Open firewall for DNS and web interface
   networking.firewall = {
-    allowedTCPPorts = [5353]; # DNS over TCP
-    allowedUDPPorts = [5353]; # DNS over UDP
+    allowedTCPPorts = [53]; # DNS over TCP
+    allowedUDPPorts = [53]; # DNS over UDP
 
     # Web interface only accessible via Tailscale
     interfaces."tailscale0".allowedTCPPorts = [3000];
@@ -105,4 +120,14 @@
     after = ["network-online.target" "tailscaled.service"];
     wants = ["network-online.target"];
   };
+
+  # Set this server as the system DNS resolver
+  networking.nameservers = ["127.0.0.1"];
+  networking.resolvconf.enable = false;
+
+  # Ensure /etc/resolv.conf points to local DNS
+  environment.etc."resolv.conf".text = ''
+    nameserver 127.0.0.1
+    options edns0
+  '';
 }

@@ -2,13 +2,13 @@
 #
 # Access methods:
 # - No web interface (DNS server only)
-# - DNS queries on port 53 (all interfaces)
+# - DNS queries on port 5354 (all interfaces)
 # - Health check: http://bee.sole-bigeye.ts.net:8080/health (monitoring only)
 #
 # Features:
-# - Primary DNS server on port 53
-# - Forwards queries to AdGuard Home on port 5353 for filtering
-# - Handles .home domain for local services
+# - Secondary DNS server on port 5354 (backup/special cases)
+# - Can forward queries to AdGuard Home on port 53 if needed
+# - Handles .home domain for local services (if AdGuard DNS rewrites fail)
 # - Health check endpoint: http://bee.sole-bigeye.ts.net:8080/health (returns "OK")
 #   Used by monitoring tools like Uptime Kuma, not meant for browser access
 #
@@ -16,7 +16,7 @@
 # - Edit the hosts section in the config
 # - Example: 192.168.1.100 service.home
 #
-# DNS flow: Client -> CoreDNS:53 -> AdGuard:5353 -> Upstream DNS
+# DNS flow: Client -> AdGuard:53 -> Upstream DNS (CoreDNS:5354 available as backup)
 {
   config,
   pkgs,
@@ -27,7 +27,7 @@
     enable = true;
     config = ''
       # Handle .home domain for local services
-      home:53 {
+      home:5354 {
         errors
         health {
           lameduck 5s
@@ -48,7 +48,7 @@
       }
 
       # Handle .home.jeremyk.net domain for HTTPS access using template for wildcard
-      home.jeremyk.net:53 {
+      home.jeremyk.net:5354 {
         errors
         health {
           lameduck 5s
@@ -70,7 +70,7 @@
       }
 
       # Handle all other domains
-      .:53 {
+      .:5354 {
         errors
         health {
           lameduck 5s
@@ -84,7 +84,7 @@
         cache 300
 
         # Forward to AdGuard Home for filtering
-        forward . 127.0.0.1:5353 {
+        forward . 127.0.0.1:53 {
           max_concurrent 100
           # Health check for upstream
           health_check 5s
@@ -105,22 +105,12 @@
     wants = ["network-online.target"];
   };
 
-  # Open firewall for DNS
+  # Open firewall for DNS on alternative port
   networking.firewall = {
-    allowedTCPPorts = [53];
-    allowedUDPPorts = [53];
+    allowedTCPPorts = [5354];
+    allowedUDPPorts = [5354];
   };
 
   # Disable systemd-resolved on DNS servers
   services.resolved.enable = lib.mkForce false;
-  
-  # Set this server as the system DNS resolver
-  networking.nameservers = ["127.0.0.1"];
-  networking.resolvconf.enable = false;
-
-  # Ensure /etc/resolv.conf points to local DNS
-  environment.etc."resolv.conf".text = ''
-    nameserver 127.0.0.1
-    options edns0
-  '';
 }
