@@ -65,14 +65,6 @@
           inputs.disko.packages.${system}.disko
           just
         ];
-
-        shellHook = ''
-          echo "🔧 NixOS Homelab Dev Environment"
-          echo "📦 Additional tools: colmena, nixos-anywhere, disko, just"
-          echo "🎯 Hosts: navi, bee, halo, pi"
-          echo ""
-          echo "📋 Run 'just' to see available commands"
-        '';
       };
     });
 
