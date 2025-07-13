@@ -42,6 +42,10 @@
     curl
     wget
     jq
+    
+    # Network diagnostic tools
+    dig
+    bind # includes nslookup
 
     # File management
     nnn # file manager

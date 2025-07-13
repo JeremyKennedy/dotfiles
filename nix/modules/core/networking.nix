@@ -11,10 +11,10 @@
   # Custom DNS configuration
   networking.networkmanager.dns = "none";
   networking.nameservers = [
-    "100.100.100.100" # Tailscale DNS
-    "192.168.1.245" # bee (AdGuard Home)
+    "100.74.102.74" # bee (CoreDNS -> AdGuard Home)
+    "100.100.100.100" # Tailscale DNS (fallback)
   ];
-  networking.search = ["sole-bigeye.ts.net"];
+  networking.search = ["sole-bigeye.ts.net" "home"];
 
   # Enable DHCP for now until static IPs are confirmed working
   networking.useDHCP = lib.mkDefault true;

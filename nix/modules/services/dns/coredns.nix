@@ -37,15 +37,8 @@
 
         # Forward all .home queries to local zone
         hosts {
-          # Add static entries for local services here
-          # Example: 192.168.1.100 service.home
-
+          100.74.102.74 bee.home adguard.home traefik.home dns.home
           fallthrough
-        }
-
-        # If not found in hosts, return NXDOMAIN
-        template ANY ANY {
-          rcode NXDOMAIN
         }
       }
 
