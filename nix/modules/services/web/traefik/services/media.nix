@@ -1,6 +1,24 @@
 # Media services configuration for Traefik
+#
+# This module defines media streaming and management services.
+# 
+# Public services (accessible at service.jeremyk.net):
+# - plex: Media streaming server
+# - overseerr: Media request management
+# - tautulli: Plex statistics
+# - calibre-web: E-book library (books.jeremyk.net)
+# - yourspotify: Spotify statistics
+#
+# Internal services (accessible at service.home.jeremyk.net via Tailscale):
+# - sonarr, radarr, prowlarr: Media automation
+# - bazarr: Subtitle management
+# - deluge, nzbget: Download clients
+# - tdarr: Media transcoding
+# - calibre: E-book management
+# - jackett: Torrent indexer proxy
+#
 {lib, ...}: let
-  tower = "192.168.1.240";
+  tower = "192.168.1.240";  # Unraid server
 in {
   # Media services organized by access level
   public = {

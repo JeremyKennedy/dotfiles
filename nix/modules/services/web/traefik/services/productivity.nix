@@ -1,7 +1,26 @@
 # Productivity services configuration for Traefik
+#
+# This module defines productivity and collaboration services.
+#
+# Public services (accessible at service.jeremyk.net):
+# - nextcloud: File sync and collaboration (also cloud.jeremyk.net)
+# - gitea: Git repository hosting
+# - microbin: Pastebin service
+# - immich: Photo management
+# - mealie: Recipe manager
+# - kutt: URL shortener
+#
+# Internal services (accessible at service.home.jeremyk.net via Tailscale):
+# - paperless: Document management
+# - grist: Spreadsheet database
+# - kimai: Time tracking
+# - overleaf: LaTeX editor
+# - changes: Change tracking
+# - homeassistant: Home automation (also hass/ha.home.jeremyk.net)
+#
 {lib, ...}: let
-  tower = "192.168.1.240";
-  bee = "localhost";
+  tower = "192.168.1.240";  # Unraid server
+  bee = "localhost";        # Local host (bee)
 in {
   # Productivity services organized by access level
   public = {

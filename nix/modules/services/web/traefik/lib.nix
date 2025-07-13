@@ -33,10 +33,11 @@ with lib; rec {
     public ? false,
   }: let
     subdomain = config.subdomain or name;
-    service = config.service or name;
     extraHosts = config.extraHosts or [];
+    # Use different domains for public vs tailscale services
+    baseDomain = if public then "jeremyk.net" else "home.jeremyk.net";
     # Handle root domain (empty subdomain)
-    hosts = if subdomain == "" then ["jeremyk.net"] ++ extraHosts else ["${subdomain}.jeremyk.net"] ++ extraHosts;
+    hosts = if subdomain == "" then [baseDomain] ++ extraHosts else ["${subdomain}.${baseDomain}"] ++ extraHosts;
     hostRule = concatMapStringsSep " || " (h: "Host(`${h}`)") hosts;
     # Always apply security headers, add tailscale-only for non-public services
     baseMiddlewares =
@@ -49,7 +50,7 @@ with lib; rec {
     serviceMiddlewares = config.middlewares or [];
   in {
     rule = hostRule;
-    service = service;
+    service = name;
     middlewares = baseMiddlewares ++ serviceMiddlewares;
     entryPoints = ["web" "websecure"];
     tls = {certResolver = "letsencrypt";};
@@ -85,28 +86,36 @@ with lib; rec {
   in
     recursiveUpdate baseConfig backendConfig;
 
-  # Creates a redirect configuration
+  # Creates a complete redirect configuration
   #
-  # This is a convenience function for creating services that only redirect
-  # to other URLs without proxying to a backend.
+  # This function generates all redirect-related configuration from a single
+  # definition, keeping everything DRY.
   #
   # Inputs:
-  #   name: Redirect name (used for subdomain)
-  #   from: Source subdomain (e.g., "meet" for meet.jeremyk.net)
-  #   to: Target URL to redirect to
-  #   permanent: Whether this is a permanent (301) or temporary (302) redirect
+  #   redirects: Attribute set where keys are redirect names and values contain:
+  #     - from: Source subdomain (e.g., "meet" for meet.jeremyk.net)
+  #     - to: Target URL to redirect to
+  #     - permanent: Whether this is a permanent (301) or temporary (302) redirect
   #
-  # Output: Service configuration for a redirect
-  mkRedirect = {
-    name,
-    from,
-    to,
-    permanent ? false,
-  }: {
-    subdomain = from;
-    service = "noop@internal";  # Special Traefik service that does nothing
-    middlewares = ["redirect-${name}"];
-    # The middleware needs to be defined separately in the redirects service file
+  # Output: { public = { services... }; middleware = { middlewares... }; }
+  mkRedirects = redirects: {
+    public = mapAttrs (name: config: {
+      subdomain = config.from;
+      service = "noop@internal";
+      middlewares = ["redirect-${config.from}"];
+    }) redirects;
+    
+    middleware = foldl' (acc: name: 
+      acc // {
+        "redirect-${redirects.${name}.from}" = {
+          redirectRegex = {
+            regex = "^https?://${redirects.${name}.from}.jeremyk.net/(.*)";
+            replacement = redirects.${name}.to;
+            permanent = redirects.${name}.permanent or false;
+          };
+        };
+      }
+    ) {} (attrNames redirects);
   };
 
 
@@ -142,15 +151,9 @@ with lib; rec {
     tailscaleServices;
 
     # Only create backend services for those that need them
-    # Skip internal Traefik services and redirects (which don't have host/port)
+    # Skip redirects (which don't have host/port)
     servicesNeedingBackends =
-      filterAttrs (
-        n: c: let
-          serviceName = c.service or n;
-        in
-          serviceName != "api@internal" && serviceName != "noop@internal" && c ? host && c ? port
-      )
-      allServices;
+      filterAttrs (n: c: c ? host && c ? port) allServices;
     serviceBackends = mapAttrs (name: config: mkService config) servicesNeedingBackends;
   in {
     routers = publicRouters // tailscaleRouters;

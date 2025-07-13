@@ -1,4 +1,10 @@
 # Barebone public site - returns 200 OK
+#
+# Access:
+# - https://jeremyk.net (public via Traefik)
+# - https://www.jeremyk.net (public via Traefik)
+# - http://bee.sole-bigeye.ts.net:8888 (direct Tailscale)
+# - http://192.168.1.245:8888 (direct LAN access if Tailscale is down)
 {
   config,
   pkgs,

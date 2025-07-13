@@ -1,7 +1,16 @@
 # Network services configuration for Traefik
+#
+# This module defines network infrastructure services.
+# All services are internal-only for security.
+#
+# Internal services (accessible at service.home.jeremyk.net via Tailscale):
+# - traefik: Reverse proxy dashboard (traefik.home.jeremyk.net) - hardcoded in default.nix
+# - adguard: DNS filtering and ad blocking (adguard.home.jeremyk.net)
+# - unifi: UniFi network controller (unifi.home.jeremyk.net)
+#
 {lib, ...}: let
-  tower = "192.168.1.240";
-  bee = "localhost";
+  tower = "192.168.1.240";  # Unraid server
+  bee = "localhost";        # Local host (bee)
 in {
   # Network services organized by access level
   public = {};
@@ -10,12 +19,6 @@ in {
     adguard = {
       host = bee;
       port = 3000;
-    }; # Bee service
-    traefik-dashboard = {
-      host = bee;
-      port = 9090;
-      service = "api@internal";
-      subdomain = "traefik";
     }; # Bee service
     unifi = {
       host = tower;

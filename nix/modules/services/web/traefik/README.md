@@ -7,16 +7,16 @@ This module provides a modular Traefik reverse proxy configuration with services
 ```
 traefik/
 ├── default.nix          # Main Traefik configuration (entrypoints, TLS, middleware)
-├── lib.nix              # Helper functions (mkRouter, mkService, mkRedirect)
+├── lib.nix              # Helper functions for generating Traefik configs
 ├── customizations.nix   # Reusable middleware definitions
 └── services/            # Service definitions organized by category
-    ├── gaming.nix       # Gaming services (crafty)
-    ├── media.nix        # Media services (plex, *arr stack)
-    ├── monitoring.nix   # Monitoring services (kuma, grafana, etc.)
-    ├── network.nix      # Network services (unifi, adguard, traefik dashboard)
-    ├── productivity.nix # Productivity services (nextcloud, gitea, homeassistant, etc.)
-    ├── redirects.nix    # URL redirects (meet.jeremyk.net)
-    └── webhost.nix      # Web hosting services (public-site)
+    ├── gaming.nix       # Gaming services (Minecraft, game servers)
+    ├── media.nix        # Media services (Plex, *arr stack, e-books)
+    ├── monitoring.nix   # Monitoring services (uptime, metrics, home automation)
+    ├── network.nix      # Network services (DNS, network management)
+    ├── productivity.nix # Productivity services (files, documents, development)
+    ├── redirects.nix    # URL redirects (vanity URLs, shortcuts)
+    └── webhost.nix      # Web hosting services (static websites)
 ```
 
 ## Key Concepts
@@ -39,7 +39,6 @@ Services are defined in category files with this structure:
       extraHosts = ["alias.com"];  # Optional: additional domains
       middlewares = ["websocket"]; # Optional: extra middleware
       https = true;                # Optional: use HTTPS to backend
-      service = "api@internal";    # Optional: override service name
       backend = {                  # Optional: advanced backend config
         responseForwarding.flushInterval = "0s";
       };
@@ -52,41 +51,6 @@ Services are defined in category files with this structure:
 }
 ```
 
-## Helper Functions
-
-### mkRouter
-Creates router configuration from service definition. Automatically:
-- Generates domain rules from subdomain
-- Applies security headers
-- Adds Tailscale restriction for non-public services
-- Configures TLS with Let's Encrypt
-
-### mkService  
-Creates backend service configuration. Handles:
-- HTTP/HTTPS scheme selection
-- Load balancer configuration
-- Backend customizations
-
-### mkRedirects
-Creates both redirect services and their middleware from a single definition. Example:
-```nix
-redirectDefinitions = {
-  meet = {
-    from = "meet";
-    to = "https://meet.google.com/abc-defg-hij";
-    permanent = false;
-  };
-  old-site = {
-    from = "old";
-    to = "https://new.example.com";
-    permanent = true;
-  };
-};
-
-generated = helpers.mkRedirects redirectDefinitions;
-# Returns: { services = {...}; middleware = {...}; }
-```
-
 ## Adding New Services
 
 1. Choose the appropriate category file in `services/`
@@ -97,12 +61,16 @@ generated = helpers.mkRedirects redirectDefinitions;
      port = 8080;
    };
    ```
-3. Service will be available at `myservice.jeremyk.net`
+3. Service will be available at:
+   - Public services: `myservice.jeremyk.net`
+   - Tailscale services: `myservice.home.jeremyk.net`
 
 ## Customizations
 
 ### Middleware
 Reusable middleware are defined in `customizations.nix`:
+- `security-headers` - Security headers (applied to all services)
+- `tailscale-only` - Restricts access to Tailscale IPs (auto-applied to internal services)
 - `websocket` - WebSocket protocol support
 - `cors-allow-all` - Permissive CORS headers
 - `basic-auth` - HTTP basic authentication
@@ -110,13 +78,25 @@ Reusable middleware are defined in `customizations.nix`:
 ### Special Cases
 - Root domain: Set `subdomain = ""` for jeremyk.net
 - Multiple domains: Use `extraHosts = ["alias.com"]`
-- Internal services: Use `service = "api@internal"`
 - Redirects: Define in `redirects.nix` using the redirectDefinitions pattern
+- Traefik dashboard: Hardcoded in default.nix at `traefik.home.jeremyk.net` (uses `api@internal` service)
+
+## Domain Strategy
+
+This configuration uses a security-first approach with domain separation:
+
+- **Public services**: `service.jeremyk.net` - Accessible from anywhere
+- **Internal services**: `service.home.jeremyk.net` - Only resolvable within Tailscale network
+
+This provides fail-fast security:
+1. DNS resolution fails immediately for unauthorized access to internal services
+2. Traefik middleware provides additional access control if DNS is bypassed
+3. Services are only accessible via Tailscale VPN
 
 ## Notes
 
 - All services get HTTPS via Let's Encrypt DNS challenge
-- Public services are accessible from anywhere
-- Tailscale services require VPN connection
-- Tower host: 192.168.1.240 (most services)
+- Domain is automatically selected based on service type (public/tailscale)
+- Tower host: 192.168.1.240 (Unraid server, most services)
 - Bee host: localhost (DNS, Traefik, public site)
+- Halo host: 46.62.144.212 (Hetzner VPS, public monitoring)

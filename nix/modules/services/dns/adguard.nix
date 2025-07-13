@@ -1,10 +1,16 @@
 # AdGuard Home DNS filtering service
 #
-# Access methods:
-# - http://adguard.home                    - Primary access (via Traefik reverse proxy)
-# - https://adguard.home.jeremyk.net       - HTTPS access with valid Let's Encrypt certificate
-# - http://bee.sole-bigeye.ts.net:3000    - Direct access to AdGuard port (Tailscale only)
-# - http://100.74.102.74:3000             - Direct access via Tailscale IP
+# Web Interface Access:
+# - https://adguard.home.jeremyk.net (via Traefik + Tailscale)
+# - http://adguard.home:3000 (via CoreDNS + Tailscale)
+# - http://bee.sole-bigeye.ts.net:3000 (direct Tailscale)
+# - http://100.74.102.74:3000 (direct Tailscale IP)
+# - http://192.168.1.245:3000 (LAN access if Tailscale is down)
+#
+# DNS Server Access:
+# - DNS queries: 192.168.1.245:53 (primary DNS for network)
+# - DNS queries: bee.sole-bigeye.ts.net:53 (via Tailscale)
+# - DNS queries: 100.74.102.74:53 (Tailscale IP)
 #
 # Initial setup: Create admin user via web interface
 #

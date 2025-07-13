@@ -1,6 +1,12 @@
 # Web hosting services configuration for Traefik
+#
+# This module defines static website hosting services.
+#
+# Public services (accessible at service.jeremyk.net):
+# - public-site: Main website (jeremyk.net and www.jeremyk.net)
+#
 {lib, ...}: let
-  bee = "localhost";
+  bee = "localhost";  # Local host (bee)
 in {
   # Web hosting services organized by access level
   public = {
