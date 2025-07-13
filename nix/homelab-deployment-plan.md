@@ -9,7 +9,7 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 ### ✅ What's Been Done
 - **Multi-host flake structure** - All 4 hosts defined with proper architecture support
 - **Colmena deployment** - Ready for remote deployments (no buildOnTarget)
-- **Common modules** - base, shell, git, ssh, tailscale, hardware configurations
+- **Common modules** - base, boot, performance, shell, git, ssh, tailscale, hardware configurations
 - **Host configurations** - All hosts have basic configs with disko where needed
 - **Development environment** - devShell with colmena, nixos-anywhere, disko
 - **Baseline tracking** - Comprehensive system to ensure desktop remains unchanged
@@ -17,20 +17,19 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 - **Claude Code** - Added to all hosts via common/base.nix
 
 ### 🔄 Next Steps
-1. **Complete Phase 2** - Build and validate all host configurations
-2. **Phase 2.5** - Deploy bee with nixos-anywhere as first real test
-3. **Phase 3** - Extract more common configuration patterns
-4. **Phase 4** - Migrate home-manager programs to system level
+1. **Phase 4** - Move Home-Manager Programs to System Level
+2. **Phase 5** - DNS and Ingress Infrastructure (CoreDNS, AdGuard, Traefik)
+3. **Phase 6** - Full Deployment and Validation
 
 ## Task Completion Tracking
 
-**Overall Progress**: ⏳ In Progress (2/10 phases complete)
+**Overall Progress**: ⏳ In Progress (4/10 phases complete)
 
 ### Phase Status
 - [x] **Phase 1**: Refactor for Multi-Host (Desktop Unchanged) - 6/6 tasks ✅
 - [x] **Phase 2**: Add Server Hosts Configuration - 7/7 tasks ✅
-- [ ] **Phase 2.5**: Early Bee Deployment (Barebones) - 0/5 tasks
-- [ ] **Phase 3**: Extract and Share Common Configuration - 0/6 tasks
+- [x] **Phase 2.5**: Early Bee Deployment (Barebones) - 5/5 tasks ✅
+- [x] **Phase 3**: Extract and Share Common Configuration - 6/6 tasks ✅
 - [ ] **Phase 4**: Move Home-Manager Programs to System Level - 0/6 tasks
 - [ ] **Phase 5**: DNS and Ingress Infrastructure - 0/7 tasks
 - [ ] **Phase 6**: Full Deployment and Validation - 0/8 tasks
@@ -40,8 +39,8 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 - [ ] **Phase 10**: DNS/Ingress Debug & Testing Utilities - 0/3 tasks
 
 ### Quick Reference - Current Task
-**Current**: Phase 2 complete! Ready for Phase 2.5 - Deploy bee with nixos-anywhere
-**Last Update**: All hosts validated - desktop/bee confirmed working, halo builds successfully
+**Current**: Phase 3 complete! Ready for Phase 4 - Move Home-Manager Programs to System Level
+**Last Update**: Common configuration extracted (boot, performance, enhanced base), deployed successfully to bee
 
 ### Baseline Capture and Validation
 

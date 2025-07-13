@@ -11,24 +11,37 @@ This repository manages multiple NixOS hosts using Nix flakes and Colmena for de
 
 ## Deployment Process
 
-### Initial Deployment (New or Existing Host)
+### Initial Deployment (New Host)
 
-The deploy script can handle both new installations and redeploying over existing NixOS systems:
+For brand new installations or complete system wipes:
 
 ```bash
 # Enter development shell for deployment tools
 nix develop
 
 # Deploy host (WARNING: This will WIPE the target disk!)
-./deploy-host.sh bee root@192.168.1.245        # Deploy/redeploy bee
-./deploy-host.sh halo root@46.62.144.212       # Deploy/redeploy halo  
-./deploy-host.sh pi root@192.168.1.230         # Deploy/redeploy pi
-./deploy-host.sh hostname user@ip.address      # Generic usage
+./deploy-host.sh bee root@192.168.1.245        # Deploy bee
+./deploy-host.sh halo root@46.62.144.212       # Deploy halo  
+./deploy-host.sh pi root@192.168.1.230         # Deploy pi
 
-# The script auto-detects:
-# - Existing NixOS: Uses kexec to redeploy
-# - Installer ISO: Direct deployment
-# - Use 'nixos@' if deploying from installer ISO
+# IMPORTANT: Do NOT use Tailscale hostnames for initial deployment!
+# nixos-anywhere reboots during install and won't reconnect through Tailscale.
+# Always use direct IP addresses for initial deployment.
+
+# If deployment hangs at "Uploading install SSH keys", press Ctrl+D
+```
+
+### Deploying to Existing NixOS Systems
+
+When colmena can't deploy due to configuration drift:
+
+```bash
+# Use --existing-nix flag for existing NixOS systems
+./deploy-host.sh --existing-nix halo root@46.62.144.212
+./deploy-host.sh --existing-nix bee root@192.168.1.245
+
+# This uses nixos-rebuild instead of nixos-anywhere (no disk wipe)
+# Prefer IP addresses over Tailscale hostnames in case network services restart
 ```
 
 ### Configuration Updates (Existing Host)
@@ -68,7 +81,7 @@ sudo nixos-rebuild switch --flake .#JeremyDesktop
 
 4. **Deploy**:
    ```bash
-   # Initial deployment
+   # Initial deployment (use IP address, not Tailscale hostname!)
    ./deploy-host.sh newhostname root@ip.address
    ```
 
@@ -82,14 +95,11 @@ sudo nixos-rebuild switch --flake .#JeremyDesktop
    # Add to secrets.nix and allSystems list, then re-encrypt:
    cd /home/jeremy/dotfiles/nix && agenix --rekey
    
-   # Join Tailscale network
-   ssh root@ip.address 'tailscale up'
-   
-   # Optional: Enable Tailscale SSH (allows SSH without port 22)
-   ssh root@ip.address 'tailscale set --ssh'
-   
-   # For VPS/exit nodes (like halo): advertise exit node
-   ssh root@ip.address 'tailscale set --advertise-exit-node'
+   # Join Tailscale network (all-in-one command)
+   # For regular hosts:
+   ssh root@ip.address 'tailscale up --ssh'
+   # For VPS/exit nodes (like halo):
+   ssh root@ip.address 'tailscale up --ssh --advertise-exit-node'
    
    # Deploy any configuration updates
    ./colmena-deploy.sh newhostname
