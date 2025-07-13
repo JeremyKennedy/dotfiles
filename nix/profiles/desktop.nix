@@ -7,22 +7,22 @@
 }: {
   imports = [
     ../modules/core # Core modules for ALL hosts
-
-    # Desktop modules would be imported by specific desktop hosts
-    # as they may vary (Hyprland vs GNOME vs KDE, etc.)
+    ../modules/desktop # Desktop modules (graphics, hyprland, waybar, ledger)
   ];
 
   # Desktop-specific defaults
   services.xserver.enable = lib.mkDefault true;
 
-  # Enable sound
-  sound.enable = lib.mkDefault true;
-  hardware.pulseaudio.enable = lib.mkDefault false;
+  # Enable sound with PipeWire
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
   services.pipewire = {
-    enable = lib.mkDefault true;
-    alsa.enable = lib.mkDefault true;
-    alsa.support32Bit = lib.mkDefault true;
-    pulse.enable = lib.mkDefault true;
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    wireplumber.enable = true;
+    jack.enable = true;
   };
 
   # Enable networking GUI

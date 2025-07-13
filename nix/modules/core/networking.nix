@@ -6,7 +6,25 @@
   ...
 }: {
   # Enable NetworkManager for easier network management
-  networking.networkmanager.enable = lib.mkDefault true;
+  networking.networkmanager.enable = true;
+
+  # Custom DNS configuration
+  networking.networkmanager.dns = "none";
+  networking.nameservers = [
+    "100.100.100.100" # Tailscale DNS
+    "192.168.1.245" # bee (AdGuard Home)
+  ];
+  networking.search = ["sole-bigeye.ts.net"];
+
+  # Enable DHCP for now until static IPs are confirmed working
+  networking.useDHCP = lib.mkDefault true;
+  networking.dhcpcd.enable = lib.mkDefault true;
+
+  # Tailscale for all hosts
+  services.tailscale = {
+    enable = true;
+    openFirewall = true;
+  };
 
   # Basic network optimizations
   boot.kernel.sysctl = {

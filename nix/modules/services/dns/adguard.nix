@@ -1,8 +1,8 @@
 # AdGuard Home DNS filtering service
-# 
+#
 # Access: http://bee.sole-bigeye.ts.net:3000
 # Initial setup: Create admin user via web interface
-# 
+#
 # Features:
 # - DNS filtering and ad blocking
 # - DNSSEC support

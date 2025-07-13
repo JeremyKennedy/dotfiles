@@ -73,7 +73,7 @@
           echo ""
           echo "📋 Run 'just' to see available commands"
           echo ""
-          
+
           # Convenient aliases that mirror just commands
           alias dev="just"
           alias deploy="just deploy"
