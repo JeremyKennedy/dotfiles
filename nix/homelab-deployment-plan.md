@@ -4,6 +4,64 @@
 
 This plan outlines the phased approach to refactor the existing single-host NixOS configuration into a multi-host setup supporting `jeremydesktop`, `bee`, `halo`, and `pi` hosts. The approach prioritizes maintaining desktop functionality while enabling declarative infrastructure management via Colmena.
 
+## Task Completion Tracking
+
+**Overall Progress**: ⏳ In Progress (0/10 phases complete)
+
+### Phase Status
+- [ ] **Phase 1**: Refactor for Multi-Host (Desktop Unchanged) - 0/6 tasks
+- [ ] **Phase 2**: Add Server Hosts Configuration - 0/7 tasks
+- [ ] **Phase 2.5**: Early Bee Deployment (Barebones) - 0/5 tasks
+- [ ] **Phase 3**: Extract and Share Common Configuration - 0/6 tasks
+- [ ] **Phase 4**: Move Home-Manager Programs to System Level - 0/6 tasks
+- [ ] **Phase 5**: DNS and Ingress Infrastructure - 0/7 tasks
+- [ ] **Phase 6**: Full Deployment and Validation - 0/8 tasks
+- [ ] **Phase 7**: Ingress for Unraid Services (Bridge Mode) - 0/6 tasks
+- [ ] **Phase 8**: Secure Routing Boundaries - 0/5 tasks
+- [ ] **Phase 9**: Observability and Health - 0/4 tasks
+- [ ] **Phase 10**: DNS/Ingress Debug & Testing Utilities - 0/3 tasks
+
+### Quick Reference - Current Task
+**Next Task**: Phase 1.1 - Create directory structure
+
+### Baseline Capture and Validation
+
+**Before ANY changes:**
+```bash
+# Capture initial baseline (run from nix directory)
+./baselines/capture-baseline.sh initial
+```
+
+**After EACH phase:**
+```bash
+# Compare current state with baseline (READ-ONLY, no system changes)
+./baselines/compare-baseline.sh
+
+# Additional validation commands (all READ-ONLY)
+nix flake check
+sudo nixos-rebuild dry-build --flake .#jeremydesktop
+```
+
+**IMPORTANT**: All baseline and validation commands are READ-ONLY. They will:
+- ✅ Build configurations in the Nix store
+- ✅ Compare with baseline
+- ❌ NEVER run `nixos-rebuild switch`
+- ❌ NEVER modify the running system
+
+### Baseline Structure (Streamlined)
+All baseline files are stored in `nix/baselines/` (gitignored):
+
+**Key Principle**: The system derivation path is the single source of truth. If it doesn't change, nothing functionally changed.
+
+- `initial/` - Baseline before changes (only 4 files):
+  - `system-derivation.txt` - **PRIMARY**: The exact store path (if this matches, config is unchanged)
+  - `system-closure.txt` - Package list for diff analysis only
+  - `critical-values.txt` - Quick sanity checks (hostname, stateVersion, package count)
+  - `SUMMARY.txt` - Human-readable summary
+- `current/` - Created only when changes detected
+- `capture-baseline.sh` - Focused capture (usage: `./capture-baseline.sh [initial|current]`)
+- `compare-baseline.sh` - One-line answer: changed or unchanged (READ-ONLY)
+
 ## Key Requirements
 
 - **Secrets**: Already handled via agenix (no setup needed)
@@ -14,7 +72,55 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 - **Security**: Uptime Kuma not publicly exposed
 - **Dev Environment**: Using `devenv.nix`
 
+## Desktop Rename Plan (JeremyDesktop → navi)
+
+**📦 When and How to Rename**
+
+**Ideal timing**: After Phase 3 (when multi-host structure is working)
+- Once the multi-host structure is in place
+- Once you've validated builds and deploys work
+- Once colmena build/apply and secrets are clean
+
+**Steps**:
+1. Rename the host in `flake.nix` and `hosts/navi/default.nix`
+2. Update `networking.hostName = "navi";` in the config
+3. Update colmena deployment key (`navi = { deployment.targetHost = ... }`)
+4. Rename secrets if necessary (e.g., `secrets/navi.age`)
+5. Reboot and re-apply config
+
+**Note**: This plan keeps using `jeremydesktop` throughout Phase 1-3 to maintain baseline compatibility.
+
+## Current State Analysis
+
+### Existing Configuration Structure
+- **Desktop**: Single host `JeremyDesktop` in `/home/jeremy/dotfiles/nix/`
+- **Current flake**: Has agenix already integrated
+- **Existing hetz-nix**: Separate directory with VPS config for halo
+- **Home-manager**: Heavy usage for shell and programs (needs migration)
+
+### Key Files to Preserve
+- `nix/nixos/configuration.nix` - Main desktop config (DO NOT CHANGE until Phase 4)
+- `nix/home-manager/` - User configs (will be reduced in scope)
+- `nix/secrets.json` - Already exists
+- `hetz-nix/` - Reference for halo configuration
+
+### Critical Constraints
+1. **Desktop must work identically** until Phase 4
+2. **No buildOnTarget** - all ARM/x86 builds on desktop
+3. **SSH access required** - use existing SSH key for all hosts
+4. **Tailscale routing** - all hosts become routers/relays
+
 ## Phase 1: Refactor for Multi-Host (Desktop Unchanged)
+
+**Status**: ⏳ In Progress
+
+### Task List - Phase 1
+- [ ] **1.1**: Create directory structure (`hosts/` with subdirectories)
+- [ ] **1.2**: Update flake.nix with multi-host support and colmena
+- [ ] **1.3**: Create desktop wrapper (`hosts/jeremydesktop/default.nix`)
+- [ ] **1.4**: Create development environment (`devenv.nix`, `.envrc`)
+- [ ] **1.5**: Run comprehensive desktop validation
+- [ ] **1.6**: Verify all configs build (`nix flake check`)
 
 ### 1.1 Create Directory Structure
 
@@ -56,6 +162,7 @@ nix/
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";  # For bleeding-edge Traefik, Tailscale
     
     home-manager = {
       url = "github:nix-community/home-manager/master";
@@ -226,20 +333,38 @@ nix/
 use flake . --impure
 ```
 
-### 1.5 Validation
+### 1.5 Desktop Validation
+
+**CRITICAL**: Desktop must remain functionally identical until Phase 4.
 
 ```bash
-# Ensure desktop configuration unchanged
-sudo nixos-rebuild dry-build --flake .#jeremydesktop > /tmp/before.txt
-# After changes
-sudo nixos-rebuild dry-build --flake .#jeremydesktop > /tmp/after.txt
-diff /tmp/before.txt /tmp/after.txt
-
-# Test flake
-nix flake check
+# Simply run the comparison script after each change
+./baselines/compare-baseline.sh
 ```
 
+This will show either:
+- ✅ UNCHANGED - Desktop configuration is identical!
+- ⚠️ CHANGED - Desktop configuration has been modified!
+
+If changed, it will show:
+- Exact package count differences
+- Size changes in MB
+- First 5 packages added/removed
+
+**That's it!** The system derivation path tells us everything we need to know.
+
 ## Phase 2: Add Server Hosts Configuration
+
+**Status**: ⏸️ Not Started
+
+### Task List - Phase 2
+- [ ] **2.1**: Create common modules (`base.nix`, `ssh.nix`, `tailscale.nix`)
+- [ ] **2.2**: Configure halo (VPS) - port from `hetz-nix/`
+- [ ] **2.3**: Configure bee (Mini PC) - minimal initial config
+- [ ] **2.4**: Configure pi (Raspberry Pi) - placeholder
+- [ ] **2.5**: Copy disko configs from `hetz-nix/`
+- [ ] **2.6**: Test all configs build without errors
+- [ ] **2.7**: Verify desktop still unchanged
 
 ### 2.1 Create Common Modules
 
@@ -446,7 +571,182 @@ nix flake check
 }
 ```
 
+## Phase 2.5: Early Bee Deployment (Barebones)
+
+**Status**: ⏸️ Not Started
+
+**Purpose**: Deploy bee early with minimal config to establish working base before adding networking services.
+
+### Task List - Phase 2.5
+- [ ] **2.5.1**: Create barebones bee config (SSH + basic packages only)
+- [ ] **2.5.2**: Generate hardware config for bee hardware
+- [ ] **2.5.3**: Deploy bee with nixos-anywhere (barebones)
+- [ ] **2.5.4**: Verify SSH access and basic functionality
+- [ ] **2.5.5**: Test colmena deployment to bee
+
+### 2.5.1 Barebones Bee Configuration
+
+Create a minimal working configuration for bee:
+
+```nix
+# hosts/bee/barebones.nix - Temporary minimal config
+{ config, pkgs, lib, ... }: {
+  imports = [
+    ./disko.nix
+    ./hardware-configuration.nix
+  ];
+  
+  # Basic system settings
+  networking.hostName = "bee";
+  time.timeZone = "America/Toronto";
+  i18n.defaultLocale = "en_CA.UTF-8";
+  
+  # Boot configuration
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  
+  # Enable flakes
+  nix.settings = {
+    experimental-features = "nix-command flakes";
+    auto-optimise-store = true;
+  };
+  
+  # SSH access
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "prohibit-password";
+      PasswordAuthentication = false;
+    };
+  };
+  
+  users.users.root.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL7YCbzW2kMJxx2YIN2XLGpLZMNzcTjB6WWmvKPVjVnR"
+  ];
+  
+  # Basic packages
+  environment.systemPackages = with pkgs; [
+    vim
+    git
+    curl
+    htop
+  ];
+  
+  # Minimal firewall
+  networking.firewall.enable = true;
+  
+  system.stateVersion = "24.11";
+}
+```
+
+### 2.5.2 Hardware Configuration
+
+```bash
+# Generate hardware config for bee (run this when bee hardware is available)
+nixos-generate-config --show-hardware-config > hosts/bee/hardware-configuration.nix
+```
+
+### 2.5.3 Bee Disk Configuration (Simple)
+
+```nix
+# hosts/bee/disko.nix - Simple single disk layout
+{
+  disko.devices = {
+    disk.main = {
+      type = "disk";
+      device = "/dev/sda";  # Update based on actual hardware
+      content = {
+        type = "gpt";
+        partitions = {
+          ESP = {
+            size = "512M";
+            type = "EF00";
+            content = {
+              type = "filesystem";
+              format = "vfat";
+              mountpoint = "/boot";
+            };
+          };
+          root = {
+            size = "100%";
+            content = {
+              type = "filesystem";
+              format = "ext4";
+              mountpoint = "/";
+            };
+          };
+        };
+      };
+    };
+  };
+}
+```
+
+### 2.5.4 Update Flake for Barebones Bee
+
+Temporarily point bee to barebones config:
+
+```nix
+# In flake.nix nixosConfigurations
+bee = nixpkgs.lib.nixosSystem {
+  specialArgs = {inherit inputs outputs secrets;};
+  modules = [
+    inputs.agenix.nixosModules.default
+    inputs.disko.nixosModules.disko
+    ./hosts/bee/barebones.nix  # Use barebones config initially
+  ];
+};
+```
+
+### 2.5.5 Deploy Barebones Bee
+
+```bash
+# Deploy bee with nixos-anywhere (barebones)
+nix run github:nix-community/nixos-anywhere -- \
+  --flake .#bee \
+  root@<bee-ip>
+
+# Test SSH access
+ssh root@<bee-ip>
+
+# Test colmena deployment
+colmena apply --on bee
+```
+
+### 2.5.6 Validation
+
+```bash
+# Verify bee is reachable
+colmena exec --on bee -- uname -a
+
+# Check basic services
+colmena exec --on bee -- systemctl status sshd
+colmena exec --on bee -- systemctl status nix-daemon
+
+# Verify basic packages available
+colmena exec --on bee -- vim --version
+colmena exec --on bee -- git --version
+```
+
+**Note**: After Phase 2.5 is complete, bee will have:
+- Working SSH access
+- Basic NixOS system
+- Colmena deployment capability
+- Ready for incremental service addition
+
+Later phases will replace `barebones.nix` with the full `default.nix` configuration.
+
 ## Phase 3: Extract and Share Common Configuration
+
+**Status**: ⏸️ Not Started
+
+### Task List - Phase 3
+- [ ] **3.1**: Create shared shell configuration (`common/shell.nix`)
+- [ ] **3.2**: Create shared programs configuration (`common/programs.nix`)
+- [ ] **3.3**: Update desktop to use common modules (incremental)
+- [ ] **3.4**: Update server hosts to use common modules
+- [ ] **3.5**: Test desktop still works after each common module addition
+- [ ] **3.6**: Remove redundant config from existing files
 
 ### 3.1 Create Shared Shell Configuration
 
@@ -591,6 +891,16 @@ nix flake check
 
 ## Phase 4: Move Home-Manager Programs to System Level
 
+**Status**: ⏸️ Not Started
+
+### Task List - Phase 4
+- [ ] **4.1**: Identify programs to move from home-manager to system
+- [ ] **4.2**: Update `common/programs.nix` with home-manager programs
+- [ ] **4.3**: Remove programs from `home-manager/programs.nix`
+- [ ] **4.4**: Update `home-manager/shell.nix` (remove shell config)
+- [ ] **4.5**: Test desktop functionality after each change
+- [ ] **4.6**: Verify programs still available and working
+
 ### 4.1 Update Home-Manager Configuration
 
 Reduce home-manager to only GUI-specific applications:
@@ -637,6 +947,17 @@ Reduce home-manager to only GUI-specific applications:
 ```
 
 ## Phase 5: DNS and Ingress Infrastructure
+
+**Status**: ⏸️ Not Started
+
+### Task List - Phase 5
+- [ ] **5.1**: Create CoreDNS module (`common/dns.nix`)
+- [ ] **5.2**: Create AdGuard Home module (`common/adguard.nix`)
+- [ ] **5.3**: Create Traefik module (`common/traefik.nix`)
+- [ ] **5.4**: Update bee config to include DNS/ingress services
+- [ ] **5.5**: Generate self-signed certificates for .home domain
+- [ ] **5.6**: Configure Tailscale IP assignment for bee
+- [ ] **5.7**: Test all services build successfully
 
 ### 5.1 CoreDNS Module
 
@@ -886,6 +1207,18 @@ Reduce home-manager to only GUI-specific applications:
 
 ## Phase 6: Deployment and Validation
 
+**Status**: ⏸️ Not Started
+
+### Task List - Phase 6
+- [ ] **6.1**: Generate hardware config for bee
+- [ ] **6.2**: Deploy bee with nixos-anywhere
+- [ ] **6.3**: Deploy halo (migrate from existing system)
+- [ ] **6.4**: Test colmena deployment to all hosts
+- [ ] **6.5**: Verify DNS services working on bee
+- [ ] **6.6**: Test Traefik routing and .home domains
+- [ ] **6.7**: Verify Uptime Kuma accessible via Tailscale
+- [ ] **6.8**: Run full system validation
+
 ### 6.1 Initial Deployment Commands
 
 ```bash
@@ -953,11 +1286,347 @@ colmena exec --on bee -- journalctl -u coredns -f
 5. **Add Services**: Gradually add Nextcloud, *arr services, etc.
 6. **Configure Backups**: Set up automated backups for stateful data
 
-## Notes
+## Implementation Notes for New Agent Sessions
 
+### Before Starting
+1. **Read existing configs** to understand current state:
+   - `nix/flake.nix` - current single-host setup
+   - `nix/nixos/configuration.nix` - desktop config to preserve
+   - `hetz-nix/configuration.nix` - reference for halo
+   - `nix/home-manager/` - configs to migrate to system level
+
+2. **Capture baseline** before any changes:
+   ```bash
+   cd /home/jeremy/dotfiles/nix
+   ./baselines/capture-baseline.sh initial
+   ```
+   This captures only what matters:
+   - System derivation path (the single source of truth)
+   - Package closure for diff analysis
+   - Critical values (hostname, stateVersion)
+
+3. **Remember the SSH key**: `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL7YCbzW2kMJxx2YIN2XLGpLZMNzcTjB6WWmvKPVjVnR`
+
+### Phase Execution Order
+- **Phase 1**: Structure only, desktop unchanged
+- **Phase 2**: Add server configs, test builds
+- **Phase 3**: Create common modules (not used yet)  
+- **Phase 4**: Gradually migrate desktop to common modules
+- **Phase 5**: Move home-manager programs to system
+- **Phase 6**: Deploy DNS/ingress infrastructure
+
+### Key Validation Commands
+```bash
+# Always run after each phase
+nix flake check
+sudo nixos-rebuild dry-build --flake .#jeremydesktop
+colmena build
+
+# Compare configs (should be identical until Phase 4)
+diff /tmp/desktop-baseline.json /tmp/desktop-current.json
+```
+
+### Configuration Decisions Made
 - All builds happen on `jeremydesktop` (no `buildOnTarget`)
-- Tailscale routing enabled on all hosts
-- Uptime Kuma accessible only via Tailscale
+- Tailscale routing enabled on all hosts (`useRoutingFeatures = "both"`)
+- Uptime Kuma accessible only via Tailscale (bound to 127.0.0.1)
 - Hetzner firewall handles main security for `halo`
-- Services default to internal-only access
+- Services default to internal-only access (.home domains)
 - Public access requires explicit Traefik configuration
+- Shell/programs moved from home-manager to system level for sharing
+- **Unraid hosts key services** (Radarr, Sonarr, Plex, Nextcloud) - NixOS handles ingress/DNS only
+
+### Deployment Strategy
+- Use `nixos-anywhere` for initial bee deployment
+- Use `colmena apply` for ongoing deployments
+- SSH over WAN initially (Tailscale access later)
+- All hosts get same base configuration via common modules
+
+## Phase 7: Ingress for Unraid Services (Bridge Mode)
+
+**Status**: ⏸️ Not Started
+
+**Purpose**: Cleanly expose Unraid bridge-mode containers via .home domains and Tailscale routing.
+
+### Task List - Phase 7
+- [ ] **7.1**: Map Unraid service IPs/ports in CoreDNS
+- [ ] **7.2**: Configure Traefik dynamic routing to Unraid services
+- [ ] **7.3**: Set up .home domains for Unraid services
+- [ ] **7.4**: Configure Tailscale routing for Unraid access
+- [ ] **7.5**: Test service routing (nextcloud.home, radarr.home, etc.)
+- [ ] **7.6**: Verify services accessible via Tailscale but not directly on LAN
+
+### 7.1 Update CoreDNS for Unraid Services
+
+```nix
+# hosts/common/dns.nix - Add Unraid services
+home:53 {
+  log
+  errors
+  hosts {
+    # NixOS hosts
+    100.64.0.1 bee.home
+    100.64.0.2 halo.home
+    100.64.0.3 pi.home
+    
+    # NixOS services
+    100.64.0.1 traefik.home
+    100.64.0.1 adguard.home
+    100.64.0.1 dns.home
+    100.64.0.2 uptime.home
+    
+    # Unraid services (routed via Traefik)
+    100.64.0.1 nextcloud.home     # Route through bee Traefik
+    100.64.0.1 radarr.home        # Route through bee Traefik
+    100.64.0.1 sonarr.home        # Route through bee Traefik
+    100.64.0.1 plex.home          # Route through bee Traefik
+    100.64.0.1 prowlarr.home      # Route through bee Traefik
+  }
+}
+```
+
+### 7.2 Update Traefik for Unraid Service Routing
+
+```nix
+# hosts/common/traefik.nix - Add Unraid service routes
+dynamicConfigOptions = {
+  http = {
+    routers = {
+      # Existing NixOS services...
+      
+      # Unraid services
+      nextcloud = {
+        rule = "Host(`nextcloud.home`)";
+        service = "nextcloud";
+        entryPoints = ["internal"];
+        tls = true;
+      };
+      
+      radarr = {
+        rule = "Host(`radarr.home`)";
+        service = "radarr";
+        entryPoints = ["internal"];
+        tls = true;
+      };
+      
+      sonarr = {
+        rule = "Host(`sonarr.home`)";
+        service = "sonarr";
+        entryPoints = ["internal"];
+        tls = true;
+      };
+      
+      plex = {
+        rule = "Host(`plex.home`)";
+        service = "plex";
+        entryPoints = ["internal"];
+        tls = true;
+      };
+    };
+    
+    services = {
+      # Existing services...
+      
+      # Unraid services (update IPs/ports based on actual setup)
+      nextcloud = {
+        loadBalancer = {
+          servers = [{ url = "http://100.64.0.10:8443"; }];  # Unraid Tailscale IP
+        };
+      };
+      
+      radarr = {
+        loadBalancer = {
+          servers = [{ url = "http://100.64.0.10:7878"; }];
+        };
+      };
+      
+      sonarr = {
+        loadBalancer = {
+          servers = [{ url = "http://100.64.0.10:8989"; }];
+        };
+      };
+      
+      plex = {
+        loadBalancer = {
+          servers = [{ url = "http://100.64.0.10:32400"; }];
+        };
+      };
+    };
+  };
+};
+```
+
+## Phase 8: Secure Routing Boundaries
+
+**Status**: ⏸️ Not Started
+
+**Purpose**: Harden access to prevent untrusted LAN devices from reaching admin interfaces directly.
+
+### Task List - Phase 8
+- [ ] **8.1**: Configure Tailscale ACLs to restrict Unraid access
+- [ ] **8.2**: Bind admin interfaces to Tailscale IPs only
+- [ ] **8.3**: Harden LAN firewall rules on bee
+- [ ] **8.4**: Test that admin panels only accessible via Tailscale
+- [ ] **8.5**: Document security boundaries and access methods
+
+### 8.1 Tailscale ACL Configuration
+
+```json
+// tailscale ACL example (configure in Tailscale admin console)
+{
+  "acls": [
+    {
+      "action": "accept",
+      "src": ["tag:admin"],
+      "dst": ["100.64.0.10:*"]  // Unraid Tailscale IP
+    },
+    {
+      "action": "accept", 
+      "src": ["autogroup:members"],
+      "dst": ["100.64.0.1:8443", "100.64.0.2:3001"]  // bee and halo services
+    }
+  ],
+  "tagOwners": {
+    "tag:admin": ["your-email@domain.com"]
+  }
+}
+```
+
+### 8.2 Secure Admin Interface Binding
+
+```nix
+# Update services to bind only to Tailscale interfaces
+services.adguardhome.settings.web.bind_host = "100.64.0.1";  # bee Tailscale IP
+services.uptime-kuma.settings.HOST = "100.64.0.2";          # halo Tailscale IP
+```
+
+## Phase 9: Observability and Health
+
+**Status**: ⏸️ Not Started
+
+**Purpose**: Add monitoring and health checking for the homelab infrastructure.
+
+### Task List - Phase 9
+- [ ] **9.1**: Add netdata to bee for system monitoring
+- [ ] **9.2**: Configure health checks for core services
+- [ ] **9.3**: Expose monitoring dashboards via Traefik
+- [ ] **9.4**: Set up alerting for critical service failures
+
+### 9.1 Add Netdata Monitoring
+
+```nix
+# hosts/common/monitoring.nix
+{ config, lib, pkgs, ... }: {
+  services.netdata = {
+    enable = true;
+    config = {
+      global = {
+        "default port" = "19999";
+        "bind to" = "127.0.0.1";  # Local only - access via Traefik
+      };
+    };
+  };
+}
+```
+
+### 9.2 Add to Traefik Routing
+
+```nix
+# Add to traefik.nix
+netdata = {
+  rule = "Host(`metrics.home`)";
+  service = "netdata";
+  entryPoints = ["internal"];
+  tls = true;
+};
+
+services.netdata = {
+  loadBalancer = {
+    servers = [{ url = "http://127.0.0.1:19999"; }];
+  };
+};
+```
+
+## Phase 10: DNS/Ingress Debug & Testing Utilities
+
+**Status**: ⏸️ Not Started
+
+**Purpose**: Add debugging tools and validation scripts for DNS and ingress testing.
+
+### Task List - Phase 10
+- [ ] **10.1**: Add debugging packages to bee
+- [ ] **10.2**: Create DNS validation script
+- [ ] **10.3**: Create ingress testing script
+
+### 10.1 Add Debug Packages
+
+```nix
+# hosts/bee/default.nix - Add debugging tools
+environment.systemPackages = with pkgs; [
+  # Existing packages...
+  
+  # Network debugging
+  dig
+  nmap
+  tcpdump
+  wireshark-cli
+  mtr
+  
+  # Service testing
+  curl
+  wget
+  jq
+  
+  # Tailscale management
+  tailscale
+];
+```
+
+### 10.2 DNS Validation Script
+
+```bash
+# Create validation script
+#!/usr/bin/env bash
+# /etc/homelab-test/dns-test.sh
+
+echo "🧪 Testing DNS Resolution"
+
+# Test .home domain resolution
+echo "Testing .home domains..."
+for service in traefik adguard nextcloud radarr sonarr; do
+  echo -n "  $service.home: "
+  if dig @100.64.0.1 "$service.home" +short; then
+    echo "✅"
+  else
+    echo "❌"
+  fi
+done
+
+# Test service reachability
+echo "Testing service connectivity..."
+curl -k https://traefik.home:8443 >/dev/null 2>&1 && echo "  Traefik: ✅" || echo "  Traefik: ❌"
+curl -k https://nextcloud.home:8443 >/dev/null 2>&1 && echo "  Nextcloud: ✅" || echo "  Nextcloud: ❌"
+```
+
+## Future Enhancements (Optional)
+
+### Phase 11: GitOps Pipeline (Future)
+- Automated deployment on git push
+- CI/CD with Woodpecker CI or GitHub Actions
+- Automated testing and rollback capabilities
+
+### Phase 12: Advanced Secrets Management
+- Document agenix workflows
+- Create secrets validation scripts
+- Implement secret rotation procedures
+
+### Architecture Notes
+
+This expanded plan maintains the principle of **NixOS for infrastructure, Unraid for applications**:
+
+- **NixOS (bee, halo, pi)**: DNS, ingress, monitoring, system management
+- **Unraid**: Application hosting (Nextcloud, *arr stack, Plex, etc.)
+- **Tailscale**: Secure networking and access control
+- **Traefik**: Unified ingress controller routing to both NixOS and Unraid services
+
+The architecture avoids complex Docker migrations while providing centralized, declarative management of the networking and access layer.

@@ -3,3 +3,6 @@
 
 # Secrets files
 nix/secrets.json
+
+# Baseline comparison files
+nix/baselines/
