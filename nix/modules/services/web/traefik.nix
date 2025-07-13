@@ -1,18 +1,30 @@
 # Traefik ingress controller and reverse proxy
 #
-# Dashboard: http://bee.sole-bigeye.ts.net:9090/
+# Access methods:
+# - http://traefik.home                    - Primary access (self-proxied)
+# - https://traefik.home.jeremyk.net       - HTTPS access with valid Let's Encrypt certificate
+# - http://bee.sole-bigeye.ts.net:9090    - Direct access to dashboard port (Tailscale only)
+# - http://100.74.102.74:9090             - Direct access via Tailscale IP
 #
 # Features:
-# - HTTP/HTTPS reverse proxy
+# - HTTP/HTTPS reverse proxy with automatic redirection
 # - Automatic HTTPS with Let's Encrypt
 # - Dashboard on port 9090 (Tailscale only)
 # - Metrics endpoint for Prometheus
 # - Rate limiting and security headers
+# - NixOS-native service configuration
 #
 # To add new services:
-# 1. Add router in dynamicConfigOptions.http.routers
-# 2. Add service in dynamicConfigOptions.http.services
-# 3. Or use file provider in /etc/traefik/conf.d/
+# 1. Add router to services.traefik.dynamicConfigOptions.http.routers
+# 2. Add service to services.traefik.dynamicConfigOptions.http.services
+# Example:
+#   myapp = {
+#     rule = "Host(`myapp.home`)";
+#     service = "myapp";
+#     middlewares = ["tailscale-only" "security-headers"];
+#     entryPoints = ["websecure"];
+#     tls = true;
+#   };
 {
   config,
   pkgs,
@@ -23,33 +35,15 @@
     enable = true;
 
     staticConfigOptions = {
-      # Global configuration
-      global = {
-        checkNewVersion = false;
-        sendAnonymousUsage = false;
-      };
-
-      # API and dashboard configuration
-      api = {
-        dashboard = true;
-        debug = false;
-        insecure = true; # Allow direct access on Tailscale
-      };
-
-      # Entrypoints configuration
       entryPoints = {
         web = {
           address = ":80";
-          # No automatic HTTPS redirect for internal services
+          asDefault = true;
+          # No global HTTPS redirect - handle per domain
         };
 
         websecure = {
           address = ":443";
-          http = {
-            tls = {
-              certResolver = "default";
-            };
-          };
         };
 
         # Dashboard endpoint (Tailscale only)
@@ -63,47 +57,30 @@
         };
       };
 
-      # Certificate resolvers
-      certificatesResolvers = {
-        default = {
-          acme = {
-            email = "admin@home.local";
-            storage = "/var/lib/traefik/acme.json";
-            # Use Let's Encrypt staging for testing
-            # caServer = "https://acme-staging-v02.api.letsencrypt.org/directory";
-            caServer = "https://acme-v02.api.letsencrypt.org/directory";
-            httpChallenge = {
-              entryPoint = "web";
-            };
-          };
+      certificatesResolvers.letsencrypt.acme = {
+        email = "me@jeremyk.net";
+        storage = "${config.services.traefik.dataDir}/acme.json";
+        dnsChallenge = {
+          provider = "cloudflare";
+          delayBeforeCheck = 10;
+          resolvers = ["1.1.1.1:53" "1.0.0.1:53"];
         };
       };
 
-      # Provider configuration
-      providers = {
-        # File provider for static configuration
-        file = {
-          directory = "/etc/traefik/conf.d";
-          watch = true;
-        };
-
-        # Docker provider (if needed in future)
-        # docker = {
-        #   endpoint = "unix:///var/run/docker.sock";
-        #   exposedByDefault = false;
-        #   network = "traefik";
-        # };
+      # API and dashboard configuration
+      api = {
+        dashboard = true;
+        insecure = true; # Expose dashboard on traefik entrypoint (port 9090)
       };
 
-      # Logging
       log = {
         level = "INFO";
-        filePath = "/var/log/traefik/traefik.log";
+        filePath = "${config.services.traefik.dataDir}/traefik.log";
         format = "json";
       };
 
       accessLog = {
-        filePath = "/var/log/traefik/access.log";
+        filePath = "${config.services.traefik.dataDir}/access.log";
         format = "json";
         bufferingSize = 100;
       };
@@ -121,43 +98,69 @@
       ping = {
         entryPoint = "web";
       };
+
+      # Global settings
+      global = {
+        checkNewVersion = false;
+        sendAnonymousUsage = false;
+      };
     };
 
     # Dynamic configuration
     dynamicConfigOptions = {
       http = {
         routers = {
-          # Dashboard router - only accessible via Tailscale
-          dashboard = {
-            rule = "Host(`traefik.home`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))";
-            service = "api@internal";
-            middlewares = ["dashboard-auth" "tailscale-only"];
+          # Traefik dashboard - .home (HTTP only)
+          traefik-home = {
+            rule = "Host(`traefik.home`)";
+            service = "traefik-dashboard";
+            middlewares = ["tailscale-only"];
+            entryPoints = ["web"];
+          };
+
+          # Traefik dashboard - .home.jeremyk.net (HTTPS with auto-redirect)
+          traefik-secure = {
+            rule = "Host(`traefik.home.jeremyk.net`)";
+            service = "traefik-dashboard";
+            middlewares = ["tailscale-only" "security-headers"];
+            entryPoints = ["web" "websecure"];
             tls = {
-              certResolver = "default";
+              certResolver = "letsencrypt";
             };
           };
 
-          # AdGuard Home router
-          adguard = {
+          # AdGuard - .home (HTTP only)
+          adguard-home = {
             rule = "Host(`adguard.home`)";
             service = "adguard";
             middlewares = ["tailscale-only"];
             entryPoints = ["web"];
           };
-        };
 
-        middlewares = {
-          # Basic auth for dashboard
-          dashboard-auth = {
-            basicAuth = {
-              # Generate with: htpasswd -nb admin password
-              # Default: admin/admin (CHANGE THIS!)
-              users = [
-                "admin:$2y$10$0Nt7WkVa7HxZDpN0IF7p7OqOYWyBQ8DqhzXbdA0cGpSgYqBsMNL0y"
-              ];
+          # AdGuard - .home.jeremyk.net (HTTPS with auto-redirect)
+          adguard-secure = {
+            rule = "Host(`adguard.home.jeremyk.net`)";
+            service = "adguard";
+            middlewares = ["tailscale-only" "security-headers"];
+            entryPoints = ["web" "websecure"];
+            tls = {
+              certResolver = "letsencrypt";
             };
           };
 
+          # Public website (HTTPS with auto-redirect)
+          public-site-router = {
+            rule = "Host(`jeremyk.net`) || Host(`www.jeremyk.net`)";
+            service = "public-site";
+            middlewares = ["security-headers" "rate-limit"];
+            entryPoints = ["web" "websecure"];
+            tls = {
+              certResolver = "letsencrypt";
+            };
+          };
+        };
+
+        middlewares = {
           # Restrict to Tailscale network
           tailscale-only = {
             ipWhiteList = {
@@ -177,7 +180,7 @@
               contentTypeNosniff = true;
               forceSTSHeader = true;
               frameDeny = true;
-              sslRedirect = true;
+              sslRedirect = false; # Don't force SSL in headers
               stsIncludeSubdomains = true;
               stsPreload = true;
               stsSeconds = 31536000;
@@ -188,7 +191,9 @@
             };
           };
 
-          # Rate limiting
+
+
+          # Rate limiting for public services
           rate-limit = {
             rateLimit = {
               average = 100;
@@ -204,7 +209,25 @@
           adguard = {
             loadBalancer = {
               servers = [
-                { url = "http://localhost:3000"; }
+                {url = "http://localhost:3000";}
+              ];
+            };
+          };
+
+          # Traefik Dashboard
+          traefik-dashboard = {
+            loadBalancer = {
+              servers = [
+                {url = "http://localhost:9090";}
+              ];
+            };
+          };
+
+          # Public site - returns 200 OK
+          public-site = {
+            loadBalancer = {
+              servers = [
+                {url = "http://localhost:8888";}
               ];
             };
           };
@@ -213,17 +236,14 @@
     };
   };
 
-  # Create configuration directory
-  systemd.tmpfiles.rules = [
-    "d /etc/traefik/conf.d 0755 traefik traefik -"
-    "d /var/log/traefik 0755 traefik traefik -"
-  ];
+  # Traefik service configuration
+  services.traefik.dataDir = "/var/lib/traefik";
 
   # Firewall configuration
   networking.firewall = {
     allowedTCPPorts = [80 443];
-
-    # Dashboard only via Tailscale
+    
+    # Dashboard only accessible via Tailscale
     interfaces."tailscale0".allowedTCPPorts = [9090];
   };
 
@@ -231,5 +251,9 @@
   systemd.services.traefik = {
     after = ["network-online.target" "tailscaled.service"];
     wants = ["network-online.target"];
+    # Cloudflare API credentials for DNS challenge
+    serviceConfig = {
+      EnvironmentFile = config.age.secrets.cloudflare_dns_token.path;
+    };
   };
 }

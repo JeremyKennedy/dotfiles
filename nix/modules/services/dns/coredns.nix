@@ -1,5 +1,10 @@
 # CoreDNS configuration for local DNS resolution
 #
+# Access methods:
+# - No web interface (DNS server only)
+# - DNS queries on port 53 (all interfaces)
+# - Health check: http://bee.sole-bigeye.ts.net:8080/health (monitoring only)
+#
 # Features:
 # - Primary DNS server on port 53
 # - Forwards queries to AdGuard Home on port 5353 for filtering
@@ -38,6 +43,28 @@
         # Forward all .home queries to local zone
         hosts {
           100.74.102.74 bee.home adguard.home traefik.home dns.home
+          fallthrough
+        }
+      }
+
+      # Handle .home.jeremyk.net domain for HTTPS access using template for wildcard
+      home.jeremyk.net:53 {
+        errors
+        health {
+          lameduck 5s
+        }
+        ready
+
+        # Enable query logging for debugging
+        log
+
+        # DNS caching
+        cache 30
+
+        # Use template plugin for wildcard support
+        template IN A home.jeremyk.net {
+          match ^([a-zA-Z0-9-]+\.)?home\.jeremyk\.net\.$
+          answer "{{ .Name }} 300 IN A 100.74.102.74"
           fallthrough
         }
       }

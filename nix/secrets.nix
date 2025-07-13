@@ -6,11 +6,12 @@ let
   # pi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... root@pi";
 
   allUsers = [jeremy];
-  allSystems = [navi]; # Add bee here after getting its key
+  allSystems = [navi bee halo]
 in {
   "secrets/hass_token.age".publicKeys = allUsers ++ allSystems;
   "secrets/hass_server.age".publicKeys = allUsers ++ allSystems;
   "secrets/chatgpt_key.age".publicKeys = allUsers ++ allSystems;
   "secrets/grist_api_key.age".publicKeys = allUsers ++ allSystems;
   "secrets/grist_proxy_auth.age".publicKeys = allUsers ++ allSystems;
+  "secrets/cloudflare_dns_token.age".publicKeys = allUsers ++ allSystems;
 }

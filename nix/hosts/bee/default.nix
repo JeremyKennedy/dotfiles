@@ -12,11 +12,13 @@
     # Host-specific
     ./disko.nix
     ./hardware-configuration.nix
+    ./secrets.nix
 
     # Network services for this host
     ../../modules/services/dns/adguard.nix
     ../../modules/services/dns/coredns.nix
     ../../modules/services/web/traefik.nix
+    ../../modules/services/web/public-site.nix
   ];
 
   networking.hostName = "bee";

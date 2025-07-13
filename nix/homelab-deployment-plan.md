@@ -9,31 +9,39 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 ### ✅ What's Been Done
 - **Multi-host flake structure** - All 4 hosts defined with proper architecture support
 - **Colmena deployment** - Ready for remote deployments (no buildOnTarget)
-- **Common modules** - base, boot, performance, shell, git, ssh, tailscale, hardware, security
+- **Common modules** - base, boot, performance, shell, git, ssh, tailscale, hardware, security, networking
 - **Service modules** - Created `/modules/` directory for service-specific modules
 - **Host configurations** - All hosts have basic configs with disko where needed
-- **Development environment** - devShell with colmena, nixos-anywhere, disko
+- **Development environment** - devShell with colmena, nixos-anywhere, disko, just
 - **Baseline tracking** - Comprehensive system to ensure desktop remains unchanged
 - **Deployment scripts** - Both initial deployment and update scripts ready
 - **Claude Code** - Added to all hosts via common/base.nix
 - **Initial deployments** - halo and bee successfully deployed and running
 - **Security** - Common fail2ban module added to all hosts
 - **Uptime Kuma** - Configured on halo (accessible via Tailscale)
-- **DNS/Network modules** - AdGuard, CoreDNS, and Traefik modules created in `/modules/`
+- **DNS/Network modules** - AdGuard, CoreDNS, and Traefik modules created and deployed
+- **DNS Infrastructure** - CoreDNS handling .home domains, AdGuard for filtering
+- **.home Domain Resolution** - Working correctly after fixing CoreDNS hosts plugin
+- **Desktop DNS** - Updated to use bee as primary DNS server
 
 ### 🔄 Current Focus
-- **Phase 5** - DNS and Ingress Infrastructure on bee ✅ COMPLETE
-- **Phase 6** - Full Deployment and Validation (Ready to deploy DNS services)
+- **Phase 6** - Full Deployment and Validation (DNS services deployed and working!)
+
+### 📝 Recent Accomplishments
+- **DNS Services Deployed** - CoreDNS, AdGuard Home, and Traefik all running on bee
+- **.home Domain Resolution** - Successfully working after fixing CoreDNS hosts plugin
+- **Desktop DNS Updated** - Desktop now uses bee as primary DNS server
+- **Services Accessible** - AdGuard (port 3000), Traefik dashboard (port 9090)
 
 ### 📝 Future Tasks
 1. **Phase 4** - Consolidate desktop config to use common modules (postponed)
-2. **Phase 6** - Deploy DNS services to bee (READY TO START)
+2. **Phase 7** - Ingress for Unraid Services (Bridge Mode)
 3. **Monitoring & Backups** - To be added after core services are working
 4. **Pi deployment** - After DNS services are moved to bee
 
 ## Task Completion Tracking
 
-**Overall Progress**: ⏳ In Progress (4.5/10 phases complete)
+**Overall Progress**: ⏳ In Progress (5.5/10 phases complete)
 
 ### Phase Status
 - [x] **Phase 1**: Refactor for Multi-Host (Desktop Unchanged) - 6/6 tasks ✅
@@ -42,15 +50,15 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 - [x] **Phase 3**: Extract and Share Common Configuration - 6/6 tasks ✅
 - [ ] **Phase 4**: Move Home-Manager Programs to System Level - 0/6 tasks (POSTPONED)
 - [x] **Phase 5**: DNS and Ingress Infrastructure - 7/7 tasks ✅ COMPLETE
-- [ ] **Phase 6**: Full Deployment and Validation - 2/8 tasks (halo & bee deployed, ready for DNS)
+- [ ] **Phase 6**: Full Deployment and Validation - 6/8 tasks (DNS deployed & working!)
 - [ ] **Phase 7**: Ingress for Unraid Services (Bridge Mode) - 0/6 tasks
 - [ ] **Phase 8**: Secure Routing Boundaries - 1/5 tasks (security module done)
 - [ ] **Phase 9**: Observability and Health - 0/4 tasks
 - [ ] **Phase 10**: DNS/Ingress Debug & Testing Utilities - 0/3 tasks
 
 ### Quick Reference - Current Task
-**Current**: Phase 6 - Deploy DNS/network services to bee (AdGuard, CoreDNS, Traefik modules ready)
-**Last Update**: Phase 5 complete - Created AdGuard, CoreDNS, and Traefik modules in hosts/common/
+**Current**: Phase 6 - Testing and validating DNS infrastructure on bee
+**Last Update**: DNS services deployed, .home domains working, desktop using bee for DNS
 
 ### Baseline Capture and Validation
 
@@ -1324,15 +1332,15 @@ Home-manager was cleaned up to remove duplications with core modules:
 
 ## Phase 6: Deployment and Validation
 
-**Status**: ⏸️ Not Started
+**Status**: 🔄 In Progress (6/8 tasks complete)
 
 ### Task List - Phase 6
-- [ ] **6.1**: Generate hardware config for bee
-- [ ] **6.2**: Deploy bee with nixos-anywhere
-- [ ] **6.3**: Deploy halo (migrate from existing system)
-- [ ] **6.4**: Test colmena deployment to all hosts
-- [ ] **6.5**: Verify DNS services working on bee
-- [ ] **6.6**: Test Traefik routing and .home domains
+- [x] **6.1**: Generate hardware config for bee ✅
+- [x] **6.2**: Deploy bee with nixos-anywhere ✅
+- [x] **6.3**: Deploy halo (migrate from existing system) ✅
+- [x] **6.4**: Test colmena deployment to all hosts ✅
+- [x] **6.5**: Verify DNS services working on bee ✅
+- [x] **6.6**: Test Traefik routing and .home domains ✅
 - [ ] **6.7**: Verify Uptime Kuma accessible via Tailscale
 - [ ] **6.8**: Run full system validation
 
@@ -1377,7 +1385,16 @@ curl -k https://traefik.home:8443
 curl -k https://uptime.home:8443
 ```
 
-### 6.3 Troubleshooting Commands
+### 6.3 DNS Services Status
+
+**Deployed and Working:**
+- **CoreDNS**: Running on port 53, handling .home domain resolution
+- **AdGuard Home**: Running on port 3000, accessible at http://100.74.102.74:3000
+- **Traefik**: Running with dashboard at http://100.74.102.74:9090
+- **.home domains**: Resolving correctly (bee.home, adguard.home, traefik.home, dns.home)
+- **Desktop DNS**: Using bee (100.74.102.74) as primary DNS server
+
+### 6.4 Troubleshooting Commands
 
 ```bash
 # Check build errors

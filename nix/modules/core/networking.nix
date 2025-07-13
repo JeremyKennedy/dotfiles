@@ -21,6 +21,7 @@
         DHCP = "ipv4";
         IPv6AcceptRA = true;
         DNS = [ "100.74.102.74" ]; # bee DNS server (Tailscale IP)
+        Domains = [ "~home" "~home.jeremyk.net" ]; # Search domains
       };
       dhcpV4Config = {
         UseDNS = false; # Ignore DHCP-provided DNS

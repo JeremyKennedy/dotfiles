@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  inputs,
   ...
 }: {
   nix.settings = {
@@ -42,6 +43,9 @@
     curl
     wget
     jq
+    
+    # Secrets management
+    # agenix is available through the overlay
     
     # Network diagnostic tools
     dig
