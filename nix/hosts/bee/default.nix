@@ -4,6 +4,10 @@
     ../common
     ./disko.nix
     ./hardware-configuration.nix
+    # Network services (from modules directory)
+    ../../modules/adguard.nix
+    ../../modules/dns.nix
+    ../../modules/traefik.nix
   ];
   
   networking.hostName = "bee";
