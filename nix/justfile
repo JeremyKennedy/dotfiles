@@ -59,6 +59,10 @@ diff host:
 gc host:
     ssh root@{{host}} "nix-collect-garbage -d"
 
+# SSH to a host
+ssh host:
+    ssh root@{{host}}.sole-bigeye.ts.net
+
 # Show system info for all hosts
 info:
     @echo "System Information:"
