@@ -1328,7 +1328,7 @@ DNS rewrites must be placed under `settings.filtering.rewrites` (not `settings.d
 
 ## Phase 6: Deployment and Validation
 
-**Status**: 🔄 In Progress (6/8 tasks complete)
+**Status**: ✅ Complete (8/8 tasks complete)
 
 ### Task List - Phase 6
 - [x] **6.1**: Generate hardware config for bee ✅
@@ -1337,8 +1337,8 @@ DNS rewrites must be placed under `settings.filtering.rewrites` (not `settings.d
 - [x] **6.4**: Test colmena deployment to all hosts ✅
 - [x] **6.5**: Verify DNS services working on bee ✅
 - [x] **6.6**: Test Traefik routing and .home domains ✅
-- [ ] **6.7**: Verify Uptime Kuma accessible via Tailscale
-- [ ] **6.8**: Run full system validation
+- [x] **6.7**: Verify Uptime Kuma accessible via Tailscale ✅
+- [x] **6.8**: Run full system validation ✅
 
 ### 6.1 Initial Deployment Commands
 
@@ -1376,9 +1376,9 @@ colmena exec --on bee -- systemctl status traefik
 dig @bee.home traefik.home
 dig @100.64.0.1 adguard.home
 
-# Test Traefik routing
-curl -k https://traefik.home:8443
-curl -k https://uptime.home:8443
+# Test Traefik routing  
+curl -k https://traefik.home.jeremyk.net
+curl -k https://uptime.jeremyk.net
 ```
 
 ### 6.3 DNS Services Status
@@ -1392,8 +1392,9 @@ curl -k https://uptime.home:8443
 - **Desktop DNS**: Using bee (100.74.102.74) as primary DNS server
 
 **Access URLs**:
-- AdGuard: http://adguard.home or https://adguard.home.jeremyk.net
-- Traefik: http://traefik.home or https://traefik.home.jeremyk.net
+- AdGuard: https://adguard.home.jeremyk.net
+- Traefik: https://traefik.home.jeremyk.net
+- Uptime Kuma (Halo): https://uptime.jeremyk.net
 
 ### 6.4 Troubleshooting Commands
 
@@ -1411,6 +1412,42 @@ nix eval --json .#nixosConfigurations.bee.config.services.traefik
 colmena exec --on bee -- journalctl -u traefik -f
 colmena exec --on bee -- journalctl -u coredns -f
 ```
+
+### 6.9 Tower Services Integration (Immediate Next Priority)
+
+**Status**: 🔄 In Progress - Port Testing Complete
+
+Tower (192.168.1.240) services tested for optimal routing strategy:
+
+**Port Analysis Results** (34 services tested):
+- ✅ **15 services**: Unique ports, direct access available
+- 🔄 **19 services**: Port conflicts OR blocked ports, SWAG proxy required
+
+**Port Conflicts Discovered** (explains why SWAG proxy needed):
+- Port 80: `librespeed` + `overleaf` 
+- Port 3000: `grafana` + `kutt`
+- Port 3001: `gitea` + `kuma-tower` + `yourspotify`
+- Port 8080: `calibre` + `microbin` + `scrutiny`
+- Port 8443: `crafty` + `unifi`
+
+**Final Routing Strategy**:
+- **15 services**: Traefik → Tower:direct_port (optimal)
+- **19 services**: Traefik → Tower:443 → SWAG → service (required for conflicts/blocked ports)
+
+**Services Lists**:
+
+✅ **Direct Port Access (15 services)**:
+`bazarr`, `changes`, `deluge`, `grafana`, `homeassistant`, `immich`, `kutt`, `librespeed`, `overleaf`, `plex`, `prowlarr`, `radarr`, `sonarr`, `tdarr`, `teslamate`
+
+🔄 **SWAG Proxy Required (19 services)**:
+`calibre`, `calibre-web`, `crafty`, `gitea`, `grist`, `jackett`, `kimai`, `kuma-tower`, `mealie`, `microbin`, `nextcloud`, `nzbget`, `overseerr`, `paperless`, `scrutiny`, `speedtest-tracker`, `tautulli`, `unifi`, `yourspotify`
+
+**Next Tasks**:
+1. ✅ Port analysis complete - routing strategy determined
+2. **Update Traefik config** - Change 19 services to use Tower:443 routing
+3. **Configure SWAG routes** - Add `.home.jeremyk.net` routes for 19 services  
+4. **Test routing** - Validate both direct and proxy routing methods
+5. **Execute router flip** - WAN 443: Tower → Bee
 
 ## Next Steps
 
@@ -1739,9 +1776,61 @@ done
 
 # Test service reachability
 echo "Testing service connectivity..."
-curl -k https://traefik.home:8443 >/dev/null 2>&1 && echo "  Traefik: ✅" || echo "  Traefik: ❌"
-curl -k https://nextcloud.home:8443 >/dev/null 2>&1 && echo "  Nextcloud: ✅" || echo "  Nextcloud: ❌"
+curl -k https://traefik.home.jeremyk.net >/dev/null 2>&1 && echo "  Traefik: ✅" || echo "  Traefik: ❌"
+curl -k https://uptime.jeremyk.net >/dev/null 2>&1 && echo "  Uptime Kuma: ✅" || echo "  Uptime Kuma: ❌"
 ```
+
+## Colmena Tailscale Configuration
+
+### Updated for Firewall-Only Tailscale Access
+
+Since the hosts are now secured to only allow SSH via Tailscale, the Colmena deployment configuration has been updated:
+
+```nix
+# flake.nix - Colmena configuration now uses Tailscale hostnames
+bee = {
+  deployment = {
+    targetHost = "bee.sole-bigeye.ts.net";  # Changed from 192.168.1.245
+    targetUser = "root";
+    buildOnTarget = false;
+  };
+  # ...
+};
+
+halo = {
+  deployment = {
+    targetHost = "halo.sole-bigeye.ts.net";  # Changed from 46.62.144.212
+    targetUser = "root";
+    buildOnTarget = false;
+  };
+  # ...
+};
+
+pi = {
+  deployment = {
+    targetHost = "pi.sole-bigeye.ts.net";  # Changed from 192.168.1.230
+    targetUser = "root";
+    buildOnTarget = false;
+  };
+  # ...
+};
+```
+
+### Deployment Notes
+
+- All hosts now require Tailscale access for deployment
+- Ensure your local machine is connected to Tailscale before deploying
+- The Tailscale domain is `.sole-bigeye.ts.net`
+- SSH access is only allowed through the Tailscale network
+
+### Troubleshooting Locked-Out Hosts
+
+If a host becomes unreachable after deployment (e.g., Tailscale fails):
+
+1. **Hetzner hosts (halo)**: Disable firewall via Hetzner Cloud Console, deploy fix, re-enable
+2. **Local hosts**: JetKVM can be moved between bee/pi as needed; otherwise physical access
+3. **Common issue**: Deployment may succeed but disconnect during service restart - wait 2-3 minutes and retry
+4. **Emergency access**: Use provider's web console (Hetzner Console, etc.) to fix networking manually
 
 ## Future Enhancements (Optional)
 

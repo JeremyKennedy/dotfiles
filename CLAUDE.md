@@ -66,9 +66,39 @@ This is a NixOS/home-manager dotfiles repository using Nix flakes. The configura
 - **Development**: Git (with delta diff viewer), direnv, tmux, GitHub CLI
 - **System monitoring**: btop
 
+## NixOS Debugging References
+
+When implementing new features or debugging issues:
+
+1. **Search GitHub for Real Examples**:
+   ```
+   site:github.com "services.SERVICE_NAME" language:nix
+   site:github.com "MODULE_NAME" "nixos" language:nix
+   ```
+
+2. **Official References**:
+   - **NixOS Options Search**: https://mynixos.com/options/
+   - **Nixpkgs Source**: https://github.com/NixOS/nixpkgs/tree/master/nixos/modules
+   - **NixOS Wiki**: https://wiki.nixos.org/
+   - **NixOS Tests**: https://github.com/NixOS/nixpkgs/tree/master/nixos/tests
+
+3. **Common Debugging**:
+   ```bash
+   # Check service logs
+   ssh root@HOST.sole-bigeye.ts.net "journalctl -u SERVICE -f"
+   
+   # Test with curl
+   curl -I https://SERVICE.DOMAIN --resolve SERVICE.DOMAIN:443:IP_ADDRESS
+   
+   # Check Nix evaluation
+   nix eval .#nixosConfigurations.HOST.config.services.SERVICE --json | jq
+   ```
+
 ## Common Commands
 
 The repository includes a `justfile` that provides convenient commands for common operations. Run `just` to see all available commands.
+
+**Note**: The `just` command is automatically available when you `cd` into the nix directory (via direnv). If direnv is not set up, you can manually enter the shell with `nix develop`.
 
 ### System Management
 
@@ -85,7 +115,8 @@ cd /home/jeremy/dotfiles/nix
 
 # Deploy to specific hosts
 just deploy bee                  # Deploy to single host
-just deploy halo                 # Deploy to another host
+just deploy bee halo             # Deploy to multiple hosts
+just deploy bee halo pi          # Deploy to any combination
 
 # Deploy to all hosts
 just deploy-all
@@ -100,6 +131,12 @@ just diff bee
 just deploy-direct halo 46.62.144.212
 just deploy-direct bee 192.168.1.245
 ```
+
+**Deployment Notes**:
+- All hosts require Tailscale access (`.sole-bigeye.ts.net` domain)
+- `deploy-direct` still needs firewall access - won't bypass Tailscale-only restrictions
+- **Locked out?** Hetzner: disable firewall via console; Local: JetKVM (movable between bee/pi)
+- After network changes: wait 2-3 min, deployment may have succeeded but disconnected
 
 #### Other Commands
 ```bash
@@ -146,6 +183,22 @@ cd /home/jeremy/dotfiles/nix
 git add .
 just rebuild
 ```
+
+## Security Considerations
+
+**This repository is intended to be published publicly.** All configurations must be secure even with full public knowledge:
+
+- **No secrets in code**: All sensitive data uses age-encrypted secrets or environment files
+- **No hardcoded IPs**: Internal IPs (192.168.x.x) and Tailscale IPs are not sensitive
+- **No security through obscurity**: Security relies on proper authentication, not hidden URLs
+- **Safe service exposure**: Services use Tailscale-only access or proper authentication
+- **Domain strategy**: Internal services on .home.jeremyk.net are DNS-blocked externally
+
+When adding new services or configurations:
+1. Never commit passwords, API keys, or tokens (use secrets.nix and age encryption)
+2. Ensure all internal services are behind Tailscale middleware
+3. Document all access methods openly - security comes from authentication, not secrecy
+4. Use standard ports and practices - no security through obscurity
 
 ### Development
 ```bash

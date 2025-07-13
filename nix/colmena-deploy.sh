@@ -12,6 +12,8 @@ if [ $# -eq 0 ]; then
     echo "Deploying to all hosts..."
     colmena apply --verbose
 else
+    # Build comma-separated list of hosts for colmena
+    HOSTS=$(IFS=,; echo "$*")
     echo "Deploying to: $@"
-    colmena apply --verbose --on "$@"
+    colmena apply --verbose --on "$HOSTS"
 fi

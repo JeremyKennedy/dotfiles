@@ -2,9 +2,9 @@
 default:
     @just --list
 
-# Deploy to a specific host
-deploy host:
-    ./colmena-deploy.sh {{host}}
+# Deploy to specific host(s)
+deploy +hosts:
+    ./colmena-deploy.sh {{hosts}}
 
 # Deploy to all hosts
 deploy-all:

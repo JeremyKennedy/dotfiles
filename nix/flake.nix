@@ -131,7 +131,7 @@
 
       bee = {
         deployment = {
-          targetHost = "192.168.1.245";
+          targetHost = "bee.sole-bigeye.ts.net";
           targetUser = "root";
           buildOnTarget = false;
         };
@@ -144,7 +144,7 @@
 
       halo = {
         deployment = {
-          targetHost = "46.62.144.212";
+          targetHost = "halo.sole-bigeye.ts.net";
           targetUser = "root";
           buildOnTarget = false;
         };
@@ -157,7 +157,7 @@
 
       pi = {
         deployment = {
-          targetHost = "192.168.1.230";
+          targetHost = "pi.sole-bigeye.ts.net";
           targetUser = "root";
           buildOnTarget = false; # Build ARM on desktop
         };

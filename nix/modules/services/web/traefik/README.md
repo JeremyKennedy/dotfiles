@@ -100,3 +100,62 @@ This provides fail-fast security:
 - Tower host: 192.168.1.240 (Unraid server, most services)
 - Bee host: localhost (DNS, Traefik, public site)
 - Halo host: 46.62.144.212 (Hetzner VPS, public monitoring)
+
+## Troubleshooting
+
+If Traefik isn't routing your services, check these common issues:
+
+### 1. Check if routers are loaded
+```bash
+# View all configured routers
+curl -s http://bee.sole-bigeye.ts.net:9090/api/http/routers | jq -r '.[].name' | sort
+
+# Should show your service routers, not just internal ones (api@internal, dashboard@internal, etc.)
+```
+
+### 2. Check Traefik logs for configuration errors
+```bash
+# Check for errors in the Traefik log
+ssh root@bee.sole-bigeye.ts.net "tail -100 /var/lib/traefik/traefik.log | jq 'select(.level == \"error\")'"
+
+# Common errors:
+# - "field not found" - incorrect middleware/service field names
+# - "connection refused" - backend service not running
+# - "no route to host" - wrong IP/hostname for backend
+```
+
+### 3. Verify service is running
+```bash
+# Test backend service directly
+ssh root@bee.sole-bigeye.ts.net "curl -I http://localhost:PORT"
+
+# Check service status
+ssh root@bee.sole-bigeye.ts.net "systemctl status SERVICE_NAME"
+```
+
+### 4. Check generated configuration
+```bash
+# View what Nix generated for a specific router
+nix eval .#nixosConfigurations.bee.config.services.traefik.dynamicConfigOptions.http.routers.SERVICE_NAME --json | jq
+
+# Check if your service is in the configuration
+nix eval .#nixosConfigurations.bee.config.services.traefik.dynamicConfigOptions.http.routers --json | jq 'keys'
+```
+
+### 5. Restart Traefik after fixes
+```bash
+# Deploy configuration changes
+just deploy bee
+
+# Or just restart Traefik
+ssh root@bee.sole-bigeye.ts.net "systemctl restart traefik"
+```
+
+### 6. Test with curl
+```bash
+# Test routing by forcing resolution to bee
+curl -I https://SERVICE.jeremyk.net --resolve SERVICE.jeremyk.net:443:192.168.1.245
+
+# Test internal services via Tailscale
+curl -I https://SERVICE.home.jeremyk.net
+```
