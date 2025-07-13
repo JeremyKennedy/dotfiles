@@ -1,4 +1,14 @@
 # AdGuard Home DNS filtering service
+# 
+# Access: http://bee.sole-bigeye.ts.net:3000
+# Initial setup: Create admin user via web interface
+# 
+# Features:
+# - DNS filtering and ad blocking
+# - DNSSEC support
+# - DoH/DoT upstream support
+# - Web interface on port 3000 (Tailscale only)
+# - DNS service on port 5353 (used by CoreDNS)
 {
   config,
   pkgs,

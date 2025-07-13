@@ -1,4 +1,18 @@
 # Traefik ingress controller and reverse proxy
+#
+# Dashboard: http://bee.sole-bigeye.ts.net:9090/
+#
+# Features:
+# - HTTP/HTTPS reverse proxy
+# - Automatic HTTPS with Let's Encrypt
+# - Dashboard on port 9090 (Tailscale only)
+# - Metrics endpoint for Prometheus
+# - Rate limiting and security headers
+#
+# To add new services:
+# 1. Add router in dynamicConfigOptions.http.routers
+# 2. Add service in dynamicConfigOptions.http.services
+# 3. Or use file provider in /etc/traefik/conf.d/
 {
   config,
   pkgs,
@@ -19,7 +33,7 @@
       api = {
         dashboard = true;
         debug = false;
-        insecure = false; # Require authentication
+        insecure = true; # Allow direct access on Tailscale
       };
 
       # Entrypoints configuration
@@ -45,6 +59,11 @@
               certResolver = "default";
             };
           };
+        };
+
+        # Dashboard endpoint (Tailscale only)
+        traefik = {
+          address = ":9090";
         };
 
         # Metrics endpoint (Prometheus)
@@ -206,7 +225,7 @@
     allowedTCPPorts = [80 443];
 
     # Dashboard only via Tailscale
-    interfaces."tailscale0".allowedTCPPorts = [8080];
+    interfaces."tailscale0".allowedTCPPorts = [9090];
   };
 
   # Ensure Traefik starts after network is ready

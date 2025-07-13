@@ -1,4 +1,17 @@
 # CoreDNS configuration for local DNS resolution
+#
+# Features:
+# - Primary DNS server on port 53
+# - Forwards queries to AdGuard Home on port 5353 for filtering
+# - Handles .home domain for local services
+# - Health check endpoint: http://bee.sole-bigeye.ts.net:8080/health (returns "OK")
+#   Used by monitoring tools like Uptime Kuma, not meant for browser access
+#
+# To add local DNS entries:
+# - Edit the hosts section in the config
+# - Example: 192.168.1.100 service.home
+#
+# DNS flow: Client -> CoreDNS:53 -> AdGuard:5353 -> Upstream DNS
 {
   config,
   pkgs,

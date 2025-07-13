@@ -1,4 +1,20 @@
 # Uptime Kuma monitoring service
+#
+# Access: http://halo.sole-bigeye.ts.net:3001
+# Initial setup: Create admin account on first visit
+#
+# Features:
+# - Service uptime monitoring
+# - Multiple notification channels
+# - Status pages
+# - Docker container monitoring
+# - SSL certificate monitoring
+#
+# Recommended monitors:
+# - HTTP(s) monitors for all web services
+# - TCP monitors for SSH (port 22)
+# - DNS monitors for DNS services
+# - Ping monitors for hosts
 {
   config,
   lib,
