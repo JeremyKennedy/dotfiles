@@ -17,10 +17,15 @@
   networking.hostName = "halo";
   system.stateVersion = "24.05";
 
-  # Boot configuration (from hetz-nix)
-  boot.loader.grub = {
-    efiSupport = true;
-    efiInstallAsRemovable = true;
+  # Boot configuration (from hetz-nix) - override common systemd-boot
+  boot.loader = {
+    systemd-boot.enable = lib.mkForce false;
+    efi.canTouchEfiVariables = lib.mkForce false; # Required for efiInstallAsRemovable
+    grub = {
+      enable = true;
+      efiSupport = true;
+      efiInstallAsRemovable = true;
+    };
   };
 
   # SSH brute force protection
@@ -57,9 +62,6 @@
     checkReversePath = "loose"; # Required for exit nodes
   };
 
-  # Performance
-  zramSwap.enable = true;
-
   # Optimize network for Tailscale exit node performance
   systemd.services.tailscale-optimize-network = {
     description = "Optimize network settings for Tailscale";
@@ -78,12 +80,5 @@
     allowReboot = true;
     dates = "02:00";
     randomizedDelaySec = "45min";
-  };
-
-  # Nix garbage collection
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 7d";
   };
 }

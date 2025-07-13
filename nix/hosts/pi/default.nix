@@ -9,19 +9,11 @@
   system.stateVersion = "24.11";
   nixpkgs.hostPlatform = "aarch64-linux";
 
-  # Raspberry Pi specific boot configuration
+  # Raspberry Pi specific boot configuration - override common systemd-boot
   boot.loader = {
+    systemd-boot.enable = lib.mkForce false;
+    efi.canTouchEfiVariables = lib.mkForce false;
     grub.enable = false;
     generic-extlinux-compatible.enable = true;
-  };
-
-  # Performance settings for ARM/Pi4
-  zramSwap.enable = true;
-  
-  # Nix garbage collection
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 7d";
   };
 }

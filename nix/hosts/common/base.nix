@@ -5,14 +5,24 @@
     trusted-users = ["root"];
   };
   
+  # Automatic garbage collection and optimization
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
+  
+  # Automatic store optimization (deduplication)
+  nix.optimise = {
+    automatic = true;
+    dates = ["weekly"];
+  };
+  
   time.timeZone = "America/Toronto";
   i18n.defaultLocale = "en_CA.UTF-8";
   
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  
-  # Clean /tmp on boot
-  boot.tmp.cleanOnBoot = true;
   
   # Set root password for console access (KVM)
   # Using initialHashedPassword - sets password on first boot only

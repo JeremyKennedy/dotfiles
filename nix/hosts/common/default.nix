@@ -2,6 +2,8 @@
 { ... }: {
   imports = [
     ./base.nix
+    ./boot.nix
+    ./performance.nix
     ./shell.nix
     ./git.nix
     ./ssh.nix
