@@ -32,7 +32,7 @@
 
   # Additional packages for VPS
   environment.systemPackages = with pkgs; [
-    claude-code
+    # VPS-specific packages can be added here
   ];
 
   # Uptime Kuma - NOT publicly exposed, bind to localhost only

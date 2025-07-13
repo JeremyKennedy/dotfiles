@@ -22,7 +22,8 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 - [ ] **Phase 10**: DNS/Ingress Debug & Testing Utilities - 0/3 tasks
 
 ### Quick Reference - Current Task
-**Next Task**: Phase 1.1 - Create directory structure
+**Current**: Phase 2 - Adding server host configurations
+**Completed**: Added claude-code to all hosts via common/base.nix
 
 ### Baseline Capture and Validation
 

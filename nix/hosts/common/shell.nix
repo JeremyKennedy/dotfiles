@@ -34,7 +34,16 @@
     nix-direnv.enable = true;
   };
   
-  users.users.root.shell = pkgs.fish;
+  # Keep bash as root's shell to avoid breaking automation tools
+  # But automatically start fish for interactive sessions
+  programs.bash = {
+    interactiveShellInit = ''
+      # Automatically start fish for interactive sessions
+      if [[ $- == *i* ]] && [[ -x ${pkgs.fish}/bin/fish ]]; then
+        exec ${pkgs.fish}/bin/fish
+      fi
+    '';
+  };
   
   environment.systemPackages = with pkgs; [
     fish
