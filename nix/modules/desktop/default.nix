@@ -15,5 +15,6 @@
     ./applications.nix # Desktop applications (browsers, communication, etc)
     ./development.nix # Development tools and IDEs
     ./wayland-tools.nix # Wayland/Hyprland specific tools
+    ./terminal.nix # Terminal emulator
   ];
 }

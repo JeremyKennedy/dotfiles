@@ -21,4 +21,7 @@
 
   # Automatic mounting of removable media
   services.udisks2.enable = true;
+  
+  # Note: nextcloud-client service better configured in home-manager for user-specific settings
+  # hypridle and dunst services also better in home-manager for user customization
 }

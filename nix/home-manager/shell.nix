@@ -12,13 +12,7 @@
           fortune -a | cowsay -n | lolcat
         end
 
-        # init starship prompt
-        # we do this manually to avoid the starship init script from preventing
-        # the any-nix-shell integration from showing info on the right
-        ${pkgs.starship}/bin/starship init fish | source
-
-        # init any-nix-shell integration
-        ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
+        # starship and any-nix-shell now handled by core
 
         # don't add spaces at end of abbrs unless explicitly defined in the abbr
         # bind " " expand-abbr or self-insert
@@ -31,15 +25,11 @@
       #   ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
       # '';
       shellAbbrs = {
-        g = "git";
-        v = "nvim";
-        e = "eza";
-        tree = "tre";
+        # Core abbreviations handled in core/shell.nix
+        # Keep only user-specific ones here
         co = "gh copilot";
 
-        nr = "sudo nixos-rebuild switch";
-        nru = "sudo nixos-rebuild switch --upgrade";
-
+        # Server shortcuts (user-specific)
         t = "ssh tower.lan -t fish";
         tower = "ssh tower.lan -t fish";
         tdl = "ssh tower.lan docker logs -f";
@@ -48,11 +38,8 @@
         tdr = "ssh tower.lan docker restart";
         tde = "ssh tower.lan -t docker exec -it";
 
-        run = "nix run nixpkgs#";
-        shell = "nix shell nixpkgs#";
-
+        # User-specific shortcuts
         modown = "sudo chmod 777 -R . ; sudo chown -R jeremy:users . ; ll";
-
         ha = "hass-cli";
       };
       plugins = [
@@ -60,13 +47,7 @@
       ];
     };
 
-    starship = {
-      enable = true;
-      # neede for any-nix-shell integration to show info on the right
-      enableFishIntegration = false;
-      settings = {
-      };
-    };
+    # starship now configured in core modules
 
     alacritty = {
       enable = true;
@@ -90,26 +71,6 @@
     #   enableFishIntegration = true;
     # };
 
-    neovim = {
-      enable = true;
-      viAlias = true;
-      vimAlias = true;
-      defaultEditor = true;
-    };
-
-    eza = {
-      enable = true;
-      enableFishIntegration = true;
-    };
-
-    fzf = {
-      enable = true;
-      enableFishIntegration = true;
-      defaultCommand = "${pkgs.ripgrep}/bin/rg --files --follow 2> /dev/null";
-      # ctrl-t
-      fileWidgetCommand = "${pkgs.ripgrep}/bin/rg --files --follow 2> /dev/null";
-      # alt-c
-      changeDirWidgetCommand = "${pkgs.fd}/bin/fd --type d 2> /dev/null";
-    };
+    # neovim, eza, fzf now configured in core modules
   };
 }

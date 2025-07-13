@@ -72,13 +72,6 @@
           echo "🎯 Hosts: JeremyDesktop, bee, halo, pi"
           echo ""
           echo "📋 Run 'just' to see available commands"
-          echo ""
-
-          # Convenient aliases that mirror just commands
-          alias dev="just"
-          alias deploy="just deploy"
-          alias check="just check"
-          alias status="just status"
         '';
       };
     });

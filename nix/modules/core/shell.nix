@@ -6,7 +6,7 @@
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
-      # Common aliases
+      # Common aliases (prefer abbreviations for better completion)
       alias g='git'
       alias v='nvim'
       alias ll='eza -la'
@@ -21,6 +21,9 @@
       # System shortcuts
       alias nr='sudo nixos-rebuild switch'
       alias nru='sudo nixos-rebuild switch --upgrade'
+      
+      # any-nix-shell integration
+      ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
     '';
   };
 
@@ -63,4 +66,20 @@
     any-nix-shell # nix shell manager for fish
     devenv # dev environment manager
   ];
+
+  # fzf configuration - good defaults for all users
+  environment.etc."profile.d/fzf.sh".text = ''
+    # fzf configuration
+    export FZF_DEFAULT_COMMAND='${pkgs.ripgrep}/bin/rg --files --follow --hidden --glob "!.git/*"'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND='${pkgs.fd}/bin/fd --type d --hidden --follow --exclude .git'
+    export FZF_DEFAULT_OPTS='
+      --height 40%
+      --layout=reverse
+      --border
+      --preview "${pkgs.bat}/bin/bat --style=numbers --color=always --line-range :500 {}"
+      --preview-window right:50%
+      --bind "ctrl-u:preview-page-up,ctrl-d:preview-page-down"
+    '
+  '';
 }
