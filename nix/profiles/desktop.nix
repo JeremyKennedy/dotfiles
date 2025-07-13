@@ -37,7 +37,6 @@
     jack.enable = true;
   };
 
-
   # Don't auto-upgrade desktops (user should control this)
   system.autoUpgrade.enable = lib.mkDefault false;
 }

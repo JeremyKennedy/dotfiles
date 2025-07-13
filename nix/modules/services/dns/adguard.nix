@@ -72,7 +72,7 @@
         parental_enabled = false;
         safebrowsing_enabled = true;
         safesearch_enabled = false;
-        
+
         # DNS rewrites for local domains
         rewrites = [
           {

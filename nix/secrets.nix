@@ -6,7 +6,7 @@ let
   # pi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... root@pi";
 
   allUsers = [jeremy];
-  allSystems = [navi bee halo]
+  allSystems = [navi bee halo];
 in {
   "secrets/hass_token.age".publicKeys = allUsers ++ allSystems;
   "secrets/hass_server.age".publicKeys = allUsers ++ allSystems;

@@ -10,7 +10,7 @@
     description = "Simple public site";
     after = ["network.target"];
     wantedBy = ["multi-user.target"];
-    
+
     serviceConfig = {
       Type = "simple";
       ExecStart = "${pkgs.python3}/bin/python3 -m http.server 8888 --bind 127.0.0.1";
@@ -18,7 +18,7 @@
       User = "public-site";
       Group = "public-site";
       Restart = "always";
-      
+
       # Security hardening
       PrivateTmp = true;
       ProtectSystem = "strict";
@@ -35,7 +35,7 @@
     home = "/var/lib/public-site";
     createHome = true;
   };
-  
+
   users.groups.public-site = {};
 
   # Create a simple index.html that returns 200 OK
