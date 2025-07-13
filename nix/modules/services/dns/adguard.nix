@@ -66,19 +66,13 @@
         safesearch_enabled = false;
       };
 
-      # Default blocklists
+      # OISD big blocklist - comprehensive and well-maintained
       filters = [
         {
           enabled = true;
-          url = "https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt";
-          name = "AdGuard DNS filter";
+          url = "https://big.oisd.nl";
+          name = "OISD Big Blocklist";
           id = 1;
-        }
-        {
-          enabled = true;
-          url = "https://adguardteam.github.io/HostlistsRegistry/assets/filter_2.txt";
-          name = "AdAway Default Blocklist";
-          id = 2;
         }
       ];
 
