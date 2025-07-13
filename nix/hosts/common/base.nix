@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   nix.settings = {
     experimental-features = "nix-command flakes";
     auto-optimise-store = true;
@@ -13,6 +13,10 @@
   
   # Clean /tmp on boot
   boot.cleanTmpDir = true;
+  
+  # Set root password for console access (KVM)
+  # Using initialHashedPassword - sets password on first boot only
+  users.users.root.initialHashedPassword = "$y$j9T$3KdaDnlEVteVKGJVOb.7K.$dZ6nvJLslJLLOthX5ClorJgVZ2chzVq5M2fNun1QVm0"; # "nixos"
   
   # Core system packages
   environment.systemPackages = with pkgs; [

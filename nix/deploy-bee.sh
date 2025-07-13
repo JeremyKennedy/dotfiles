@@ -20,7 +20,6 @@ cd "$(dirname "$0")"
 echo "Building and deploying bee..."
 nix run github:nix-community/nixos-anywhere -- \
     --flake .#bee \
-    --extra-experimental-features "nix-command flakes" \
-    root@192.168.1.245
+    --target-host nixos@192.168.1.245
 
-echo "Deployment complete! You can now SSH to bee using: ssh jeremy@192.168.1.245"
+echo "Deployment complete! You can now SSH to bee using: ssh root@192.168.1.245"

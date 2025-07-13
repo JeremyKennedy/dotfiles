@@ -34,7 +34,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: let
+  outputs = { self, nixpkgs, colmena, ... }@inputs: let
     inherit (self) outputs;
     systems = ["x86_64-linux"];
     forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -110,8 +110,8 @@
       };
     };
     
-    # Colmena deployment configuration
-    colmena = {
+    # Colmena deployment configuration - expose as colmenaHive
+    colmenaHive = inputs.colmena.lib.makeHive {
       meta = {
         nixpkgs = import nixpkgs { system = "x86_64-linux"; };
         specialArgs = { inherit inputs outputs; };
@@ -123,7 +123,12 @@
           targetUser = "root";
           buildOnTarget = false;
         };
-        imports = [ self.nixosConfigurations.JeremyDesktop.config ];
+        imports = [
+          inputs.hyprland.nixosModules.default
+          {programs.hyprland.enable = true;}
+          inputs.agenix.nixosModules.default
+          ./hosts/jeremydesktop/default.nix
+        ];
       };
       
       bee = {
@@ -132,7 +137,11 @@
           targetUser = "root";
           buildOnTarget = false;
         };
-        imports = [ self.nixosConfigurations.bee.config ];
+        imports = [
+          inputs.agenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          ./hosts/bee/default.nix
+        ];
       };
       
       halo = {
@@ -141,7 +150,11 @@
           targetUser = "root";
           buildOnTarget = false;
         };
-        imports = [ self.nixosConfigurations.halo.config ];
+        imports = [
+          inputs.agenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          ./hosts/halo/default.nix
+        ];
       };
       
       pi = {
@@ -150,7 +163,12 @@
           targetUser = "root";
           buildOnTarget = false;  # Build ARM on desktop
         };
-        imports = [ self.nixosConfigurations.pi.config ];
+        nixpkgs.system = "aarch64-linux";
+        imports = [
+          inputs.agenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          ./hosts/pi/default.nix
+        ];
       };
     };
   };
