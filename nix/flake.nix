@@ -63,14 +63,22 @@
           inputs.colmena.packages.${system}.colmena
           nixos-anywhere
           inputs.disko.packages.${system}.disko
+          just
         ];
 
         shellHook = ''
           echo "🔧 NixOS Homelab Dev Environment"
-          echo "📦 Additional tools: colmena, nixos-anywhere, disko"
+          echo "📦 Additional tools: colmena, nixos-anywhere, disko, just"
           echo "🎯 Hosts: JeremyDesktop, bee, halo, pi"
           echo ""
-          echo "System tools already available: alejandra, agenix, git, nix-tree, nix-diff"
+          echo "📋 Run 'just' to see available commands"
+          echo ""
+          
+          # Convenient aliases that mirror just commands
+          alias dev="just"
+          alias deploy="just deploy"
+          alias check="just check"
+          alias status="just status"
         '';
       };
     });

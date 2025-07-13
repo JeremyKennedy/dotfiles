@@ -1,0 +1,69 @@
+# List all available commands
+default:
+    @just --list
+
+# Deploy to a specific host
+deploy host:
+    ./colmena-deploy.sh {{host}}
+
+# Deploy to all hosts
+deploy-all:
+    ./colmena-deploy.sh
+
+# Check all flake configurations
+check:
+    nix flake check
+
+# Check a specific host configuration  
+check-host host:
+    nix build .#nixosConfigurations.{{host}}.config.system.build.toplevel --dry-run
+
+# Update flake inputs
+update:
+    nix flake update
+
+# Format all nix files
+fmt:
+    nix fmt
+
+# Show deployment status
+status:
+    @echo "Checking hosts..."
+    @for host in bee halo pi; do \
+        echo -n "$host: "; \
+        ssh -o ConnectTimeout=5 root@$host.sole-bigeye.ts.net "nixos-version" 2>/dev/null || echo "unreachable"; \
+    done
+
+# Rebuild local desktop
+rebuild:
+    sudo nixos-rebuild switch --flake .#JeremyDesktop
+
+# Emergency deploy when colmena fails
+deploy-direct host ip:
+    ./deploy-host.sh --existing-nix {{host}} root@{{ip}}
+
+# Build a specific host configuration without deploying
+build host:
+    nix build .#nixosConfigurations.{{host}}.config.system.build.toplevel
+
+# Enter a host-specific nix shell
+shell host:
+    nix develop .#nixosConfigurations.{{host}}.config.system.build.toplevel
+
+# Show what would change in a deployment
+diff host:
+    colmena build --on {{host}}
+    @echo "Run 'colmena apply --on {{host}}' to deploy"
+
+# Run garbage collection on a host
+gc host:
+    ssh root@{{host}} "nix-collect-garbage -d"
+
+# Show system info for all hosts
+info:
+    @echo "System Information:"
+    @echo "=================="
+    @for host in JeremyDesktop bee halo pi; do \
+        echo -n "$$host: "; \
+        nix eval --raw .#nixosConfigurations.$$host.config.system.stateVersion 2>/dev/null || echo "error"; \
+    done
