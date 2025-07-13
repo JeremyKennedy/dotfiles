@@ -28,8 +28,10 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 - **Phase 6** - Full Deployment and Validation (DNS services deployed and working!)
 
 ### 📝 Recent Accomplishments
-- **DNS Services Deployed** - CoreDNS, AdGuard Home, and Traefik all running on bee
-- **.home Domain Resolution** - Successfully working after fixing CoreDNS hosts plugin
+- **DNS Services Deployed** - AdGuard Home (primary DNS) and CoreDNS (backup) running on bee
+- **DNS Architecture Updated** - AdGuard on port 53, CoreDNS on port 5354
+- **Client IP Visibility** - Fixed! AdGuard now shows real client IPs instead of localhost
+- **Wildcard DNS** - Declaratively configured for *.home and *.home.jeremyk.net domains
 - **Desktop DNS Updated** - Desktop now uses bee as primary DNS server
 - **Services Accessible** - AdGuard (port 3000), Traefik dashboard (port 9090)
 
@@ -58,7 +60,7 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 
 ### Quick Reference - Current Task
 **Current**: Phase 6 - Testing and validating DNS infrastructure on bee
-**Last Update**: DNS services deployed, .home domains working, desktop using bee for DNS
+**Last Update**: DNS architecture refactored - AdGuard primary (port 53), CoreDNS backup (port 5354), client IPs now visible
 
 ### Baseline Capture and Validation
 
@@ -1084,106 +1086,100 @@ Home-manager was cleaned up to remove duplications with core modules:
 - [x] **5.6**: Configure Tailscale IP assignment for bee ✅
 - [x] **5.7**: Test all services build successfully ✅
 
-### 5.1 CoreDNS Module
+### 5.1 DNS Architecture Update
+
+**New Architecture** (as implemented):
+- **AdGuard Home**: Primary DNS on port 53 - handles filtering and shows client IPs
+- **CoreDNS**: Backup DNS on port 5354 - handles special cases if needed
 
 ```nix
-# hosts/common/dns.nix
-{ config, lib, pkgs, ... }: {
+# modules/services/dns/adguard.nix - Primary DNS
+{
+  services.adguardhome = {
+    enable = true;
+    mutableSettings = false;  # Fully declarative configuration
+    settings = {
+      dns = {
+        bind_hosts = ["0.0.0.0"];
+        port = 53;  # Primary DNS port
+        
+        # Wildcard DNS rewrites (declarative)
+        rewrites = [
+          {
+            domain = "*.home";
+            answer = "100.74.102.74";
+          }
+          {
+            domain = "*.home.jeremyk.net";
+            answer = "100.74.102.74";
+          }
+        ];
+      };
+      
+      filtering = {
+        # Filtering settings with rewrites
+        rewrites = [
+          {
+            domain = "*.home";
+            answer = "100.74.102.74";
+          }
+          {
+            domain = "*.home.jeremyk.net";
+            answer = "100.74.102.74";
+          }
+        ];
+      };
+    };
+  };
+}
+
+# modules/services/dns/coredns.nix - Backup DNS
+{
   services.coredns = {
     enable = true;
     config = ''
-      .:53 {
-        forward . 127.0.0.1:5353  # Forward to AdGuard
-        cache 30
-        log
-        errors
+      # Secondary DNS on port 5354
+      home:5354 {
+        # Handles .home domains if AdGuard fails
+        hosts {
+          100.74.102.74 bee.home adguard.home traefik.home dns.home
+          fallthrough
+        }
       }
       
-      home:53 {
-        log
-        errors
-        hosts {
-          # Host entries
-          100.64.0.1 bee.home
-          100.64.0.2 halo.home
-          100.64.0.3 pi.home
-          
-          # Service entries
-          100.64.0.1 traefik.home
-          100.64.0.1 adguard.home
-          100.64.0.1 dns.home
-          100.64.0.2 uptime.home
-          
-          # Future services
-          100.64.0.1 nextcloud.home
-          100.64.0.1 radarr.home
-          100.64.0.1 sonarr.home
+      home.jeremyk.net:5354 {
+        # Wildcard support using template
+        template IN A home.jeremyk.net {
+          match ^([a-zA-Z0-9-]+\.)?home\.jeremyk\.net\.$
+          answer "{{ .Name }} 300 IN A 100.74.102.74"
+          fallthrough
         }
+      }
+      
+      .:5354 {
+        # Forward other queries to AdGuard
+        forward . 127.0.0.1:53
       }
     '';
   };
   
   networking.firewall = {
-    allowedTCPPorts = [ 53 ];
-    allowedUDPPorts = [ 53 ];
+    allowedTCPPorts = [ 5354 ];
+    allowedUDPPorts = [ 5354 ];
   };
 }
 ```
 
-### 5.2 AdGuard Home Module
+### 5.2 Updated DNS Services Status
 
-```nix
-# hosts/common/adguard.nix
-{ config, lib, pkgs, ... }: {
-  services.adguardhome = {
-    enable = true;
-    mutableSettings = false;
-    settings = {
-      bind_host = "0.0.0.0";
-      bind_port = 5353;
-      
-      web = {
-        bind_host = "127.0.0.1";  # Local only
-        bind_port = 3000;
-      };
-      
-      dns = {
-        bind_hosts = ["0.0.0.0"];
-        port = 5353;
-        
-        upstream_dns = [
-          "https://dns.cloudflare.com/dns-query"
-          "https://dns.google/dns-query"
-          "1.1.1.1"
-          "8.8.8.8"
-        ];
-        
-        filtering_enabled = true;
-        filters_update_interval = 24;
-        
-        blocked_response_ttl = 10;
-        
-        cache_size = 4194304;  # 4MB
-        cache_ttl_min = 0;
-        cache_ttl_max = 86400;
-      };
-      
-      filters = [
-        {
-          enabled = true;
-          url = "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt";
-          name = "AdGuard DNS filter";
-        }
-        {
-          enabled = true;
-          url = "https://someonewhocares.org/hosts/zero/hosts";
-          name = "Dan Pollock's List";
-        }
-      ];
-    };
-  };
-}
-```
+**DNS Architecture Changes**:
+- Swapped ports: AdGuard (53), CoreDNS (5354)
+- Fixed client IP visibility issue
+- Implemented declarative wildcard DNS configuration
+- Both `*.home` and `*.home.jeremyk.net` resolve to bee's Tailscale IP
+
+**Key Configuration Note**:
+DNS rewrites must be placed under `settings.filtering.rewrites` (not `settings.dns.rewrites`) for AdGuard Home to properly process them with `mutableSettings = false`.
 
 ### 5.3 Traefik Module
 
@@ -1388,11 +1384,16 @@ curl -k https://uptime.home:8443
 ### 6.3 DNS Services Status
 
 **Deployed and Working:**
-- **CoreDNS**: Running on port 53, handling .home domain resolution
-- **AdGuard Home**: Running on port 3000, accessible at http://100.74.102.74:3000
+- **AdGuard Home**: Running on port 53 (primary DNS), web UI at http://100.74.102.74:3000
+- **CoreDNS**: Running on port 5354 (backup DNS), handling special cases
 - **Traefik**: Running with dashboard at http://100.74.102.74:9090
-- **.home domains**: Resolving correctly (bee.home, adguard.home, traefik.home, dns.home)
+- **Wildcard domains**: Both `*.home` and `*.home.jeremyk.net` resolving to 100.74.102.74
+- **Client IP visibility**: Fixed - AdGuard now shows real client IPs
 - **Desktop DNS**: Using bee (100.74.102.74) as primary DNS server
+
+**Access URLs**:
+- AdGuard: http://adguard.home or https://adguard.home.jeremyk.net
+- Traefik: http://traefik.home or https://traefik.home.jeremyk.net
 
 ### 6.4 Troubleshooting Commands
 

@@ -68,41 +68,67 @@ This is a NixOS/home-manager dotfiles repository using Nix flakes. The configura
 
 ## Common Commands
 
+The repository includes a `justfile` that provides convenient commands for common operations. Run `just` to see all available commands.
+
 ### System Management
 
 #### Local Desktop Rebuild
 ```bash
 # Rebuild local desktop
-sudo nixos-rebuild switch --flake /home/jeremy/dotfiles/nix#JeremyDesktop
+cd /home/jeremy/dotfiles/nix
+just rebuild
 ```
 
 #### Remote Deployment
 ```bash
-# Enter development shell for deployment tools
-cd /home/jeremy/dotfiles/nix && nix develop
+cd /home/jeremy/dotfiles/nix
 
-# Deploy configuration updates to existing hosts
-./colmena-deploy.sh bee         # Deploy to single host
-./colmena-deploy.sh bee halo    # Deploy to multiple hosts
-./colmena-deploy.sh             # Deploy to ALL hosts
+# Deploy to specific hosts
+just deploy bee                  # Deploy to single host
+just deploy halo                 # Deploy to another host
 
-# Alternative: Use deploy script when colmena fails
-./deploy-host.sh --existing-nix halo root@46.62.144.212
-./deploy-host.sh --existing-nix bee root@192.168.1.245
+# Deploy to all hosts
+just deploy-all
+
+# Check deployment status
+just status
+
+# Show what would change before deploying
+just diff bee
+
+# Alternative: Use direct deploy when colmena fails
+just deploy-direct halo 46.62.144.212
+just deploy-direct bee 192.168.1.245
 ```
 
 #### Other Commands
 ```bash
 # Update flake inputs (packages)
-nix flake update /home/jeremy/dotfiles/nix
+just update
 
 # Format nix files
-nix fmt /home/jeremy/dotfiles/nix
+just fmt
 
-# Check system logs
+# Check flake configuration
+just check
+just check-host bee              # Check specific host
+
+# Build a host configuration without deploying
+just build bee
+
+# SSH to a host
+just ssh bee
+
+# Run garbage collection on a host
+just gc halo
+
+# Show system info for all hosts
+just info
+
+# Check system logs (still requires direct command)
 sudo journalctl -u <service-name>
 
-# Manage systemd services
+# Manage systemd services (still requires direct commands)
 sudo systemctl status <service-name>
 sudo systemctl restart <service-name>
 ```
@@ -113,17 +139,23 @@ sudo systemctl restart <service-name>
 
 ```bash
 # Add new files before rebuilding
+cd /home/jeremy/dotfiles/nix
 git add .
-sudo nixos-rebuild switch --flake /home/jeremy/dotfiles/nix#JeremyDesktop
+just rebuild
 ```
 
 ### Development
 ```bash
+cd /home/jeremy/dotfiles/nix
+
 # Enter development shell with nix tools available
-nix develop /home/jeremy/dotfiles/nix
+nix develop
 
 # Build specific package from pkgs/
-nix build /home/jeremy/dotfiles/nix#<package-name>
+nix build .#<package-name>
+
+# Enter host-specific nix shell
+just shell bee
 ```
 
 ### Custom Services
@@ -239,14 +271,14 @@ This repository now supports multiple NixOS hosts as part of a homelab deploymen
 **Deployment Commands**:
 ```bash
 # Deploy to a specific host using Colmena
-colmena apply --on bee
-colmena apply --on halo
+just deploy bee
+just deploy halo
 
 # Deploy to all hosts
-colmena apply
+just deploy-all
 
 # Check host status
-colmena exec -- uname -a
+just status
 
 # Initial deployment with nixos-anywhere (for new hosts)
 nix run github:nix-community/nixos-anywhere -- --flake .#bee root@<ip-address>
