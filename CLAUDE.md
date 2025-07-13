@@ -11,15 +11,13 @@ This is a NixOS/home-manager dotfiles repository using Nix flakes. The configura
 - `nix/flake.nix` - Main flake configuration defining all NixOS hosts (desktop, bee, halo, pi)
 - `nix/hosts/` - Host-specific configurations
   - `navi/` - Desktop workstation (hostname: JeremyDesktop)
-  - `bee/` - DNS and network services server
-  - `halo/` - VPS with monitoring services
-  - `pi/` - Raspberry Pi configuration
+  - `bee/` - DNS and network services server (192.168.1.245)
+  - `halo/` - VPS with monitoring services (46.62.144.212)
+  - `pi/` - Raspberry Pi configuration (192.168.1.230)
 - `nix/modules/` - Reusable NixOS modules
-  - `core/` - Modules used by ALL hosts (base, boot, networking, security, ssh, etc.)
-  - `system/` - Optional system modules (performance, monitoring, virtualization)
+  - `core/` - Modules used by ALL hosts (includes base, boot, networking, security, ssh, tailscale, performance, hardware, shell, git)
   - `desktop/` - Desktop/GUI modules (hyprland, graphics, audio)
-  - `services/` - Service modules (dns/, web/, monitoring/, custom/)
-  - `user/` - User-level modules (shell, git, development tools)
+  - `services/` - Service modules (dns/, web/, monitoring/)
   - `home/` - Home-manager modules (terminal, editors, browsers)
 - `nix/profiles/` - Composition profiles (server.nix, desktop.nix)
 - `nix/nixos/` - Legacy desktop configuration (being migrated)
@@ -71,10 +69,30 @@ This is a NixOS/home-manager dotfiles repository using Nix flakes. The configura
 ## Common Commands
 
 ### System Management
-```bash
-# Rebuild and switch system configuration
-sudo nixos-rebuild switch --flake /home/jeremy/dotfiles/nix#JeremyDesktop
 
+#### Local Desktop Rebuild
+```bash
+# Rebuild local desktop
+sudo nixos-rebuild switch --flake /home/jeremy/dotfiles/nix#JeremyDesktop
+```
+
+#### Remote Deployment
+```bash
+# Enter development shell for deployment tools
+cd /home/jeremy/dotfiles/nix && nix develop
+
+# Deploy configuration updates to existing hosts
+./colmena-deploy.sh bee         # Deploy to single host
+./colmena-deploy.sh bee halo    # Deploy to multiple hosts
+./colmena-deploy.sh             # Deploy to ALL hosts
+
+# Alternative: Use deploy script when colmena fails
+./deploy-host.sh --existing-nix halo root@46.62.144.212
+./deploy-host.sh --existing-nix bee root@192.168.1.245
+```
+
+#### Other Commands
+```bash
 # Update flake inputs (packages)
 nix flake update /home/jeremy/dotfiles/nix
 

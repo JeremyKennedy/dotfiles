@@ -8,10 +8,9 @@
   services.adguardhome = {
     enable = true;
     mutableSettings = true;
+    host = "0.0.0.0";
+    port = 3000;
     settings = {
-      bind_host = "0.0.0.0";
-      bind_port = 3000;
-
       dns = {
         bind_hosts = ["0.0.0.0"];
         port = 5353;

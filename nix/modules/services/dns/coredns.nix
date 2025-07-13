@@ -66,28 +66,10 @@
     '';
   };
 
-  # Run CoreDNS as a system service
+  # Ensure CoreDNS starts after AdGuard
   systemd.services.coredns = {
-    after = ["network-online.target" "adguardhome.service"];
+    after = lib.mkForce ["network-online.target" "adguardhome.service"];
     wants = ["network-online.target"];
-    wantedBy = ["multi-user.target"];
-
-    serviceConfig = {
-      Restart = "always";
-      RestartSec = "10s";
-
-      # Security hardening
-      DynamicUser = true;
-      NoNewPrivileges = true;
-      PrivateDevices = true;
-      ProtectHome = true;
-      ProtectSystem = "strict";
-      ReadWritePaths = [];
-
-      # Allow binding to port 53
-      AmbientCapabilities = "CAP_NET_BIND_SERVICE";
-      CapabilityBoundingSet = "CAP_NET_BIND_SERVICE";
-    };
   };
 
   # Open firewall for DNS
