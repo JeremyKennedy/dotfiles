@@ -1,10 +1,12 @@
 # NixOS systemd service configuration for mqtt-service
-{ config, lib, pkgs, ... }:
-
-let
-  python = pkgs.python3.withPackages (ps: with ps; [paho-mqtt]);
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  python = pkgs.python3.withPackages (ps: with ps; [paho-mqtt]);
+in {
   # Deploy the mqtt service script
   environment.etc."mqtt-service/main.py".source = ./main.py;
   environment.etc."mqtt-service/main.py".mode = "0755";

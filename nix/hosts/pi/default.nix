@@ -1,5 +1,10 @@
 # Raspberry Pi 4 configuration for pi
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   imports = [
     # Use server profile
     ../../profiles/server.nix
@@ -7,7 +12,7 @@
     # ./disko.nix
     # ./hardware-configuration.nix
   ];
-  
+
   networking.hostName = "pi";
   system.stateVersion = "24.11";
   nixpkgs.hostPlatform = "aarch64-linux";

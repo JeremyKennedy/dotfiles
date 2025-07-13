@@ -1,22 +1,27 @@
 # Traefik ingress controller and reverse proxy
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   services.traefik = {
     enable = true;
-    
+
     staticConfigOptions = {
       # Global configuration
       global = {
         checkNewVersion = false;
         sendAnonymousUsage = false;
       };
-      
+
       # API and dashboard configuration
       api = {
         dashboard = true;
         debug = false;
-        insecure = false;  # Require authentication
+        insecure = false; # Require authentication
       };
-      
+
       # Entrypoints configuration
       entryPoints = {
         web = {
@@ -32,7 +37,7 @@
             };
           };
         };
-        
+
         websecure = {
           address = ":443";
           http = {
@@ -41,13 +46,13 @@
             };
           };
         };
-        
+
         # Metrics endpoint (Prometheus)
         metrics = {
           address = "127.0.0.1:8082";
         };
       };
-      
+
       # Certificate resolvers
       certificatesResolvers = {
         default = {
@@ -63,7 +68,7 @@
           };
         };
       };
-      
+
       # Provider configuration
       providers = {
         # File provider for static configuration
@@ -71,7 +76,7 @@
           directory = "/etc/traefik/conf.d";
           watch = true;
         };
-        
+
         # Docker provider (if needed in future)
         # docker = {
         #   endpoint = "unix:///var/run/docker.sock";
@@ -79,20 +84,20 @@
         #   network = "traefik";
         # };
       };
-      
+
       # Logging
       log = {
         level = "INFO";
         filePath = "/var/log/traefik/traefik.log";
         format = "json";
       };
-      
+
       accessLog = {
         filePath = "/var/log/traefik/access.log";
         format = "json";
         bufferingSize = 100;
       };
-      
+
       # Metrics
       metrics = {
         prometheus = {
@@ -101,13 +106,13 @@
           addServicesLabels = true;
         };
       };
-      
+
       # Ping (health check)
       ping = {
         entryPoint = "web";
       };
     };
-    
+
     # Dynamic configuration
     dynamicConfigOptions = {
       http = {
@@ -116,13 +121,13 @@
           dashboard = {
             rule = "Host(`traefik.home`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))";
             service = "api@internal";
-            middlewares = [ "dashboard-auth" "tailscale-only" ];
+            middlewares = ["dashboard-auth" "tailscale-only"];
             tls = {
               certResolver = "default";
             };
           };
         };
-        
+
         middlewares = {
           # Basic auth for dashboard
           dashboard-auth = {
@@ -134,19 +139,19 @@
               ];
             };
           };
-          
+
           # Restrict to Tailscale network
           tailscale-only = {
             ipWhiteList = {
               sourceRange = [
-                "100.64.0.0/10"     # Tailscale CGNAT range
-                "fd7a:115c:a1e0::/48"  # Tailscale IPv6 range
+                "100.64.0.0/10" # Tailscale CGNAT range
+                "fd7a:115c:a1e0::/48" # Tailscale IPv6 range
                 "127.0.0.1/32"
                 "::1/128"
               ];
             };
           };
-          
+
           # Security headers
           security-headers = {
             headers = {
@@ -164,7 +169,7 @@
               };
             };
           };
-          
+
           # Rate limiting
           rate-limit = {
             rateLimit = {
@@ -174,7 +179,7 @@
             };
           };
         };
-        
+
         # Services configuration (examples)
         services = {
           # Example service for Uptime Kuma
@@ -189,24 +194,24 @@
       };
     };
   };
-  
+
   # Create configuration directory
   systemd.tmpfiles.rules = [
     "d /etc/traefik/conf.d 0755 traefik traefik -"
     "d /var/log/traefik 0755 traefik traefik -"
   ];
-  
+
   # Firewall configuration
   networking.firewall = {
-    allowedTCPPorts = [ 80 443 ];
-    
+    allowedTCPPorts = [80 443];
+
     # Dashboard only via Tailscale
-    interfaces."tailscale0".allowedTCPPorts = [ 8080 ];
+    interfaces."tailscale0".allowedTCPPorts = [8080];
   };
-  
+
   # Ensure Traefik starts after network is ready
   systemd.services.traefik = {
-    after = [ "network-online.target" "tailscaled.service" ];
-    wants = [ "network-online.target" ];
+    after = ["network-online.target" "tailscaled.service"];
+    wants = ["network-online.target"];
   };
 }

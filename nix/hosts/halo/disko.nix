@@ -1,6 +1,5 @@
 # Disko configuration for halo VPS (from hetz-nix, kept as-is)
-{ lib, ... }:
-{
+{lib, ...}: {
   disko.devices = {
     disk.disk1 = {
       device = lib.mkDefault "/dev/sda";

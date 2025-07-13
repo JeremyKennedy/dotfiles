@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   programs.git = {
     enable = true;
     config = {
@@ -12,22 +12,21 @@
       delta.enable = true;
     };
   };
-  
-  
+
   # Version control tools
   environment.systemPackages = with pkgs; [
     jujutsu
-    delta      # syntax-highlighting pager for git
-    gh         # GitHub CLI
-    ghq        # manage remote repository clones
+    delta # syntax-highlighting pager for git
+    gh # GitHub CLI
+    ghq # manage remote repository clones
   ];
-  
+
   # Jujutsu configuration
   environment.etc."jj/config.toml".text = ''
     [user]
     name = "Jeremy Kennedy"
     email = "me@jeremyk.net"
-    
+
     [ui]
     default-command = "log"
     editor = "nvim"

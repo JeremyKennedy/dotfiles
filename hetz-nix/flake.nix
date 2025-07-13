@@ -3,7 +3,11 @@
   inputs.disko.url = "github:nix-community/disko";
   inputs.disko.inputs.nixpkgs.follows = "nixpkgs";
 
-  outputs = { nixpkgs, disko, ... }: {
+  outputs = {
+    nixpkgs,
+    disko,
+    ...
+  }: {
     nixosConfigurations.hetz-nix = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [

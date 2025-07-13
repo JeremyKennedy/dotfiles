@@ -1,10 +1,10 @@
 # VPS configuration for halo (ported from hetz-nix)
-{ 
-  config, 
-  pkgs, 
-  lib, 
+{
+  config,
+  pkgs,
+  lib,
   modulesPath,
-  ... 
+  ...
 }: {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -32,12 +32,10 @@
     };
   };
 
-
   # Additional packages for VPS
   environment.systemPackages = with pkgs; [
     # VPS-specific packages can be added here
   ];
-
 
   # Enable IP forwarding for Tailscale exit node
   boot.kernel.sysctl = {

@@ -1,6 +1,4 @@
-{ config, ... }:
-
-{
+{config, ...}: {
   age.secrets = {
     hass_token = {
       file = ../secrets/hass_token.age;

@@ -4,11 +4,10 @@ let
   bee = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF6DJdpyEf13a3yHIEaX14VwcFAyYgsxFTHNkD1IBhpt root@bee";
   halo = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM5v8pwspKvNcB3PrEBQV0bQybQ4YyEZeiBFEZ5y7R75 root@halo";
   # pi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... root@pi";
-  
-  allUsers = [ jeremy ];
-  allSystems = [ jeremyDesktop ]; # Add bee here after getting its key
-in
-{
+
+  allUsers = [jeremy];
+  allSystems = [jeremyDesktop]; # Add bee here after getting its key
+in {
   "secrets/hass_token.age".publicKeys = allUsers ++ allSystems;
   "secrets/hass_server.age".publicKeys = allUsers ++ allSystems;
   "secrets/chatgpt_key.age".publicKeys = allUsers ++ allSystems;

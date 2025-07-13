@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
@@ -9,17 +9,17 @@
       alias la='eza -la'
       alias tree='tre'
       alias e='eza'
-      
+
       # Nix shortcuts
       alias run='nix run nixpkgs#'
       alias shell='nix shell nixpkgs#'
-      
-      # System shortcuts  
+
+      # System shortcuts
       alias nr='sudo nixos-rebuild switch'
       alias nru='sudo nixos-rebuild switch --upgrade'
     '';
   };
-  
+
   programs.starship.enable = true;
   programs.zoxide.enable = true;
   programs.neovim = {
@@ -33,7 +33,7 @@
     enable = true;
     nix-direnv.enable = true;
   };
-  
+
   # Keep bash as root's shell to avoid breaking automation tools
   # But automatically start fish for interactive sessions
   programs.bash = {
@@ -44,19 +44,19 @@
       fi
     '';
   };
-  
+
   environment.systemPackages = with pkgs; [
     fish
-    eza            # modern ls replacement
+    eza # modern ls replacement
     bat
     fd
-    fzf            # fuzzy finder
-    ripgrep        # search tool
-    tre-command    # tree command, improved
-    alejandra      # nix formatter
-    cht-sh         # command cheatsheet
-    glow           # markdown previewer in terminal
-    any-nix-shell  # nix shell manager for fish
-    devenv         # dev environment manager
+    fzf # fuzzy finder
+    ripgrep # search tool
+    tre-command # tree command, improved
+    alejandra # nix formatter
+    cht-sh # command cheatsheet
+    glow # markdown previewer in terminal
+    any-nix-shell # nix shell manager for fish
+    devenv # dev environment manager
   ];
 }
