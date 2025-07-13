@@ -1,18 +1,27 @@
-# Placeholder configuration for pi (Raspberry Pi)
+# Raspberry Pi 4 configuration for pi
 { config, pkgs, lib, ... }: {
+  imports = [
+    ../common
+    ./disko.nix
+  ];
+  
   networking.hostName = "pi";
   system.stateVersion = "24.11";
   nixpkgs.hostPlatform = "aarch64-linux";
-  
-  # Minimal boot config (will be replaced with actual config)
-  boot.loader.grub.device = "nodev";
-  
-  # Minimal filesystem config to make flake check pass
-  fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "ext4";
+
+  # Raspberry Pi specific boot configuration
+  boot.loader = {
+    grub.enable = false;
+    generic-extlinux-compatible.enable = true;
   };
+
+  # Performance settings for ARM/Pi4
+  zramSwap.enable = true;
   
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  # Nix garbage collection
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
 }
