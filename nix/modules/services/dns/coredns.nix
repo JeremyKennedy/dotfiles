@@ -84,6 +84,9 @@
     allowedUDPPorts = [53];
   };
 
+  # Disable systemd-resolved on DNS servers
+  services.resolved.enable = lib.mkForce false;
+  
   # Set this server as the system DNS resolver
   networking.nameservers = ["127.0.0.1"];
   networking.resolvconf.enable = false;

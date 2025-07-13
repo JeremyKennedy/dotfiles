@@ -37,8 +37,6 @@
     jack.enable = true;
   };
 
-  # Enable networking GUI
-  networking.networkmanager.enable = lib.mkDefault true;
 
   # Don't auto-upgrade desktops (user should control this)
   system.autoUpgrade.enable = lib.mkDefault false;

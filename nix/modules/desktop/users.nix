@@ -5,7 +5,6 @@
     isNormalUser = true;
     description = "Jeremy";
     extraGroups = [
-      "networkmanager" # Network management
       "wheel" # Sudo access
       "ftp" # FTP access
       "adbusers" # Android debugging

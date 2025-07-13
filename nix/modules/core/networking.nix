@@ -5,20 +5,36 @@
   pkgs,
   ...
 }: {
-  # Enable NetworkManager for easier network management
-  networking.networkmanager.enable = true;
+  # Use systemd-networkd for declarative network management
+  networking.useNetworkd = true;
+  networking.useDHCP = false; # Explicit per-interface DHCP
 
-  # Custom DNS configuration
-  networking.networkmanager.dns = "none";
-  networking.nameservers = [
-    "100.74.102.74" # bee (CoreDNS -> AdGuard Home)
-    "100.100.100.100" # Tailscale DNS (fallback)
-  ];
-  networking.search = ["sole-bigeye.ts.net" "home"];
+  # Let systemd-resolved manage resolv.conf
+  networking.resolvconf.enable = false;
 
-  # Enable DHCP for now until static IPs are confirmed working
-  networking.useDHCP = lib.mkDefault true;
-  networking.dhcpcd.enable = lib.mkDefault true;
+  # Configure systemd-networkd
+  systemd.network = {
+    enable = true;
+    networks."10-ethernet" = {
+      matchConfig.Name = "en*";
+      networkConfig = {
+        DHCP = "ipv4";
+        IPv6AcceptRA = true;
+        DNS = [ "100.74.102.74" ]; # bee DNS server (Tailscale IP)
+      };
+      dhcpV4Config = {
+        UseDNS = false; # Ignore DHCP-provided DNS
+      };
+    };
+  };
+
+  # Use systemd-resolved for DNS
+  services.resolved = {
+    enable = true;
+    dnssec = "false"; # May conflict with bee's AdGuard
+    domains = [ "~." ];
+    fallbackDns = [ "100.74.102.74" ]; # bee fallback (Tailscale IP)
+  };
 
   # Tailscale for all hosts
   services.tailscale = {
