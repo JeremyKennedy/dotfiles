@@ -4,11 +4,11 @@
   services.printing.enable = true;
 
   # Network discovery and mDNS
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true; # Enable mDNS NSS plugin
-    openFirewall = true; # Open UDP port 5353
-  };
+  # services.avahi = {
+  #   enable = true;
+  #   nssmdns4 = true; # Enable mDNS NSS plugin
+  #   openFirewall = true; # Open UDP port 5353
+  # };
 
   # Keyring for storing credentials
   services.gnome.gnome-keyring.enable = true;

@@ -40,16 +40,7 @@
       entryPoints = {
         web = {
           address = ":80";
-          http = {
-            # Redirect all HTTP to HTTPS
-            redirections = {
-              entryPoint = {
-                to = "websecure";
-                scheme = "https";
-                permanent = true;
-              };
-            };
-          };
+          # No automatic HTTPS redirect for internal services
         };
 
         websecure = {
@@ -145,6 +136,14 @@
               certResolver = "default";
             };
           };
+
+          # AdGuard Home router
+          adguard = {
+            rule = "Host(`adguard.home`)";
+            service = "adguard";
+            middlewares = ["tailscale-only"];
+            entryPoints = ["web"];
+          };
         };
 
         middlewares = {
@@ -199,16 +198,16 @@
           };
         };
 
-        # Services configuration (examples)
+        # Services configuration
         services = {
-          # Example service for Uptime Kuma
-          # uptime-kuma = {
-          #   loadBalancer = {
-          #     servers = [
-          #       { url = "http://localhost:3001"; }
-          #     ];
-          #   };
-          # };
+          # AdGuard Home
+          adguard = {
+            loadBalancer = {
+              servers = [
+                { url = "http://localhost:3000"; }
+              ];
+            };
+          };
         };
       };
     };
