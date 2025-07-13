@@ -7,4 +7,6 @@ nix/secrets.json
 # Baseline comparison files
 nix/baselines/
 
+# Build files
 **/.direnv/
+nix/result
