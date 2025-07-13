@@ -4,41 +4,39 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";  # For bleeding-edge packages
 
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    
     hyprland = {
       url = "github:hyprwm/Hyprland";
-      # build with your own instance of nixpkgs
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    
+    colmena = {
+      url = "github:zhaofengli/colmena";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    nixpkgs-stable,
-    nixpkgs-master,
-    home-manager,
-    hyprland,
-    agenix,
-  } @ inputs: let
+  outputs = { self, nixpkgs, ... }@inputs: let
     inherit (self) outputs;
-    # Supported systems for your flake packages, shell, etc.
-    systems = [
-      "x86_64-linux"
-    ];
-    # This is a function that generates an attribute by calling a function you
-    # pass to it, with each system as an argument
+    systems = ["x86_64-linux"];
     forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
     # Your custom packages
@@ -52,19 +50,107 @@
     # Your custom packages and modifications, exported as overlays
     overlays = import ./overlays {inherit inputs;};
 
-    # # Reusable nixos modules you might want to export
-    # # These are usually stuff you would upstream into nixpkgs
-    # nixosModules = import ./modules/nixos;
+    # Development shell for homelab management
+    devShells = forAllSystems (system: {
+      default = nixpkgs.legacyPackages.${system}.mkShell {
+        buildInputs = with nixpkgs.legacyPackages.${system}; [
+          # Only include tools not in system/home-manager config
+          inputs.colmena.packages.${system}.colmena
+          nixos-anywhere
+          inputs.disko.packages.${system}.disko
+        ];
+        
+        shellHook = ''
+          echo "🔧 NixOS Homelab Dev Environment"
+          echo "📦 Additional tools: colmena, nixos-anywhere, disko"
+          echo "🎯 Hosts: jeremydesktop, bee, halo, pi"
+          echo ""
+          echo "System tools already available: alejandra, agenix, git, nix-tree, nix-diff"
+        '';
+      };
+    });
 
     nixosConfigurations = {
       JeremyDesktop = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = [
-          hyprland.nixosModules.default
+          inputs.hyprland.nixosModules.default
           {programs.hyprland.enable = true;}
-          agenix.nixosModules.default
-          ./nixos/configuration.nix
+          inputs.agenix.nixosModules.default
+          ./hosts/jeremydesktop/default.nix
         ];
+      };
+      
+      bee = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          inputs.agenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          ./hosts/bee/default.nix
+        ];
+      };
+      
+      halo = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          inputs.agenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          ./hosts/halo/default.nix
+        ];
+      };
+      
+      pi = nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          inputs.agenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          ./hosts/pi/default.nix
+        ];
+      };
+    };
+    
+    # Colmena deployment configuration
+    colmena = {
+      meta = {
+        nixpkgs = import nixpkgs { system = "x86_64-linux"; };
+        specialArgs = { inherit inputs outputs; };
+      };
+      
+      jeremydesktop = {
+        deployment = {
+          targetHost = "localhost";
+          targetUser = "root";
+          buildOnTarget = false;
+        };
+        imports = [ self.nixosConfigurations.JeremyDesktop.config ];
+      };
+      
+      bee = {
+        deployment = {
+          targetHost = "192.168.1.245";
+          targetUser = "root";
+          buildOnTarget = false;
+        };
+        imports = [ self.nixosConfigurations.bee.config ];
+      };
+      
+      halo = {
+        deployment = {
+          targetHost = "46.62.144.212";
+          targetUser = "root";
+          buildOnTarget = false;
+        };
+        imports = [ self.nixosConfigurations.halo.config ];
+      };
+      
+      pi = {
+        deployment = {
+          targetHost = "192.168.1.230";
+          targetUser = "root";
+          buildOnTarget = false;  # Build ARM on desktop
+        };
+        imports = [ self.nixosConfigurations.pi.config ];
       };
     };
   };
