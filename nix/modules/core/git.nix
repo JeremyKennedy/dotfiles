@@ -15,7 +15,11 @@
 
   # Version control tools
   environment.systemPackages = with pkgs; [
-    jujutsu
+    # Wrap jujutsu to always use system config
+    (pkgs.writeShellScriptBin "jj" ''
+      export JJ_CONFIG="/etc/jj/config.toml"
+      exec ${pkgs.jujutsu}/bin/jj "$@"
+    '')
     delta # syntax-highlighting pager for git
     gh # GitHub CLI
     ghq # manage remote repository clones
