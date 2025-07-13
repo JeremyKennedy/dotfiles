@@ -67,7 +67,7 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 
 # Additional validation commands (all READ-ONLY)
 nix flake check
-sudo nixos-rebuild dry-build --flake .#jeremydesktop
+sudo nixos-rebuild dry-build --flake .#navi
 ```
 
 **IMPORTANT**: All baseline and validation commands are READ-ONLY. They will:
@@ -1014,61 +1014,53 @@ Later phases will replace `barebones.nix` with the full `default.nix` configurat
 }
 ```
 
-## Phase 4: Move Home-Manager Programs to System Level
+## Phase 4: Desktop Configuration Consolidation
 
-**Status**: ⏸️ Not Started
+**Status**: ✅ Complete
 
 ### Task List - Phase 4
-- [ ] **4.1**: Identify programs to move from home-manager to system
-- [ ] **4.2**: Update `common/programs.nix` with home-manager programs
-- [ ] **4.3**: Remove programs from `home-manager/programs.nix`
-- [ ] **4.4**: Update `home-manager/shell.nix` (remove shell config)
-- [ ] **4.5**: Test desktop functionality after each change
-- [ ] **4.6**: Verify programs still available and working
+- [x] **4.1**: Migrate desktop config from `/nixos` to modular structure ✅
+- [x] **4.2**: Create desktop-specific modules (graphics, hyprland, applications, gaming, etc.) ✅
+- [x] **4.3**: Remove old `/nixos` directory after successful migration ✅
+- [x] **4.4**: Clean up home-manager configuration duplications ✅
+- [x] **4.5**: Implement proper separation between system and user configs ✅
+- [x] **4.6**: Update hostname from JeremyDesktop to navi throughout configuration ✅
+- [x] **4.7**: Fix platform-specific configurations (microcode, ARM support) ✅
+- [x] **4.8**: Consolidate shell and environment configurations ✅
 
-### 4.1 Update Home-Manager Configuration
+### 4.1 Desktop Module Structure Created
 
-Reduce home-manager to only GUI-specific applications:
+The desktop configuration was successfully migrated to a modular structure:
 
-```nix
-# home-manager/programs.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
-  programs = {
-    # Remove: git, ripgrep, btop, tmux, nnn, direnv, gh, broot
-    # These are now in hosts/common/programs.nix
-    
-    # Keep GUI-specific programs here
-    firefox.enable = true;
-    vscode.enable = true;
-    # etc.
-  };
-}
+```
+nix/modules/desktop/
+├── default.nix              # Imports all desktop modules
+├── graphics.nix             # AMD GPU configuration
+├── hyprland.nix             # Hyprland window manager + tools
+├── waybar.nix               # Status bar configuration
+├── wayland.nix              # Wayland environment variables
+├── applications.nix         # Desktop applications (browsers, communication)
+├── development.nix          # Development tools and IDEs
+├── gaming.nix               # Gaming and streaming tools
+├── terminal.nix             # Terminal emulator
+├── fonts.nix                # Desktop fonts
+├── programs.nix             # Desktop programs (Steam, ADB, etc.)
+├── services.nix             # Desktop services (printing, docker, etc.)
+└── users.nix                # Desktop user configuration
 ```
 
-### 4.2 Update Shell Configuration in Home-Manager
+### 4.2 Home-Manager Cleanup Completed
+
+Home-manager was cleaned up to remove duplications with core modules:
 
 ```nix
-# home-manager/shell.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
-  programs = {
-    # Remove fish config - now in system
-    # Keep only GUI terminal config
-    alacritty = {
-      enable = true;
-      settings = {
-        env.TERM = "xterm-256color";
-      };
-    };
-  };
-}
+# home-manager/packages.nix - Significantly reduced
+# Removed packages now handled by desktop modules
+# Kept only user-specific packages like killall, xsel, nvd, hcloud
+
+# home-manager/shell.nix - Cleaned up
+# Removed duplicated shell configurations
+# Kept only user-specific abbreviations and Alacritty config
 ```
 
 ## Phase 5: DNS and Ingress Infrastructure
@@ -1444,7 +1436,7 @@ colmena exec --on bee -- journalctl -u coredns -f
 ```bash
 # Always run after each phase
 nix flake check
-sudo nixos-rebuild dry-build --flake .#jeremydesktop
+sudo nixos-rebuild dry-build --flake .#navi
 colmena build
 
 # Compare configs (should be identical until Phase 4)
