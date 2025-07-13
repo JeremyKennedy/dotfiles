@@ -28,6 +28,10 @@
         # Core abbreviations handled in core/shell.nix
         # Keep only user-specific ones here
         co = "gh copilot";
+        
+        # Navigation aliases using zoxide
+        cd = "z";    # Use zoxide for navigation
+        cdi = "zi";  # Interactive directory selection with zoxide
 
         # Server shortcuts (user-specific)
         t = "ssh tower.lan -t fish";
