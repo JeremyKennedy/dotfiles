@@ -9,9 +9,13 @@
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
-    ../common
+    # Use server profile
+    ../../profiles/server.nix
+    # Host-specific
     ./disko.nix
     ./hardware-configuration.nix
+    # Services for this host
+    ../../modules/services/monitoring/uptime-kuma.nix
   ];
 
   networking.hostName = "halo";
@@ -34,14 +38,6 @@
     # VPS-specific packages can be added here
   ];
 
-  # Uptime Kuma - accessible via Tailscale only
-  services.uptime-kuma = {
-    enable = true;
-    settings = {
-      HOST = "0.0.0.0";  # Listen on all interfaces
-      PORT = "3001";
-    };
-  };
 
   # Enable IP forwarding for Tailscale exit node
   boot.kernel.sysctl = {

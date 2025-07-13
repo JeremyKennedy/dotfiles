@@ -63,7 +63,7 @@
         shellHook = ''
           echo "🔧 NixOS Homelab Dev Environment"
           echo "📦 Additional tools: colmena, nixos-anywhere, disko"
-          echo "🎯 Hosts: jeremydesktop, bee, halo, pi"
+          echo "🎯 Hosts: JeremyDesktop, bee, halo, pi"
           echo ""
           echo "System tools already available: alejandra, agenix, git, nix-tree, nix-diff"
         '';
@@ -77,7 +77,7 @@
           inputs.hyprland.nixosModules.default
           {programs.hyprland.enable = true;}
           inputs.agenix.nixosModules.default
-          ./hosts/jeremydesktop/default.nix
+          ./hosts/navi/default.nix
         ];
       };
       
@@ -117,7 +117,7 @@
         specialArgs = { inherit inputs outputs; };
       };
       
-      jeremydesktop = {
+      JeremyDesktop = {
         deployment = {
           targetHost = "localhost";
           targetUser = "root";
@@ -127,7 +127,7 @@
           inputs.hyprland.nixosModules.default
           {programs.hyprland.enable = true;}
           inputs.agenix.nixosModules.default
-          ./hosts/jeremydesktop/default.nix
+          ./hosts/navi/default.nix
         ];
       };
       

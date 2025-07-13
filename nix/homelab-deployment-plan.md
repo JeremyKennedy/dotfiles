@@ -157,23 +157,28 @@ ssh root@<host-ip> 'tailscale set --advertise-exit-node'
 ssh root@<host-ip> 'tailscale status'
 ```
 
-## Desktop Rename Plan (JeremyDesktop → navi)
+## Desktop Configuration Note
 
-**📦 When and How to Rename**
+**IMPORTANT**: The desktop hostname must remain `JeremyDesktop` in flake.nix for now.
+- The host directory is `/hosts/navi/` for organization
+- But the NixOS configuration name remains `JeremyDesktop`
+- The hostname will be updated to match the directory name in the future
 
-**Ideal timing**: After Phase 3 (when multi-host structure is working)
-- Once the multi-host structure is in place
-- Once you've validated builds and deploys work
-- Once colmena build/apply and secrets are clean
+**Current usage**:
+```bash
+# Rebuild desktop
+sudo nixos-rebuild switch --flake .#JeremyDesktop
 
-**Steps**:
-1. Rename the host in `flake.nix` and `hosts/navi/default.nix`
-2. Update `networking.hostName = "navi";` in the config
-3. Update colmena deployment key (`navi = { deployment.targetHost = ... }`)
-4. Rename secrets if necessary (e.g., `secrets/navi.age`)
+# Deploy with colmena
+colmena apply --on JeremyDesktop
+```
+
+**Future rename to navi**:
+1. Update hostname in flake.nix (`JeremyDesktop` → `navi`)
+2. Update `networking.hostName` in the config
+3. Update colmena deployment keys
+4. Update any secrets/documentation
 5. Reboot and re-apply config
-
-**Note**: This plan keeps using `jeremydesktop` throughout Phase 1-3 to maintain baseline compatibility.
 
 ## Current State Analysis
 
@@ -211,18 +216,8 @@ ssh root@<host-ip> 'tailscale status'
 
 ```
 nix/
-├── hosts/
-│   ├── common/              # Modules shared by ALL hosts
-│   │   ├── base.nix         # Core nix settings, basic packages
-│   │   ├── boot.nix         # Boot configuration
-│   │   ├── performance.nix  # Performance optimizations
-│   │   ├── shell.nix        # Fish, starship, shell utilities
-│   │   ├── git.nix          # Git configuration
-│   │   ├── ssh.nix          # SSH configuration
-│   │   ├── tailscale.nix    # Tailscale with routing
-│   │   ├── hardware.nix     # Hardware configuration
-│   │   └── security.nix     # Security (fail2ban, firewall)
-│   ├── jeremydesktop/
+├── hosts/                   # Host-specific configurations
+│   ├── navi/                # Desktop workstation (hostname: JeremyDesktop)
 │   │   └── default.nix      # Wrapper for existing config
 │   ├── bee/
 │   │   ├── default.nix
@@ -234,12 +229,34 @@ nix/
 │   │   └── hardware-configuration.nix
 │   └── pi/
 │       └── default.nix
-├── modules/                 # Service-specific modules (not all hosts)
-│   ├── adguard.nix         # AdGuard Home DNS filtering
-│   ├── dns.nix             # CoreDNS configuration
-│   └── traefik.nix         # Traefik ingress controller
-├── devenv.nix              # Development environment
-└── .envrc                  # direnv integration
+├── modules/                 # All reusable modules
+│   ├── core/                # Modules for ALL hosts
+│   │   ├── base.nix         # Core nix settings, basic packages
+│   │   ├── boot.nix         # Boot configuration
+│   │   ├── networking.nix   # Basic network config
+│   │   ├── performance.nix  # Performance optimizations
+│   │   ├── shell.nix        # Fish, starship, shell utilities
+│   │   ├── git.nix          # Git configuration
+│   │   ├── ssh.nix          # SSH configuration
+│   │   ├── tailscale.nix    # Tailscale with routing
+│   │   ├── hardware.nix     # Hardware configuration
+│   │   └── security.nix     # Security (fail2ban, firewall)
+│   ├── system/              # Optional system modules
+│   ├── desktop/             # Desktop/GUI modules
+│   ├── services/            # Service modules
+│   │   ├── dns/
+│   │   │   ├── adguard.nix
+│   │   │   └── coredns.nix
+│   │   ├── web/
+│   │   │   └── traefik.nix
+│   │   └── monitoring/
+│   │       └── uptime-kuma.nix
+│   ├── user/                # User-level modules
+│   └── home/                # Home-manager modules
+├── profiles/                # Host type compositions
+│   ├── server.nix
+│   └── desktop.nix
+└── flake.nix                # Main flake configuration
 ```
 
 ### 1.2 Update flake.nix

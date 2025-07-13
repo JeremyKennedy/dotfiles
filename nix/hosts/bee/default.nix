@@ -1,13 +1,17 @@
 # Beelink Mini PC configuration for bee
 { config, pkgs, lib, ... }: {
   imports = [
-    ../common
+    # Use server profile
+    ../../profiles/server.nix
+    
+    # Host-specific
     ./disko.nix
     ./hardware-configuration.nix
-    # Network services (from modules directory)
-    ../../modules/adguard.nix
-    ../../modules/dns.nix
-    ../../modules/traefik.nix
+    
+    # Network services for this host
+    ../../modules/services/dns/adguard.nix
+    ../../modules/services/dns/coredns.nix
+    ../../modules/services/web/traefik.nix
   ];
   
   networking.hostName = "bee";

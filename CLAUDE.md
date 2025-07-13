@@ -8,10 +8,21 @@ This is a NixOS/home-manager dotfiles repository using Nix flakes. The configura
 
 ### Key Structure
 
-- `nix/flake.nix` - Main flake configuration defining all NixOS hosts (jeremydesktop, bee, halo, pi)
-- `nix/hosts/` - Host-specific configurations and common modules
-- `nix/modules/` - Service-specific modules (DNS, ingress, etc.)
-- `nix/nixos/` - System-level NixOS configuration modules (desktop)
+- `nix/flake.nix` - Main flake configuration defining all NixOS hosts (desktop, bee, halo, pi)
+- `nix/hosts/` - Host-specific configurations
+  - `navi/` - Desktop workstation (hostname: JeremyDesktop)
+  - `bee/` - DNS and network services server
+  - `halo/` - VPS with monitoring services
+  - `pi/` - Raspberry Pi configuration
+- `nix/modules/` - Reusable NixOS modules
+  - `core/` - Modules used by ALL hosts (base, boot, networking, security, ssh, etc.)
+  - `system/` - Optional system modules (performance, monitoring, virtualization)
+  - `desktop/` - Desktop/GUI modules (hyprland, graphics, audio)
+  - `services/` - Service modules (dns/, web/, monitoring/, custom/)
+  - `user/` - User-level modules (shell, git, development tools)
+  - `home/` - Home-manager modules (terminal, editors, browsers)
+- `nix/profiles/` - Composition profiles (server.nix, desktop.nix)
+- `nix/nixos/` - Legacy desktop configuration (being migrated)
 - `nix/home-manager/` - User-level home-manager configuration modules
 - `nix/overlays/` - Package overlays for stable/unstable/master nixpkgs
 - `nix/pkgs/` - Custom package definitions
@@ -193,26 +204,19 @@ Custom overlays provide access to different package versions and custom packages
 This repository now supports multiple NixOS hosts as part of a homelab deployment:
 
 **Hosts**:
-- `jeremydesktop` - Main desktop workstation (x86_64)
-- `bee` - Mini PC for DNS/network services (x86_64)
+- `JeremyDesktop` - Main desktop workstation (x86_64) - *directory: /hosts/navi/*
+- `bee` - Mini PC for DNS/network services (x86_64)  
 - `halo` - Hetzner VPS for remote services (x86_64)
 - `pi` - Raspberry Pi (aarch64)
 
-**Common Modules** (`nix/hosts/common/`) - Used by ALL hosts:
-- `base.nix` - Core NixOS settings and packages
-- `boot.nix` - Boot configuration
-- `performance.nix` - Performance tuning
-- `shell.nix` - Shell configuration (Fish, Starship)
-- `git.nix` - Git configuration
-- `ssh.nix` - SSH server configuration
-- `tailscale.nix` - Tailscale VPN configuration
-- `hardware.nix` - Hardware optimization
-- `security.nix` - Security settings (fail2ban)
-
-**Service Modules** (`nix/modules/`) - Service-specific, not all hosts:
-- `dns.nix` - CoreDNS configuration
-- `adguard.nix` - AdGuard Home DNS filtering
-- `traefik.nix` - Traefik reverse proxy
+**Module Organization**:
+- **Core** (`/modules/core/`) - Used by ALL hosts
+- **System** (`/modules/system/`) - Optional system features
+- **Desktop** (`/modules/desktop/`) - GUI/desktop modules
+- **Services** (`/modules/services/`) - Service configurations
+- **User** (`/modules/user/`) - User-level configurations
+- **Home** (`/modules/home/`) - Home-manager modules
+- **Profiles** (`/profiles/`) - Common host type configurations
 
 **Deployment Commands**:
 ```bash

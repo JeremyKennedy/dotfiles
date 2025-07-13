@@ -1,8 +1,11 @@
 # Raspberry Pi 4 configuration for pi
 { config, pkgs, lib, ... }: {
   imports = [
-    ../common
-    ./disko.nix
+    # Use server profile
+    ../../profiles/server.nix
+    # Host-specific (when available)
+    # ./disko.nix
+    # ./hardware-configuration.nix
   ];
   
   networking.hostName = "pi";
