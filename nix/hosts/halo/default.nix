@@ -28,23 +28,17 @@
     };
   };
 
-  # SSH brute force protection
-  services.fail2ban = {
-    enable = true;
-    maxretry = 3;
-    ignoreIP = ["100.64.0.0/10"]; # Tailscale network
-  };
 
   # Additional packages for VPS
   environment.systemPackages = with pkgs; [
     # VPS-specific packages can be added here
   ];
 
-  # Uptime Kuma - NOT publicly exposed, bind to localhost only
+  # Uptime Kuma - accessible via Tailscale only
   services.uptime-kuma = {
     enable = true;
     settings = {
-      HOST = "127.0.0.1";  # Local only - access via Tailscale
+      HOST = "0.0.0.0";  # Listen on all interfaces
       PORT = "3001";
     };
   };
@@ -55,11 +49,15 @@
     "net.ipv6.conf.all.forwarding" = 1;
   };
 
-  # Firewall configuration - minimal, Hetzner firewall handles main security
+  # Firewall configuration
+  # SECURITY: Services bind to 0.0.0.0 but are protected by firewall rules.
+  # Only Tailscale traffic can reach them via trustedInterfaces.
+  # Hetzner firewall provides additional protection at network level.
   networking.firewall = {
     enable = true;
-    trustedInterfaces = ["tailscale0"];
+    trustedInterfaces = ["tailscale0"]; # Only trust Tailscale traffic
     checkReversePath = "loose"; # Required for exit nodes
+    # No ports opened - tailscale0 trusted interface allows access
   };
 
   # Optimize network for Tailscale exit node performance

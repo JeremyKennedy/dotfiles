@@ -9,38 +9,45 @@ This plan outlines the phased approach to refactor the existing single-host NixO
 ### ✅ What's Been Done
 - **Multi-host flake structure** - All 4 hosts defined with proper architecture support
 - **Colmena deployment** - Ready for remote deployments (no buildOnTarget)
-- **Common modules** - base, boot, performance, shell, git, ssh, tailscale, hardware configurations
+- **Common modules** - base, boot, performance, shell, git, ssh, tailscale, hardware, security
 - **Host configurations** - All hosts have basic configs with disko where needed
 - **Development environment** - devShell with colmena, nixos-anywhere, disko
 - **Baseline tracking** - Comprehensive system to ensure desktop remains unchanged
 - **Deployment scripts** - Both initial deployment and update scripts ready
 - **Claude Code** - Added to all hosts via common/base.nix
+- **Initial deployments** - halo and bee successfully deployed and running
+- **Security** - Common fail2ban module added to all hosts
+- **Uptime Kuma** - Configured on halo (accessible via Tailscale)
 
-### 🔄 Next Steps
-1. **Phase 4** - Move Home-Manager Programs to System Level
-2. **Phase 5** - DNS and Ingress Infrastructure (CoreDNS, AdGuard, Traefik)
-3. **Phase 6** - Full Deployment and Validation
+### 🔄 Current Focus
+- **Phase 5** - DNS and Ingress Infrastructure on bee (CoreDNS, AdGuard, Traefik)
+
+### 📝 Future Tasks
+1. **Phase 4** - Consolidate desktop config to use common modules (postponed)
+2. **Phase 6** - Full Deployment and Validation
+3. **Monitoring & Backups** - To be added after core services are working
+4. **Pi deployment** - After DNS services are moved to bee
 
 ## Task Completion Tracking
 
-**Overall Progress**: ⏳ In Progress (4/10 phases complete)
+**Overall Progress**: ⏳ In Progress (3.5/10 phases complete)
 
 ### Phase Status
 - [x] **Phase 1**: Refactor for Multi-Host (Desktop Unchanged) - 6/6 tasks ✅
 - [x] **Phase 2**: Add Server Hosts Configuration - 7/7 tasks ✅
 - [x] **Phase 2.5**: Early Bee Deployment (Barebones) - 5/5 tasks ✅
 - [x] **Phase 3**: Extract and Share Common Configuration - 6/6 tasks ✅
-- [ ] **Phase 4**: Move Home-Manager Programs to System Level - 0/6 tasks
-- [ ] **Phase 5**: DNS and Ingress Infrastructure - 0/7 tasks
-- [ ] **Phase 6**: Full Deployment and Validation - 0/8 tasks
+- [ ] **Phase 4**: Move Home-Manager Programs to System Level - 0/6 tasks (POSTPONED)
+- [ ] **Phase 5**: DNS and Ingress Infrastructure - 0/7 tasks (CURRENT)
+- [ ] **Phase 6**: Full Deployment and Validation - 2/8 tasks (halo & bee deployed)
 - [ ] **Phase 7**: Ingress for Unraid Services (Bridge Mode) - 0/6 tasks
-- [ ] **Phase 8**: Secure Routing Boundaries - 0/5 tasks
+- [ ] **Phase 8**: Secure Routing Boundaries - 1/5 tasks (security module done)
 - [ ] **Phase 9**: Observability and Health - 0/4 tasks
 - [ ] **Phase 10**: DNS/Ingress Debug & Testing Utilities - 0/3 tasks
 
 ### Quick Reference - Current Task
-**Current**: Phase 3 complete! Ready for Phase 4 - Move Home-Manager Programs to System Level
-**Last Update**: Common configuration extracted (boot, performance, enhanced base), deployed successfully to bee
+**Current**: Phase 5 - DNS and Ingress Infrastructure (CoreDNS, AdGuard, Traefik on bee)
+**Last Update**: Security module added, halo and bee deployed, Uptime Kuma configured
 
 ### Baseline Capture and Validation
 

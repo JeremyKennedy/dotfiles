@@ -9,5 +9,6 @@
     ./ssh.nix
     ./tailscale.nix
     ./hardware.nix
+    ./security.nix
   ];
 }
