@@ -7,8 +7,8 @@
 # - This allows phone to reach local devices even when using Tailscale exit nodes
 {
   services.tailscale.extraUpFlags = [
-    "--accept-dns"  # Allow Tailscale DNS for *.sole-bigeye.ts.net resolution
-    "--advertise-routes=192.168.1.0/24"  # Share local network with Tailscale
-    "--ssh"  # Enable Tailscale SSH
+    "--accept-dns" # Allow Tailscale DNS for *.sole-bigeye.ts.net resolution
+    "--advertise-routes=192.168.1.0/24" # Share local network with Tailscale
+    "--ssh" # Enable Tailscale SSH
   ];
 }

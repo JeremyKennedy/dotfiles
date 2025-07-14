@@ -3,7 +3,7 @@
 # ⚠️  UNUSED - Replaced by AdGuard Home DNS rewrites
 # This service is redundant and has been removed from hosts.
 # AdGuard Home directly handles *.home.jeremyk.net → 100.74.102.74 via DNS rewrites.
-# 
+#
 # Original purpose was to provide .home.jeremyk.net domain resolution,
 # but AdGuard DNS rewrites accomplish this more efficiently.
 {
