@@ -93,4 +93,4 @@ url = "http://halo.sole-bigeye.ts.net:3001"
 
 # Traefik service path overrides
 [traefik_paths]
-plex = "/web/index.html#!/"
+plex = "/web/index.html"
