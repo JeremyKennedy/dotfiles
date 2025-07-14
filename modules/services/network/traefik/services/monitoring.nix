@@ -16,7 +16,7 @@
 {lib, ...}: let
   tower = "192.168.1.240"; # Unraid server
   bee = "localhost"; # Local host (bee)
-  halo = "halo.sole-bigeye.ts.net"; # Hetzner VPS
+  halo = "100.78.79.103"; # Hetzner VPS (Tailscale IP)
 in {
   # Monitoring services organized by access level
   public = {
