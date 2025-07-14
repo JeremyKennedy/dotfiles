@@ -30,9 +30,17 @@ update:
 fmt:
     nix fmt .
 
-# Test services on all hosts
+# Test services using modern Python framework
 test-services:
-    ./scripts/test-services.sh
+    cd scripts/homelab-test && nix develop -c python -m homelab_test.cli
+
+# Test core infrastructure only (Python framework)
+test-core:
+    cd scripts/homelab-test && nix develop -c python -m homelab_test.cli --core
+
+# Get JSON output
+test-json:
+    cd scripts/homelab-test && nix develop -c python -m homelab_test.cli --output json
 
 # Rebuild local desktop
 rebuild:

@@ -1,0 +1,96 @@
+# Homelab Test Configuration
+# This file configures the testing framework for your homelab services
+
+parallel_execution = true
+follow_redirects = true
+verify_ssl = false
+
+[timeouts]
+http = 5.0
+infrastructure = 10.0
+
+[traefik]
+api_url = "http://100.74.102.74:9090"
+timeout = 30.0
+
+# DNS resolution tests
+[[dns_tests]]
+name = "External DNS"
+query = "google.com"
+nameserver = ""
+
+[[dns_tests]]
+name = "Internal DNS"
+query = "hass.home.jeremyk.net"
+nameserver = ""
+
+[[dns_tests]]
+name = "Public domain"
+query = "plex.jeremyk.net"
+nameserver = ""
+
+# Host connectivity tests
+[[hosts]]
+name = "Router"
+ip_address = "192.168.1.1"
+tailscale_hostname = ""
+skip_ping = false
+
+[[hosts]]
+name = "Internet"
+ip_address = "8.8.8.8"
+tailscale_hostname = ""
+skip_ping = false
+
+[[hosts]]
+name = "Bee"
+ip_address = "192.168.1.245"
+tailscale_hostname = "bee.sole-bigeye.ts.net"
+skip_ping = false
+
+[[hosts]]
+name = "Tower"
+ip_address = "192.168.1.240"
+tailscale_hostname = "tower.sole-bigeye.ts.net"
+skip_ping = false
+
+[[hosts]]
+name = "Pi"
+ip_address = "192.168.1.230"
+tailscale_hostname = "pi.sole-bigeye.ts.net"
+skip_ping = false
+
+[[hosts]]
+name = "Navi"
+ip_address = "192.168.1.250"
+tailscale_hostname = "navi.sole-bigeye.ts.net"
+skip_ping = false
+
+[[hosts]]
+name = "Halo VPS"
+ip_address = "46.62.144.212"
+tailscale_hostname = "halo.sole-bigeye.ts.net"
+skip_ping = true
+skip_reason = "firewall blocks ICMP"
+
+# Direct infrastructure services (bypass Traefik)
+[[direct_services]]
+name = "adguard-direct"
+url = "http://bee.sole-bigeye.ts.net:3000"
+
+[[direct_services]]
+name = "coredns-direct"
+url = "http://bee.sole-bigeye.ts.net:8080/health"
+
+[[direct_services]]
+name = "traefik-dashboard"
+url = "https://traefik.home.jeremyk.net/"
+routing_type = "bee"
+
+[[direct_services]]
+name = "kuma-direct"
+url = "http://halo.sole-bigeye.ts.net:3001"
+
+# Traefik service path overrides
+[traefik_paths]
+plex = "/web/index.html#!/"

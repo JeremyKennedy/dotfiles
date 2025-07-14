@@ -1,0 +1,40 @@
+# List all available commands
+default:
+    @just --list
+
+# Run full health check
+start:
+    nix develop -c python -m homelab_test.cli
+
+# Run full health check (alias)
+run:
+    nix develop -c python -m homelab_test.cli
+
+# Test core infrastructure only
+core:
+    nix develop -c python -m homelab_test.cli --core
+
+# Output in JSON format
+json:
+    nix develop -c python -m homelab_test.cli --output json
+
+# Lint code
+lint:
+    nix develop -c ruff check .
+
+# Fix linting issues
+fix:
+    nix develop -c ruff check --fix .
+
+# Format code
+fmt:
+    nix develop -c ruff format .
+
+# Type check code
+check:
+    nix develop -c mypy src/
+
+# Clean up code (fix + format)
+clean:
+    nix develop -c ruff check --fix .
+    nix develop -c ruff format .
