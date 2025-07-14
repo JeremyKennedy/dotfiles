@@ -95,3 +95,5 @@ url = "http://halo.sole-bigeye.ts.net:3001"
 # Traefik service path overrides
 [traefik_paths]
 plex = "/web/index.html"
+tautulli = "/auth/login"
+kimai = "/en/login"

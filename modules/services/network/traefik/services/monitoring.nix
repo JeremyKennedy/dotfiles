@@ -26,39 +26,32 @@ in {
     };
     librespeed = {
       host = tower;
-      port = 80; # Direct port - no conflicts (overleaf uses different access level)
+      port = 6580;
       subdomain = "speedtest";
     };
   };
 
   tailscale = {
-    # Direct port access (unique ports)
-    teslamate = {
-      host = tower;
-      port = 4000; # Direct port - no conflicts
-    };
-
-    # SWAG proxy routing (port conflicts or blocked)
     grafana = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 3000, conflicts with mealie)
-      https = true;
+      port = 3003;
     };
     kuma-tower = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 3001, conflicts with gitea+yourspotify)
-      https = true;
+      port = 3001;
     };
     scrutiny = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 8080, conflicts with calibre+microbin)
-      https = true;
+      port = 8088;
     };
     "speedtest-tracker" = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 8765, port blocked)
-      https = true;
+      port = 8094;
       subdomain = "speedhist";
+    };
+    teslamate = {
+      host = tower;
+      port = 4000;
     };
   };
 }

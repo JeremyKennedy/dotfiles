@@ -27,72 +27,62 @@ in {
     # SWAG proxy routing (port conflicts or blocked)
     gitea = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 3001, conflicts with kuma-tower+yourspotify)
-      https = true;
+      port = 3020; # SWAG proxy HTTPS port (was 3001, conflicts with kuma-tower+yourspotify)
     };
     kutt = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 3000, conflicts with grafana)
+      port = 8180;
       subdomain = "link";
-      https = true;
     };
     mealie = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 9925, port blocked)
-      https = true;
+      port = 3000;
     };
     microbin = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 8080, conflicts with calibre+scrutiny)
+      port = 9647;
       subdomain = "bin";
-      https = true;
     };
     nextcloud = {
       host = tower;
-      port = 443; # SWAG proxy (was 444, service needs proxy)
-      subdomain = "cloud";
+      port = 444;
       https = true;
+      subdomain = "cloud";
       extraHosts = ["cloud.jeremyk.net"];
     };
   };
 
   tailscale = {
-    # Direct port access (unique ports)
     changes = {
       host = tower;
-      port = 5000; # Direct port - no conflicts
+      port = 5000;
     };
-    immich = {
+    grist = {
       host = tower;
-      port = 2283; # Direct port - no conflicts
+      port = 8484;
     };
     home-assistant = {
       host = tower;
-      port = 8123; # Direct port - Home Assistant accessible directly
+      port = 8123;
       subdomain = "hass";
       extraHosts = ["ha.home.jeremyk.net" "homeassistant.home.jeremyk.net"];
       middlewares = [];
     };
-    # overleaf = {
-    #   host = tower;
-    #   port = 80; # Direct port - no conflicts (librespeed conflict resolved via public/tailscale separation)
-    # };
-
-    # SWAG proxy routing (port conflicts or blocked)
-    grist = {
+    immich = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 8484, service needs proxy)
-      https = true;
+      port = 2283;
     };
     kimai = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 8001, port blocked)
-      https = true;
+      port = 8092;
     };
+    # overleaf = {
+    #   host = tower;
+    #   port = 80;
+    # };
     paperless = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 8010, port blocked)
-      https = true;
+      port = 8102;
     };
   };
 }

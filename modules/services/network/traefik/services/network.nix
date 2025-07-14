@@ -16,16 +16,13 @@ in {
   public = {};
 
   tailscale = {
-    # Direct port access (unique ports)
     adguard = {
       host = bee;
-      port = 3000; # Bee service - no conflicts
+      port = 3000;
     };
-
-    # SWAG proxy routing (port conflicts)
     unifi = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 8443, conflicts with crafty and tower webui)
+      port = 8443;
       https = true;
     };
   };

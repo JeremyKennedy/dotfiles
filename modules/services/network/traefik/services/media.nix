@@ -24,14 +24,12 @@ in {
   public = {
     "calibre-web" = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 8083, port blocked)
-      https = true;
+      port = 6881;
       subdomain = "books";
     };
     overseerr = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 5055, service needs proxy)
-      https = true;
+      port = 5055;
       extraHosts = ["req.jeremyk.net" "request.jeremyk.net" "req.jibbs.stream" "request.jibbs.stream"];
     };
     plex = {
@@ -45,58 +43,47 @@ in {
     };
     yourspotify = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 3001, conflicts with gitea+kuma-tower)
+      port = 18803;
       https = true;
     };
   };
 
   tailscale = {
-    # Direct port access (unique ports)
     bazarr = {
       host = tower;
-      port = 6767; # Direct port - no conflicts
+      port = 6767;
     };
     deluge = {
       host = tower;
-      port = 8112; # Direct port - no conflicts
+      port = 8112;
     };
     prowlarr = {
       host = tower;
-      port = 9696; # Direct port - no conflicts
+      port = 9696;
     };
     radarr = {
       host = tower;
-      port = 7878; # Direct port - no conflicts
+      port = 7878;
     };
     sonarr = {
       host = tower;
-      port = 8989; # Direct port - no conflicts
+      port = 8989;
     };
     tdarr = {
       host = tower;
-      port = 8265; # Direct port - no conflicts
+      port = 8265;
     };
-
-    # SWAG proxy routing (port conflicts or blocked)
     calibre = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 8080, conflicts with microbin+scrutiny)
-      https = true;
-    };
-    jackett = {
-      host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 9117, port blocked)
-      https = true;
+      port = 6880;
     };
     nzbget = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 6789, service needs proxy)
-      https = true;
+      port = 6790;
     };
     tautulli = {
       host = tower;
-      port = 18071; # SWAG proxy HTTPS port (was 8181, service needs proxy)
-      https = true;
+      port = 8181;
     };
   };
 }
