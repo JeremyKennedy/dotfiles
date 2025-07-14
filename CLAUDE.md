@@ -351,8 +351,7 @@ nix run github:nix-community/nixos-anywhere -- --flake .#bee root@<ip-address>
 ```
 
 **DNS and Network Services** (on bee):
-- **CoreDNS**: Primary DNS server handling .home domains and forwarding
-- **AdGuard Home**: DNS filtering and ad blocking (upstream for CoreDNS)
+- **AdGuard Home**: DNS filtering, ad blocking, and .home.jeremyk.net domain resolution via DNS rewrites
 - **Traefik**: Reverse proxy for internal services with automatic HTTPS
 
 All services are configured for Tailscale-only access by default, ensuring security through the VPN layer. The .home domain is used for internal services, with Traefik providing unified ingress.

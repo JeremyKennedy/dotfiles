@@ -78,10 +78,6 @@ skip_reason = "firewall blocks ICMP"
 name = "adguard-direct"
 url = "http://bee.sole-bigeye.ts.net:3000"
 
-# CoreDNS removed - AdGuard DNS rewrites handle *.home.jeremyk.net directly
-# [[direct_services]]
-# name = "coredns-direct"
-# url = "http://bee.sole-bigeye.ts.net:8080/health"
 
 [[direct_services]]
 name = "traefik-dashboard"
