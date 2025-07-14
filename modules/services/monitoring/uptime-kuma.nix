@@ -1,9 +1,9 @@
 # Uptime Kuma monitoring service
 #
 # Access:
-# - https://uptime.jeremyk.net (public via Traefik)
+# - https://kuma-halo.jeremyk.net (public via Traefik)
 # - http://halo.sole-bigeye.ts.net:3001 (direct Tailscale)
-# - http://46.62.144.212:3001 (direct IP if Tailscale is down)
+# - http://46.62.144.212:3001 (direct IP if Tailscale is down - will not work due to Hetzner firewall)
 # Initial setup: Create admin account on first visit
 #
 # Features:
