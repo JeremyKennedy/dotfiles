@@ -14,6 +14,7 @@
     ./network.nix
     ./hardware-configuration.nix
     ./secrets.nix
+    ./tailscale-override.nix
 
     # Network services for this host
     ../../modules/services/network/adguard.nix

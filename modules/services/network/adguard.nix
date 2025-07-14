@@ -1,28 +1,24 @@
 # AdGuard Home DNS filtering service
 #
-# Web Interface Access:
+# DNS Flow:
+# 1. Queries for *.sole-bigeye.ts.net → Tailscale MagicDNS (if device has Tailscale)
+# 2. All other queries → AdGuard Home (bee:53) → Filtered upstream DNS
+# 3. Local domains (*.home.jeremyk.net) → AdGuard DNS rewrites → bee (100.74.102.74)
+#
+# Access Methods:
 # - https://adguard.home.jeremyk.net (via Traefik + Tailscale)
-# - http://adguard.home:3000 (via CoreDNS + Tailscale)
 # - http://bee.sole-bigeye.ts.net:3000 (direct Tailscale)
 # - http://100.74.102.74:3000 (direct Tailscale IP)
 # - http://192.168.1.245:3000 (LAN access if Tailscale is down)
 #
-# DNS Server Access:
-# - DNS queries: 192.168.1.245:53 (primary DNS for network)
-# - DNS queries: bee.sole-bigeye.ts.net:53 (via Tailscale)
-# - DNS queries: 100.74.102.74:53 (Tailscale IP)
-#
 # Initial setup: Create admin user via web interface
 #
-# IMPORTANT: DNS rewrites are configured declaratively under settings.filtering.rewrites
-# With mutableSettings = false, the configuration is fully managed by Nix.
-#
 # Features:
-# - DNS filtering and ad blocking
+# - DNS filtering and ad blocking for all network devices
 # - DNSSEC support
 # - DoH/DoT upstream support
 # - Web interface on port 3000 (Tailscale only)
-# - DNS service on port 53 (primary DNS server)
+# - DNS service on port 53 (primary DNS server for LAN + Tailscale forwarding)
 {
   config,
   pkgs,
@@ -127,16 +123,15 @@
     wants = ["network-online.target"];
   };
 
-  # Set this server as the system DNS resolver
-  networking.nameservers = ["127.0.0.1"];
+  # DNS Configuration for Tailscale Integration
+  networking.nameservers = ["127.0.0.1"]; # Fallback (not used when Tailscale manages DNS)
   networking.resolvconf.enable = false;
-  
-  # Disable systemd-resolved to prevent conflicts with AdGuard DNS
+
+  # Disable systemd-resolved to prevent conflicts
   services.resolved.enable = lib.mkForce false;
 
-  # Ensure /etc/resolv.conf points to local DNS
-  environment.etc."resolv.conf".text = ''
-    nameserver 127.0.0.1
-    options edns0
-  '';
+  # Let Tailscale manage /etc/resolv.conf for bee's own DNS resolution
+  # This allows bee to resolve Tailscale hostnames (*.sole-bigeye.ts.net)
+  # Client devices still use AdGuard directly via bee:53
+  # Static resolv.conf commented out to allow Tailscale DNS management for bee
 }

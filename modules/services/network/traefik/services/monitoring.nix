@@ -14,9 +14,9 @@
 # - speedtest-tracker: Speed test history (speedhist.home.jeremyk.net)
 #
 {lib, ...}: let
-  tower = "192.168.1.240"; # Unraid server
   bee = "localhost"; # Local host (bee)
-  halo = "100.78.79.103"; # Hetzner VPS (Tailscale IP)
+  tower = "tower.sole-bigeye.ts.net"; # Unraid server
+  halo = "halo.sole-bigeye.ts.net"; # Hetzner VPS
 in {
   # Monitoring services organized by access level
   public = {

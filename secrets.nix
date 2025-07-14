@@ -14,4 +14,5 @@ in {
   "secrets/grist_api_key.age".publicKeys = allUsers ++ allSystems;
   "secrets/grist_proxy_auth.age".publicKeys = allUsers ++ allSystems;
   "secrets/cloudflare_dns_token.age".publicKeys = allUsers ++ allSystems;
+  "secrets/tailscale_auth_key.age".publicKeys = allUsers ++ allSystems;
 }
