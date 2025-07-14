@@ -4,16 +4,6 @@
 with lib; {
   # Reusable middleware definitions
   middleware = {
-    # WebSocket support - for any service that needs WebSocket connections
-    websocket = {
-      headers = {
-        customRequestHeaders = {
-          "Connection" = "upgrade";
-          "Upgrade" = "websocket";
-        };
-      };
-    };
-
     # CORS headers - Allow cross-origin requests (use with caution)
     cors-allow-all = {
       headers = {

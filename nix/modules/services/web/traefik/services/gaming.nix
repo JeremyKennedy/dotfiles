@@ -5,16 +5,17 @@
 # service.home.jeremyk.net (internal access only via Tailscale)
 #
 {lib, ...}: let
-  tower = "192.168.1.240";  # Unraid server
+  tower = "192.168.1.240"; # Unraid server
 in {
   # Gaming services organized by access level
   public = {};
 
   tailscale = {
-    crafty = {
-      host = tower;
-      port = 8443;
-      https = true;
-    };
+    # SWAG proxy routing (port conflicts)
+    # crafty = {
+    #   host = tower;
+    #   port = 18071; # SWAG proxy HTTPS port (was 8443, conflicts with unifi)
+    #   https = true;
+    # };
   };
 }

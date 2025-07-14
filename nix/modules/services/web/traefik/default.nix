@@ -30,7 +30,7 @@
 
   # Generate configurations using helper functions
   configs = helpers.generateConfigs services;
-  
+
   # Get redirect middleware from redirects service file
   redirectMiddleware = redirects.middleware or {};
 in {
@@ -116,16 +116,18 @@ in {
     # Dynamic configuration
     dynamicConfigOptions = {
       http = {
-        routers = configs.routers // {
-          # Hardcoded Traefik dashboard router (special case)
-          traefik-dashboard = {
-            rule = "Host(`traefik.home.jeremyk.net`)";
-            service = "api@internal";
-            middlewares = ["security-headers" "tailscale-only"];
-            entryPoints = ["web" "websecure"];
-            tls = {certResolver = "letsencrypt";};
+        routers =
+          configs.routers
+          // {
+            # Hardcoded Traefik dashboard router (special case)
+            traefik-dashboard = {
+              rule = "Host(`traefik.home.jeremyk.net`)";
+              service = "api@internal";
+              middlewares = ["security-headers" "tailscale-only"];
+              entryPoints = ["web" "websecure"];
+              tls = {certResolver = "letsencrypt";};
+            };
           };
-        };
 
         middlewares =
           {

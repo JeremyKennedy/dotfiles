@@ -14,9 +14,9 @@
 # - speedtest-tracker: Speed test history (speedhist.home.jeremyk.net)
 #
 {lib, ...}: let
-  tower = "192.168.1.240";  # Unraid server
-  bee = "localhost";        # Local host (bee)
-  halo = "46.62.144.212";   # Hetzner VPS
+  tower = "192.168.1.240"; # Unraid server
+  bee = "localhost"; # Local host (bee)
+  halo = "46.62.144.212"; # Hetzner VPS
 in {
   # Monitoring services organized by access level
   public = {
@@ -28,33 +28,40 @@ in {
     };
     librespeed = {
       host = tower;
-      port = 80;
+      port = 80; # Direct port - no conflicts (overleaf uses different access level)
       subdomain = "speedtest";
     };
   };
 
   tailscale = {
+    # Direct port access (unique ports)
+    teslamate = {
+      host = tower;
+      port = 4000; # Direct port - no conflicts
+    };
+
+    # SWAG proxy routing (port conflicts or blocked)
+    grafana = {
+      host = tower;
+      port = 18071; # SWAG proxy HTTPS port (was 3000, conflicts with mealie)
+      https = true;
+    };
     kuma-tower = {
       host = tower;
-      port = 3001;
+      port = 18071; # SWAG proxy HTTPS port (was 3001, conflicts with gitea+yourspotify)
+      https = true;
       subdomain = "uptime-tower";
       extraHosts = ["status-tower.home.jeremyk.net"];
     };
-    grafana = {
-      host = tower;
-      port = 3000;
-    };
     scrutiny = {
       host = tower;
-      port = 8080;
-    };
-    teslamate = {
-      host = tower;
-      port = 4000;
+      port = 18071; # SWAG proxy HTTPS port (was 8080, conflicts with calibre+microbin)
+      https = true;
     };
     "speedtest-tracker" = {
       host = tower;
-      port = 8765;
+      port = 18071; # SWAG proxy HTTPS port (was 8765, port blocked)
+      https = true;
       subdomain = "speedhist";
     };
   };

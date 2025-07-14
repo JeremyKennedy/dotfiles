@@ -184,6 +184,19 @@ git add .
 just rebuild
 ```
 
+## SSH Access to Hosts
+
+For SSH access to remote hosts in the homelab:
+- **Username**: `root` for all external hosts (tower, bee, halo, pi)
+- **Authentication**: Uses SSH keys configured in the homelab
+
+Example SSH commands:
+```bash
+ssh root@192.168.1.240  # Tower (Unraid)
+ssh root@100.74.102.74  # Bee via Tailscale
+ssh root@46.62.144.212  # Halo (VPS)
+```
+
 ## Security Considerations
 
 **This repository is intended to be published publicly.** All configurations must be secure even with full public knowledge:

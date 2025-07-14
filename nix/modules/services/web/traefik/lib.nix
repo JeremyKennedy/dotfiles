@@ -12,7 +12,7 @@
 {lib}:
 with lib; rec {
   # Creates a Traefik router configuration
-  # 
+  #
   # A router is what receives incoming HTTP requests and decides where to send them.
   # It matches requests based on rules (like "Host(`example.com`)") and forwards
   # them to a service. It can also apply middleware to modify the request/response.
@@ -20,7 +20,7 @@ with lib; rec {
   # Inputs:
   #   name: Service name (used as default for subdomain if not specified)
   #   config: Service configuration containing:
-  #     - subdomain: Subdomain for the service (default: service name)
+  #     - subdomain: Subdomain for the service (completely replaces service name in URL, default: service name)
   #     - service: Traefik service name to route to (default: service name)
   #     - extraHosts: Additional hostnames this service should respond to
   #     - middlewares: List of middleware names to apply
@@ -35,9 +35,15 @@ with lib; rec {
     subdomain = config.subdomain or name;
     extraHosts = config.extraHosts or [];
     # Use different domains for public vs tailscale services
-    baseDomain = if public then "jeremyk.net" else "home.jeremyk.net";
+    baseDomain =
+      if public
+      then "jeremyk.net"
+      else "home.jeremyk.net";
     # Handle root domain (empty subdomain)
-    hosts = if subdomain == "" then [baseDomain] ++ extraHosts else ["${subdomain}.${baseDomain}"] ++ extraHosts;
+    hosts =
+      if subdomain == ""
+      then [baseDomain] ++ extraHosts
+      else ["${subdomain}.${baseDomain}"] ++ extraHosts;
     hostRule = concatMapStringsSep " || " (h: "Host(`${h}`)") hosts;
     # Always apply security headers, add tailscale-only for non-public services
     baseMiddlewares =
@@ -99,25 +105,28 @@ with lib; rec {
   #
   # Output: { public = { services... }; middleware = { middlewares... }; }
   mkRedirects = redirects: {
-    public = mapAttrs (name: config: {
-      subdomain = config.from;
-      service = "noop@internal";
-      middlewares = ["redirect-${config.from}"];
-    }) redirects;
-    
-    middleware = foldl' (acc: name: 
-      acc // {
-        "redirect-${redirects.${name}.from}" = {
-          redirectRegex = {
-            regex = "^https?://${redirects.${name}.from}.jeremyk.net/(.*)";
-            replacement = redirects.${name}.to;
-            permanent = redirects.${name}.permanent or false;
+    public =
+      mapAttrs (name: config: {
+        subdomain = config.from;
+        service = "noop@internal";
+        middlewares = ["redirect-${config.from}"];
+      })
+      redirects;
+
+    middleware = foldl' (
+      acc: name:
+        acc
+        // {
+          "redirect-${redirects.${name}.from}" = {
+            redirectRegex = {
+              regex = "^https?://${redirects.${name}.from}.jeremyk.net/(.*)";
+              replacement = redirects.${name}.to;
+              permanent = redirects.${name}.permanent or false;
+            };
           };
-        };
-      }
+        }
     ) {} (attrNames redirects);
   };
-
 
   # Main function that generates all Traefik configurations from service definitions
   #

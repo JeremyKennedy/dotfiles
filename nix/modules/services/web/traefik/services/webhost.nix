@@ -6,7 +6,7 @@
 # - public-site: Main website (jeremyk.net and www.jeremyk.net)
 #
 {lib, ...}: let
-  bee = "localhost";  # Local host (bee)
+  bee = "localhost"; # Local host (bee)
 in {
   # Web hosting services organized by access level
   public = {

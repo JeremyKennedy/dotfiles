@@ -13,7 +13,7 @@
 {lib, ...}: let
   # Import helper functions
   helpers = import ../lib.nix {inherit lib;};
-  
+
   # Define all redirects in one place
   redirectDefinitions = {
     meet = {
@@ -23,8 +23,8 @@
     };
     # Add more redirects here as needed
   };
-  
+
   # Generate everything from redirect definitions
   generated = helpers.mkRedirects redirectDefinitions;
-in 
-  generated // { tailscale = {}; }
+in
+  generated // {tailscale = {};}

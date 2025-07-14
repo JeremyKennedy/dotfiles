@@ -1,7 +1,7 @@
 # Media services configuration for Traefik
 #
 # This module defines media streaming and management services.
-# 
+#
 # Public services (accessible at service.jeremyk.net):
 # - plex: Media streaming server
 # - overseerr: Media request management
@@ -18,10 +18,22 @@
 # - jackett: Torrent indexer proxy
 #
 {lib, ...}: let
-  tower = "192.168.1.240";  # Unraid server
+  tower = "192.168.1.240"; # Unraid server
 in {
   # Media services organized by access level
   public = {
+    "calibre-web" = {
+      host = tower;
+      port = 18071; # SWAG proxy HTTPS port (was 8083, port blocked)
+      https = true;
+      subdomain = "books";
+    };
+    overseerr = {
+      host = tower;
+      port = 18071; # SWAG proxy HTTPS port (was 5055, service needs proxy)
+      https = true;
+      extraHosts = ["req.jeremyk.net" "request.jeremyk.net" "req.jibbs.stream" "request.jibbs.stream"];
+    };
     plex = {
       host = tower;
       port = 32400;
@@ -31,62 +43,60 @@ in {
         loadBalancer.responseForwarding.flushInterval = "0s";
       };
     };
-    overseerr = {
-      host = tower;
-      port = 5055;
-      extraHosts = ["req.jeremyk.net" "request.jeremyk.net" "req.jibbs.stream" "request.jibbs.stream"];
-    };
-    tautulli = {
-      host = tower;
-      port = 8181;
-    };
-    "calibre-web" = {
-      host = tower;
-      port = 8083;
-      subdomain = "books";
-    };
     yourspotify = {
       host = tower;
-      port = 3001;
+      port = 18071; # SWAG proxy HTTPS port (was 3001, conflicts with gitea+kuma-tower)
+      https = true;
     };
   };
 
   tailscale = {
-    sonarr = {
-      host = tower;
-      port = 8989;
-    };
-    radarr = {
-      host = tower;
-      port = 7878;
-    };
-    prowlarr = {
-      host = tower;
-      port = 9696;
-    };
+    # Direct port access (unique ports)
     bazarr = {
       host = tower;
-      port = 6767;
+      port = 6767; # Direct port - no conflicts
     };
     deluge = {
       host = tower;
-      port = 8112;
+      port = 8112; # Direct port - no conflicts
     };
-    nzbget = {
+    prowlarr = {
       host = tower;
-      port = 6789;
+      port = 9696; # Direct port - no conflicts
+    };
+    radarr = {
+      host = tower;
+      port = 7878; # Direct port - no conflicts
+    };
+    sonarr = {
+      host = tower;
+      port = 8989; # Direct port - no conflicts
     };
     tdarr = {
       host = tower;
-      port = 8265;
+      port = 8265; # Direct port - no conflicts
     };
+
+    # SWAG proxy routing (port conflicts or blocked)
     calibre = {
       host = tower;
-      port = 8080;
+      port = 18071; # SWAG proxy HTTPS port (was 8080, conflicts with microbin+scrutiny)
+      https = true;
     };
     jackett = {
       host = tower;
-      port = 9117;
+      port = 18071; # SWAG proxy HTTPS port (was 9117, port blocked)
+      https = true;
+    };
+    nzbget = {
+      host = tower;
+      port = 18071; # SWAG proxy HTTPS port (was 6789, service needs proxy)
+      https = true;
+    };
+    tautulli = {
+      host = tower;
+      port = 18071; # SWAG proxy HTTPS port (was 8181, service needs proxy)
+      https = true;
     };
   };
 }

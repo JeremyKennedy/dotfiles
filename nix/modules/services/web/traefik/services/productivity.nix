@@ -19,65 +19,77 @@
 # - homeassistant: Home automation (also hass/ha.home.jeremyk.net)
 #
 {lib, ...}: let
-  tower = "192.168.1.240";  # Unraid server
-  bee = "localhost";        # Local host (bee)
+  tower = "192.168.1.240"; # Unraid server
+  bee = "localhost"; # Local host (bee)
 in {
   # Productivity services organized by access level
   public = {
-    nextcloud = {
-      host = tower;
-      port = 444;
-      https = true;
-      extraHosts = ["cloud.jeremyk.net"];
-    };
+    # SWAG proxy routing (port conflicts or blocked)
     gitea = {
       host = tower;
-      port = 3001;
-    };
-    microbin = {
-      host = tower;
-      port = 8080;
-    };
-    immich = {
-      host = tower;
-      port = 2283;
-    };
-    mealie = {
-      host = tower;
-      port = 9925;
+      port = 18071; # SWAG proxy HTTPS port (was 3001, conflicts with kuma-tower+yourspotify)
+      https = true;
     };
     kutt = {
       host = tower;
-      port = 3000;
+      port = 18071; # SWAG proxy HTTPS port (was 3000, conflicts with grafana)
+      https = true;
+    };
+    mealie = {
+      host = tower;
+      port = 18071; # SWAG proxy HTTPS port (was 9925, port blocked)
+      https = true;
+    };
+    microbin = {
+      host = tower;
+      port = 18071; # SWAG proxy HTTPS port (was 8080, conflicts with calibre+scrutiny)
+      https = true;
+    };
+    nextcloud = {
+      host = tower;
+      port = 443; # SWAG proxy (was 444, service needs proxy)
+      https = true;
+      extraHosts = ["cloud.jeremyk.net"];
     };
   };
 
   tailscale = {
-    paperless = {
+    # Direct port access (unique ports)
+    changes = {
       host = tower;
-      port = 8010;
+      port = 5000; # Direct port - no conflicts
     };
+    immich = {
+      host = tower;
+      port = 2283; # Direct port - no conflicts
+    };
+    home-assistant = {
+      host = tower;
+      port = 8123; # Direct port - Home Assistant accessible directly
+      subdomain = "hass";
+      extraHosts = ["ha.home.jeremyk.net" "homeassistant.home.jeremyk.net"];
+      middlewares = [];
+    };
+    # overleaf = {
+    #   host = tower;
+    #   port = 80; # Direct port - no conflicts (librespeed conflict resolved via public/tailscale separation)
+    # };
+
+    # SWAG proxy routing (port conflicts or blocked)
     grist = {
       host = tower;
-      port = 8484;
+      port = 18071; # SWAG proxy HTTPS port (was 8484, service needs proxy)
+      https = true;
     };
     kimai = {
       host = tower;
-      port = 8001;
+      port = 18071; # SWAG proxy HTTPS port (was 8001, port blocked)
+      https = true;
     };
-    overleaf = {
+    paperless = {
       host = tower;
-      port = 80;
-    };
-    changes = {
-      host = tower;
-      port = 5000;
-    };
-    homeassistant = {
-      host = tower;
-      port = 8123;
-      extraHosts = ["hass.jeremyk.net" "ha.jeremyk.net"];
-      middlewares = ["websocket"];
+      port = 18071; # SWAG proxy HTTPS port (was 8010, port blocked)
+      https = true;
     };
   };
 }

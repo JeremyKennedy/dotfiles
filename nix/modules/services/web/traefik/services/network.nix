@@ -9,20 +9,23 @@
 # - unifi: UniFi network controller (unifi.home.jeremyk.net)
 #
 {lib, ...}: let
-  tower = "192.168.1.240";  # Unraid server
-  bee = "localhost";        # Local host (bee)
+  tower = "192.168.1.240"; # Unraid server
+  bee = "localhost"; # Local host (bee)
 in {
   # Network services organized by access level
   public = {};
 
   tailscale = {
+    # Direct port access (unique ports)
     adguard = {
       host = bee;
-      port = 3000;
-    }; # Bee service
+      port = 3000; # Bee service - no conflicts
+    };
+
+    # SWAG proxy routing (port conflicts)
     unifi = {
       host = tower;
-      port = 8443;
+      port = 18071; # SWAG proxy HTTPS port (was 8443, conflicts with crafty and tower webui)
       https = true;
     };
   };
