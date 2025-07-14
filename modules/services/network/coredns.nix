@@ -1,22 +1,11 @@
 # CoreDNS configuration for local DNS resolution
 #
-# Access methods:
-# - No web interface (DNS server only)
-# - DNS queries on port 5354 (all interfaces)
-# - Health check: http://bee.sole-bigeye.ts.net:8080/health (monitoring only)
-#
-# Features:
-# - Secondary DNS server on port 5354 (backup/special cases)
-# - Can forward queries to AdGuard Home on port 53 if needed
-# - Handles .home domain for local services (if AdGuard DNS rewrites fail)
-# - Health check endpoint: http://bee.sole-bigeye.ts.net:8080/health (returns "OK")
-#   Used by monitoring tools like Uptime Kuma, not meant for browser access
-#
-# To add local DNS entries:
-# - Edit the hosts section in the config
-# - Example: 192.168.1.100 service.home
-#
-# DNS flow: Client -> AdGuard:53 -> Upstream DNS (CoreDNS:5354 available as backup)
+# ⚠️  UNUSED - Replaced by AdGuard Home DNS rewrites
+# This service is redundant and has been removed from hosts.
+# AdGuard Home directly handles *.home.jeremyk.net → 100.74.102.74 via DNS rewrites.
+# 
+# Original purpose was to provide .home.jeremyk.net domain resolution,
+# but AdGuard DNS rewrites accomplish this more efficiently.
 {
   config,
   pkgs,

@@ -130,6 +130,9 @@
   # Set this server as the system DNS resolver
   networking.nameservers = ["127.0.0.1"];
   networking.resolvconf.enable = false;
+  
+  # Disable systemd-resolved to prevent conflicts with AdGuard DNS
+  services.resolved.enable = lib.mkForce false;
 
   # Ensure /etc/resolv.conf points to local DNS
   environment.etc."resolv.conf".text = ''

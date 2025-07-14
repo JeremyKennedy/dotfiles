@@ -17,7 +17,6 @@
 
     # Network services for this host
     ../../modules/services/network/adguard.nix
-    ../../modules/services/network/coredns.nix
     ../../modules/services/network/traefik
     ../../modules/services/web/public-site.nix
   ];
