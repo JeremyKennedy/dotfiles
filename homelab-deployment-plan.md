@@ -87,7 +87,7 @@ sudo nixos-rebuild dry-build --flake .#navi
 - ❌ NEVER modify the running system
 
 ### Baseline Structure (Streamlined)
-All baseline files are stored in `nix/baselines/` (gitignored):
+All baseline files are stored in `baselines/` (gitignored):
 
 **Key Principle**: The system derivation path is the single source of truth. If it doesn't change, nothing functionally changed.
 
@@ -126,7 +126,7 @@ ssh root@<host-ip> 'cat /etc/ssh/ssh_host_ed25519_key.pub'
 # allSystems = [ jeremyDesktop bee ];
 
 # 4. Re-encrypt all secrets
-cd /home/jeremy/dotfiles/nix
+cd /home/jeremy/dotfiles
 agenix --rekey
 
 # 5. Commit and push changes
@@ -193,15 +193,15 @@ colmena apply --on JeremyDesktop
 ## Current State Analysis
 
 ### Existing Configuration Structure
-- **Desktop**: Single host `JeremyDesktop` in `/home/jeremy/dotfiles/nix/`
+- **Desktop**: Single host `JeremyDesktop` in `/home/jeremy/dotfiles/`
 - **Current flake**: Has agenix already integrated
 - **Existing hetz-nix**: Separate directory with VPS config for halo
 - **Home-manager**: Heavy usage for shell and programs (needs migration)
 
 ### Key Files to Preserve
-- `nix/nixos/configuration.nix` - Main desktop config (DO NOT CHANGE until Phase 4)
-- `nix/home-manager/` - User configs (will be reduced in scope)
-- `nix/secrets.json` - Already exists
+- `nixos/configuration.nix` - Main desktop config (DO NOT CHANGE until Phase 4)
+- `home-manager/` - User configs (will be reduced in scope)
+- `secrets.json` - Already exists
 - `hetz-nix/` - Reference for halo configuration
 
 ### Critical Constraints
@@ -832,7 +832,7 @@ ssh root@192.168.1.245 'cat /etc/ssh/ssh_host_ed25519_key.pub'
 
 # 2. Add the key to secrets.nix and update allSystems list
 # 3. Re-encrypt all secrets
-cd /home/jeremy/dotfiles/nix
+cd /home/jeremy/dotfiles
 agenix --rekey
 
 # 4. Join Tailscale network
@@ -1043,7 +1043,7 @@ Later phases will replace `barebones.nix` with the full `default.nix` configurat
 The desktop configuration was successfully migrated to a modular structure:
 
 ```
-nix/modules/desktop/
+modules/desktop/
 ├── default.nix              # Imports all desktop modules
 ├── graphics.nix             # AMD GPU configuration
 ├── hyprland.nix             # Hyprland window manager + tools
@@ -1462,14 +1462,14 @@ Tower (192.168.1.240) services tested for optimal routing strategy:
 
 ### Before Starting
 1. **Read existing configs** to understand current state:
-   - `nix/flake.nix` - current single-host setup
-   - `nix/nixos/configuration.nix` - desktop config to preserve
+   - `flake.nix` - current single-host setup
+   - `nixos/configuration.nix` - desktop config to preserve
    - `hetz-nix/configuration.nix` - reference for halo
-   - `nix/home-manager/` - configs to migrate to system level
+   - `home-manager/` - configs to migrate to system level
 
 2. **Capture baseline** before any changes:
    ```bash
-   cd /home/jeremy/dotfiles/nix
+   cd /home/jeremy/dotfiles
    ./baselines/capture-baseline.sh initial
    ```
    This captures only what matters:

@@ -2,11 +2,11 @@
 **/.env
 
 # Secrets files
-nix/secrets.json
+secrets.json
 
 # Baseline comparison files
-nix/baselines/
+baselines/
 
 # Build files
 **/.direnv/
-nix/result
+result

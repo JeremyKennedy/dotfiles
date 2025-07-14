@@ -4,19 +4,23 @@ default:
 
 # Deploy to specific host(s)
 deploy +hosts:
-    ./colmena-deploy.sh {{hosts}}
+    ./scripts/colmena-deploy.sh {{hosts}}
 
 # Deploy to all hosts
 deploy-all:
-    ./colmena-deploy.sh
+    ./scripts/colmena-deploy.sh
 
-# Check all flake configurations
-check:
-    nix flake check
-
-# Check a specific host configuration  
-check-host host:
-    nix build .#nixosConfigurations.{{host}}.config.system.build.toplevel --dry-run
+# Check flake configurations (optionally for specific host(s))
+check +hosts="":
+    #!/usr/bin/env bash
+    if [ -z "{{hosts}}" ]; then
+        nix flake check
+    else
+        for host in {{hosts}}; do
+            echo "Checking $host..."
+            nix build .#nixosConfigurations.$host.config.system.build.toplevel --dry-run
+        done
+    fi
 
 # Update flake inputs
 update:
@@ -26,13 +30,9 @@ update:
 fmt:
     nix fmt .
 
-# Show deployment status
-status:
-    @echo "Checking hosts..."
-    @for host in bee halo pi; do \
-        echo -n "$host: "; \
-        ssh -o ConnectTimeout=5 root@$host.sole-bigeye.ts.net "nixos-version" 2>/dev/null || echo "unreachable"; \
-    done
+# Test services on all hosts
+test-services:
+    ./scripts/test-services.sh
 
 # Rebuild local desktop
 rebuild:
@@ -40,7 +40,7 @@ rebuild:
 
 # Emergency deploy when colmena fails
 deploy-direct host ip:
-    ./deploy-host.sh --existing-nix {{host}} root@{{ip}}
+    ./scripts/deploy-host.sh --existing-nix {{host}} root@{{ip}}
 
 # Build a specific host configuration without deploying
 build host:

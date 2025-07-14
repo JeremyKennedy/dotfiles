@@ -5,9 +5,9 @@ This file contains information for AI assistants working on this project.
 ## Project Location
 
 This project is located in Jeremy's dotfiles repository at:
-- **Path**: `~/dotfiles/nix/nixos/scripts/grist-payment-updater/`
+- **Path**: `~/dotfiles/modules/services/utility/grist-payment-updater/`
 - **Repository**: Personal NixOS/home-manager configuration dotfiles
-- **Integration**: Part of NixOS system configuration in `nixos/scripts/`
+- **Integration**: Part of NixOS system configuration in `hosts/navi/services.nix`
 
 ## Project Overview
 

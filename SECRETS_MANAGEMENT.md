@@ -27,7 +27,7 @@ The `secrets.json` file serves as your local "source of truth" that feeds into a
 
 To see what secrets are available:
 ```bash
-ls nix/secrets/
+ls secrets/
 # Shows: chatgpt_key.age  grist_api_key.age  grist_proxy_auth.age  hass_server.age  hass_token.age
 ```
 
@@ -37,12 +37,11 @@ To update any secret:
 
 1. **Edit the `secrets.json` file**:
 ```bash
-vim nix/secrets.json
+vim secrets.json
 ```
 
 2. **Re-encrypt the updated secrets**:
 ```bash
-cd nix/
 # Re-encrypt individual secrets from secrets.json
 jq -r .hass_token secrets.json | agenix -e secrets/hass_token.age
 jq -r .hass_server secrets.json | agenix -e secrets/hass_server.age
@@ -122,6 +121,5 @@ If you need to add a new machine or user:
 1. Add their SSH public key to `secrets.nix`
 2. Re-encrypt all secrets:
 ```bash
-cd nix/
 agenix -r
 ```

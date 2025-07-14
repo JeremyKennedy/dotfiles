@@ -12,7 +12,7 @@
     # Host-specific configurations
     ./filesystems.nix
     ./network.nix
-    ./scripts.nix
+    ./services.nix
     ./secrets.nix
 
     # Hardware configuration

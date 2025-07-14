@@ -8,25 +8,23 @@ This is a NixOS/home-manager dotfiles repository using Nix flakes. The configura
 
 ### Key Structure
 
-- `nix/flake.nix` - Main flake configuration defining all NixOS hosts (desktop, bee, halo, pi)
-- `nix/hosts/` - Host-specific configurations
+- `flake.nix` - Main flake configuration defining all NixOS hosts (desktop, bee, halo, pi)
+- `hosts/` - Host-specific configurations
   - `navi/` - Desktop workstation (hostname: JeremyDesktop)
   - `bee/` - DNS and network services server (192.168.1.245)
   - `halo/` - VPS with monitoring services (46.62.144.212)
   - `pi/` - Raspberry Pi configuration (192.168.1.230)
-- `nix/modules/` - Reusable NixOS modules
+- `modules/` - Reusable NixOS modules
   - `core/` - Modules used by ALL hosts (includes base, boot, networking, security, ssh, tailscale, performance, hardware, shell, git)
   - `desktop/` - Desktop/GUI modules (hyprland, graphics, audio)
-  - `services/` - Service modules (dns/, web/, monitoring/)
+  - `services/` - Service modules (network/, web/, monitoring/, utility/)
   - `home/` - Home-manager modules (terminal, editors, browsers)
-- `nix/profiles/` - Composition profiles (server.nix, desktop.nix)
-- `nix/nixos/` - Legacy desktop configuration (being migrated)
-- `nix/home-manager/` - User-level home-manager configuration modules
-- `nix/overlays/` - Package overlays for stable/unstable/master nixpkgs
-- `nix/pkgs/` - Custom package definitions
-- `nix/secrets.json` - Secrets file (referenced in flake)
-- `hypr/` - Hyprland window manager configuration
-- `scripts/` - Standalone shell scripts
+- `profiles/` - Composition profiles (server.nix, desktop.nix)
+- `nixos/` - Legacy desktop configuration (being migrated)
+- `home-manager/` - User-level home-manager configuration modules
+- `overlays/` - Package overlays for stable/unstable/master nixpkgs
+- `secrets.json` - Secrets file (referenced in flake)
+- `scripts/` - Deployment and utility scripts (colmena-deploy.sh, deploy-host.sh, test-services.sh)
 
 ### Configuration Organization
 
@@ -35,7 +33,7 @@ This is a NixOS/home-manager dotfiles repository using Nix flakes. The configura
 - `hyprland.nix` - Hyprland window manager setup
 - `graphics.nix` - GPU and graphics configuration
 - `network.nix` - Network and firewall settings
-- `scripts.nix` - Custom scripts and systemd services
+- `services.nix` - Custom services and systemd units
 - `waybar.nix` - Status bar configuration
 - `filesystems.nix` - Filesystem mounts and configuration
 - `ledger.nix` - Ledger-specific configuration
@@ -52,7 +50,7 @@ This is a NixOS/home-manager dotfiles repository using Nix flakes. The configura
 - `chatgpt-cli.nix` - ChatGPT CLI configuration
 - `hass-cli.nix` - Home Assistant CLI configuration
 
-**Hyprland Configuration Files** (in `hypr/.config/hypr/`):
+**Hyprland Configuration Files** (in `modules/desktop/hyprland/configs/`):
 - `hyprland.conf` - Main Hyprland window manager configuration
 - `hypridle.conf` - Idle management configuration
 - `hyprlock.conf` - Screen lock configuration
@@ -105,13 +103,13 @@ The repository includes a `justfile` that provides convenient commands for commo
 #### Local Desktop Rebuild
 ```bash
 # Rebuild local desktop
-cd /home/jeremy/dotfiles/nix
+cd /home/jeremy/dotfiles
 just rebuild
 ```
 
 #### Remote Deployment
 ```bash
-cd /home/jeremy/dotfiles/nix
+cd /home/jeremy/dotfiles
 
 # Deploy to specific hosts
 just deploy bee                  # Deploy to single host
@@ -147,14 +145,14 @@ just update
 just fmt
 
 # Check flake configuration
-just check
-just check-host bee              # Check specific host
+just check                       # Check all hosts
+just check bee                   # Check specific host
 
 # Build a host configuration without deploying
 just build bee
 
-# Dry-run build to check configuration syntax
-just check-host bee              # Check specific host configuration
+# Test services on all hosts
+just test-services               # Check all services are running
 
 # SSH to a host
 just ssh bee
@@ -179,7 +177,7 @@ sudo systemctl restart <service-name>
 
 ```bash
 # Add new files before rebuilding
-cd /home/jeremy/dotfiles/nix
+cd /home/jeremy/dotfiles
 git add .
 just rebuild
 ```
@@ -215,7 +213,7 @@ When adding new services or configurations:
 
 ### Development
 ```bash
-cd /home/jeremy/dotfiles/nix
+cd /home/jeremy/dotfiles
 
 # Enter development shell with nix tools available
 nix develop
@@ -229,7 +227,7 @@ just shell bee
 
 ### Custom Services
 
-The system includes custom systemd services defined in `scripts.nix`:
+The system includes custom systemd services defined in `services.nix`:
 
 **MQTT Volume Control** (`mqtt-service`):
 - Runs as systemd service under user "jeremy"
@@ -245,12 +243,11 @@ The system includes custom systemd services defined in `scripts.nix`:
 
 ### Writing Custom Services
 
-All services in this repository use a modular approach. Each service has its own subdirectory under `scripts/` with a `service.nix` file:
+All services in this repository use a modular approach. Each service has its own subdirectory under `hosts/navi/services/` with a `service.nix` file:
 
 **Service Structure**:
 ```
-nix/nixos/scripts/
-├── scripts.nix              # Imports all service modules
+hosts/navi/services/
 ├── mqtt-service/
 │   ├── service.nix          # Service definition
 │   ├── main.py              # Python script
@@ -261,7 +258,7 @@ nix/nixos/scripts/
     └── CLAUDE.md            # Service documentation
 ```
 
-**Service Template** (`scripts/my-service/service.nix`):
+**Service Template** (`hosts/navi/services/my-service/service.nix`):
 ```nix
 { config, lib, pkgs, ... }:
 
@@ -287,13 +284,13 @@ in
 }
 ```
 
-**Adding to System** (`scripts.nix`):
+**Adding to System** (`hosts/navi/services.nix`):
 ```nix
 {
   imports = [
-    ./scripts/mqtt-service/service.nix
-    ./scripts/grist-payment-updater/service.nix
-    ./scripts/my-service/service.nix  # Add new service here
+    ./services/mqtt-service/service.nix
+    ./services/grist-payment-updater/service.nix
+    ./services/my-service/service.nix  # Add new service here
   ];
 }
 ```

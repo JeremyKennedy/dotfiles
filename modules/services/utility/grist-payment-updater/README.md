@@ -14,7 +14,7 @@ Automatically updates payment dates in your Grist table based on recurrence patt
 ## Quick Start
 
 ### NixOS Service (Recommended)
-1. **Configure Secrets**: Update `nix/secrets.json` with your credentials
+1. **Configure Secrets**: Update `secrets.json` with your credentials
 2. **Deploy**: Service runs automatically at 8 AM daily
 
 ### Standalone Usage

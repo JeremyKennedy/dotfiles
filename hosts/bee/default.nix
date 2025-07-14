@@ -16,9 +16,9 @@
     ./secrets.nix
 
     # Network services for this host
-    ../../modules/services/dns/adguard.nix
-    ../../modules/services/dns/coredns.nix
-    ../../modules/services/web/traefik
+    ../../modules/services/network/adguard.nix
+    ../../modules/services/network/coredns.nix
+    ../../modules/services/network/traefik
     ../../modules/services/web/public-site.nix
   ];
 
