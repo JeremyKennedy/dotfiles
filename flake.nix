@@ -43,6 +43,7 @@
     inherit (self) outputs;
     systems = ["x86_64-linux"];
     forAllSystems = nixpkgs.lib.genAttrs systems;
+    inherit (import ./modules/core/hosts.nix) hosts;
   in {
     # Formatter for your nix files, available through 'nix fmt'
     # Other options beside 'alejandra' include 'nixpkgs-fmt'
@@ -127,7 +128,7 @@
 
       bee = {
         deployment = {
-          targetHost = "bee.sole-bigeye.ts.net";
+          targetHost = hosts.bee.tailscaleDomain;
           targetUser = "root";
           buildOnTarget = false;
         };
@@ -140,7 +141,7 @@
 
       halo = {
         deployment = {
-          targetHost = "halo.sole-bigeye.ts.net";
+          targetHost = hosts.halo.tailscaleDomain;
           targetUser = "root";
           buildOnTarget = false;
         };
@@ -153,9 +154,9 @@
 
       pi = {
         deployment = {
-          targetHost = "pi.sole-bigeye.ts.net";
+          targetHost = hosts.pi.ip;
           targetUser = "root";
-          buildOnTarget = false; # Build ARM on desktop
+          buildOnTarget = true; # Build ARM on Pi itself
         };
         nixpkgs.system = "aarch64-linux";
         imports = [

@@ -5,6 +5,7 @@
   ...
 }: let
   cfg = config.networking.staticIP;
+  inherit (import ./hosts.nix) hosts;
 in {
   options.networking.staticIP = {
     enable = lib.mkEnableOption "static IP configuration";
@@ -25,7 +26,7 @@ in {
       networkConfig = {
         Address = cfg.address;
         Gateway = cfg.gateway;
-        DNS = ["100.74.102.74"]; # bee DNS server (Tailscale IP)
+        DNS = [hosts.bee.tailscaleIp]; # bee DNS server (Tailscale IP)
         Domains = ["~home" "~home.jeremyk.net"]; # Search domains
       };
     };

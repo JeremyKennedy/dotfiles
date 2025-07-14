@@ -6,7 +6,11 @@
 # - public-site: Main website (jeremyk.net and www.jeremyk.net)
 #
 {lib, ...}: let
+  inherit (import ../../../../core/hosts.nix) hosts;
   bee = "localhost"; # Local host (bee)
+  navi = hosts.navi.tailscaleDomain;
+  tower = hosts.tower.tailscaleDomain;
+  halo = hosts.halo.tailscaleDomain;
 in {
   # Web hosting services organized by access level
   public = {

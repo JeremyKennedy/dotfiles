@@ -4,7 +4,9 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  inherit (import ./hosts.nix) hosts;
+in {
   # Use systemd-networkd for declarative network management
   networking.useNetworkd = true;
   networking.useDHCP = false; # Explicit per-interface DHCP
@@ -20,7 +22,7 @@
       networkConfig = {
         DHCP = "ipv4";
         IPv6AcceptRA = true;
-        DNS = ["100.74.102.74"]; # bee DNS server (Tailscale IP)
+        DNS = [hosts.bee.tailscaleIp]; # bee DNS server (Tailscale IP)
         Domains = ["~home" "~home.jeremyk.net"]; # Search domains
       };
       dhcpV4Config = {
@@ -34,7 +36,7 @@
     enable = true;
     dnssec = "false"; # May conflict with bee's AdGuard
     domains = ["~."];
-    fallbackDns = ["100.74.102.74"]; # bee fallback (Tailscale IP)
+    fallbackDns = [hosts.bee.tailscaleIp]; # bee fallback (Tailscale IP)
   };
 
   # Tailscale for all hosts

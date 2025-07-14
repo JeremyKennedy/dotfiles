@@ -2,7 +2,9 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  inherit (import ../modules/core/hosts.nix) hosts;
+in {
   programs = {
     fish = {
       enable = true;
@@ -34,13 +36,13 @@
         cdi = "zi"; # Interactive directory selection with zoxide
 
         # Server shortcuts (user-specific)
-        t = "ssh tower.lan -t fish";
-        tower = "ssh tower.lan -t fish";
-        tdl = "ssh tower.lan docker logs -f";
-        tdu = "ssh tower.lan docker start";
-        tdd = "ssh tower.lan docker stop";
-        tdr = "ssh tower.lan docker restart";
-        tde = "ssh tower.lan -t docker exec -it";
+        t = "ssh ${hosts.tower.ip} -t fish";
+        tower = "ssh ${hosts.tower.ip} -t fish";
+        tdl = "ssh ${hosts.tower.ip} docker logs -f";
+        tdu = "ssh ${hosts.tower.ip} docker start";
+        tdd = "ssh ${hosts.tower.ip} docker stop";
+        tdr = "ssh ${hosts.tower.ip} docker restart";
+        tde = "ssh ${hosts.tower.ip} -t docker exec -it";
 
         # User-specific shortcuts
         modown = "sudo chmod 777 -R . ; sudo chown -R jeremy:users . ; ll";

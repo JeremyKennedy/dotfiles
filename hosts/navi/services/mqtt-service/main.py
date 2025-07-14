@@ -7,7 +7,7 @@ import os
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
 logging.info("Starting MQTT service")
 
-MQTT_BROKER = "192.168.1.240"
+MQTT_BROKER = os.environ.get("MQTT_BROKER", "192.168.1.240")
 WPCTL = "/run/current-system/sw/bin/wpctl"
 HYPRCTL = "/run/current-system/sw/bin/hyprctl"
 

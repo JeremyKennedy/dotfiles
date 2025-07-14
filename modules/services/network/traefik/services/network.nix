@@ -9,8 +9,11 @@
 # - unifi: UniFi network controller (unifi.home.jeremyk.net)
 #
 {lib, ...}: let
-  tower = "192.168.1.240"; # Unraid server
+  inherit (import ../../../../core/hosts.nix) hosts;
   bee = "localhost"; # Local host (bee)
+  navi = hosts.navi.tailscaleDomain;
+  tower = hosts.tower.tailscaleDomain;
+  halo = hosts.halo.tailscaleDomain;
 in {
   # Network services organized by access level
   public = {};

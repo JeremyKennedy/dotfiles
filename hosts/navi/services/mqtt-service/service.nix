@@ -6,6 +6,7 @@
   ...
 }: let
   python = pkgs.python3.withPackages (ps: with ps; [paho-mqtt]);
+  inherit (import ../../../../modules/core/hosts.nix) hosts;
 in {
   # Deploy the mqtt service script
   environment.etc."mqtt-service/main.py".source = ./main.py;
@@ -26,6 +27,7 @@ in {
         "QT_QPA_PLATFORM=wayland"
         "GDK_BACKEND=wayland"
         "PATH=/run/current-system/sw/bin:/home/jeremy/.nix-profile/bin"
+        "MQTT_BROKER=${hosts.tower.ip}"
       ];
       ExecStart = "${python}/bin/python3 /etc/mqtt-service/main.py";
       Restart = "always";

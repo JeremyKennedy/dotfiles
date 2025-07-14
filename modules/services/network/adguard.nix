@@ -24,7 +24,9 @@
   pkgs,
   lib,
   ...
-}: {
+}: let
+  inherit (import ../../core/hosts.nix) hosts;
+in {
   services.adguardhome = {
     enable = true;
     mutableSettings = false;
@@ -79,11 +81,11 @@
         rewrites = [
           {
             domain = "*.home";
-            answer = "100.74.102.74";
+            answer = hosts.bee.tailscaleIp;
           }
           {
             domain = "*.home.jeremyk.net";
-            answer = "100.74.102.74";
+            answer = hosts.bee.tailscaleIp;
           }
         ];
       };

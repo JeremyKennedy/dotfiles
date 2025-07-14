@@ -19,8 +19,11 @@
 # - homeassistant: Home automation (also hass/ha.home.jeremyk.net)
 #
 {lib, ...}: let
-  tower = "192.168.1.240"; # Unraid server
+  inherit (import ../../../../core/hosts.nix) hosts;
   bee = "localhost"; # Local host (bee)
+  navi = hosts.navi.tailscaleDomain;
+  tower = hosts.tower.tailscaleDomain;
+  halo = hosts.halo.tailscaleDomain;
 in {
   # Productivity services organized by access level
   public = {
@@ -83,6 +86,10 @@ in {
     paperless = {
       host = tower;
       port = 8102;
+    };
+    scoredo = {
+      host = navi;
+      port = 9000;
     };
   };
 }

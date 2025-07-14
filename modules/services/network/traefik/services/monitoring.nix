@@ -14,10 +14,11 @@
 # - speedtest-tracker: Speed test history (speedhist.home.jeremyk.net)
 #
 {lib, ...}: let
+  inherit (import ../../../../core/hosts.nix) hosts;
   bee = "localhost"; # Local host (bee)
-  navi = "navi.sole-bigeye.ts.net"; # Desktop PC
-  tower = "tower.sole-bigeye.ts.net"; # Unraid server
-  halo = "halo.sole-bigeye.ts.net"; # Hetzner VPS
+  navi = hosts.navi.tailscaleDomain;
+  tower = hosts.tower.tailscaleDomain;
+  halo = hosts.halo.tailscaleDomain;
 in {
   # Monitoring services organized by access level
   public = {
