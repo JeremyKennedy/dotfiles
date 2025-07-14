@@ -24,7 +24,7 @@ with lib; rec {
   #     - service: Traefik service name to route to (default: service name)
   #     - extraHosts: Additional hostnames this service should respond to
   #     - middlewares: List of middleware names to apply
-  #   public: Whether this service is publicly accessible (false = Tailscale only)
+  #   public: Whether this service is publicly accessible (true = both .jeremyk.net + .home.jeremyk.net, false = .home.jeremyk.net only, via Tailscale)
   #
   # Output: Traefik router configuration
   mkRouter = {
@@ -34,16 +34,19 @@ with lib; rec {
   }: let
     subdomain = config.subdomain or name;
     extraHosts = config.extraHosts or [];
-    # Use different domains for public vs tailscale services
-    baseDomain =
-      if public
-      then "jeremyk.net"
-      else "home.jeremyk.net";
-    # Handle root domain (empty subdomain)
+    # Generate hosts based on public flag
     hosts =
-      if subdomain == ""
-      then [baseDomain] ++ extraHosts
-      else ["${subdomain}.${baseDomain}"] ++ extraHosts;
+      if public
+      then
+        # Public services get BOTH .jeremyk.net AND .home.jeremyk.net domains
+        if subdomain == ""
+        then ["jeremyk.net" "home.jeremyk.net"] ++ extraHosts
+        else ["${subdomain}.jeremyk.net" "${subdomain}.home.jeremyk.net"] ++ extraHosts
+      else
+        # Internal-only services get only .home.jeremyk.net domain (current behavior)
+        if subdomain == ""
+        then ["home.jeremyk.net"] ++ extraHosts
+        else ["${subdomain}.home.jeremyk.net"] ++ extraHosts;
     hostRule = concatMapStringsSep " || " (h: "Host(`${h}`)") hosts;
     # Always apply security headers, add tailscale-only for non-public services
     baseMiddlewares =
