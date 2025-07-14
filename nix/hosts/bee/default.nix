@@ -11,6 +11,7 @@
 
     # Host-specific
     ./disko.nix
+    ./network.nix
     ./hardware-configuration.nix
     ./secrets.nix
 
@@ -21,7 +22,6 @@
     ../../modules/services/web/public-site.nix
   ];
 
-  networking.hostName = "bee";
   system.stateVersion = "24.11";
 
   # Boot configuration for UEFI systems

@@ -270,9 +270,10 @@ test_infrastructure() {
 
     # Direct infrastructure tests (bypassing Traefik)
     echo "  Infrastructure Services:"
-    test_service "adguard-direct" "http://100.74.102.74:3000" "Infrastructure"
-    test_service "coredns-direct" "http://100.74.102.74:8080/health" "Infrastructure"
+    test_service "adguard-direct" "http://bee.sole-bigeye.ts.net:3000" "Infrastructure"
+    test_service "coredns-direct" "http://bee.sole-bigeye.ts.net:8080/health" "Infrastructure"
     test_service "traefik-dashboard" "https://traefik.home.jeremyk.net/" "Infrastructure"
+    test_service "kuma-direct" "http://halo.sole-bigeye.ts.net:3001" "Infrastructure"
 
     echo ""
     echo "  Network Connectivity Tests:"

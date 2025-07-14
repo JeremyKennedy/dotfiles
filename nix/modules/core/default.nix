@@ -4,6 +4,7 @@
     ./base.nix # Essential Nix settings and packages
     ./boot.nix # Boot configuration
     ./networking.nix # Basic network configuration
+    ./static-ip.nix # Static IP configuration option
     ./security.nix # Firewall and fail2ban
     ./ssh.nix # SSH server
     ./tailscale.nix # VPN configuration

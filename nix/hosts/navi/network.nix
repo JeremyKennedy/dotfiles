@@ -4,6 +4,14 @@
   pkgs,
   ...
 }: {
+  networking.hostName = "navi";
+
+  # Static IP configuration
+  networking.staticIP = {
+    enable = true;
+    address = "192.168.1.250/24";
+  };
+
   # Desktop-specific firewall rules
   networking.firewall = {
     allowedTCPPorts = [

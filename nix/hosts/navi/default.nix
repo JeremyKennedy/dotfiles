@@ -22,9 +22,6 @@
     inputs.home-manager.nixosModules.home-manager
   ];
 
-  # Host-specific settings
-  networking.hostName = "navi";
-
   # Host-specific boot configuration
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 20;

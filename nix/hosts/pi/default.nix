@@ -10,10 +10,10 @@
     ../../profiles/server.nix
     # Host-specific
     ./disko.nix
+    ./network.nix
     # ./hardware-configuration.nix (not needed with disko)
   ];
 
-  networking.hostName = "pi";
   system.stateVersion = "24.11";
   nixpkgs.hostPlatform = "aarch64-linux";
 

@@ -33,6 +33,7 @@ in {
     kutt = {
       host = tower;
       port = 18071; # SWAG proxy HTTPS port (was 3000, conflicts with grafana)
+      subdomain = "link";
       https = true;
     };
     mealie = {
@@ -43,11 +44,13 @@ in {
     microbin = {
       host = tower;
       port = 18071; # SWAG proxy HTTPS port (was 8080, conflicts with calibre+scrutiny)
+      subdomain = "bin";
       https = true;
     };
     nextcloud = {
       host = tower;
       port = 443; # SWAG proxy (was 444, service needs proxy)
+      subdomain = "cloud";
       https = true;
       extraHosts = ["cloud.jeremyk.net"];
     };

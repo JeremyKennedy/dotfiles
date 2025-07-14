@@ -18,7 +18,6 @@
     ../../modules/services/monitoring/uptime-kuma.nix
   ];
 
-  networking.hostName = "halo";
   system.stateVersion = "24.05";
 
   # Boot configuration (from hetz-nix) - override common systemd-boot
@@ -41,17 +40,6 @@
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
     "net.ipv6.conf.all.forwarding" = 1;
-  };
-
-  # Firewall configuration
-  # SECURITY: Services bind to 0.0.0.0 but are protected by firewall rules.
-  # Only Tailscale traffic can reach them via trustedInterfaces.
-  # Hetzner firewall provides additional protection at network level.
-  networking.firewall = {
-    enable = true;
-    trustedInterfaces = ["tailscale0"]; # Only trust Tailscale traffic
-    checkReversePath = "loose"; # Required for exit nodes
-    # No ports opened - tailscale0 trusted interface allows access
   };
 
   # Optimize network for Tailscale exit node performance

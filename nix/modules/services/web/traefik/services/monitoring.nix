@@ -23,8 +23,6 @@ in {
     kuma-halo = {
       host = halo;
       port = 3001;
-      subdomain = "uptime";
-      extraHosts = ["status.jeremyk.net"];
     };
     librespeed = {
       host = tower;
@@ -50,8 +48,6 @@ in {
       host = tower;
       port = 18071; # SWAG proxy HTTPS port (was 3001, conflicts with gitea+yourspotify)
       https = true;
-      subdomain = "uptime-tower";
-      extraHosts = ["status-tower.home.jeremyk.net"];
     };
     scrutiny = {
       host = tower;
