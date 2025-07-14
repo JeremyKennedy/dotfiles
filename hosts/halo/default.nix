@@ -9,13 +9,17 @@
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
+
     # Use server profile
     ../../profiles/server.nix
+
     # Host-specific
     ./disko.nix
     ./hardware-configuration.nix
+
     # Services for this host
     ../../modules/services/monitoring/uptime-kuma.nix
+    ../../modules/services/monitoring/netdata.nix
   ];
 
   system.stateVersion = "24.05";

@@ -18,6 +18,9 @@
     # Hardware configuration
     ./hardware-configuration.nix
 
+    # Services for this host
+    ../../modules/services/monitoring/netdata.nix
+
     # Import home-manager's NixOS module
     inputs.home-manager.nixosModules.home-manager
   ];

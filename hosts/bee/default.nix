@@ -16,10 +16,11 @@
     ./secrets.nix
     ./tailscale-override.nix
 
-    # Network services for this host
+    # Services for this host
     ../../modules/services/network/adguard.nix
     ../../modules/services/network/traefik
     ../../modules/services/web/public-site.nix
+    ../../modules/services/monitoring/netdata.nix
   ];
 
   system.stateVersion = "24.11";

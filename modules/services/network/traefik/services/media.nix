@@ -22,7 +22,7 @@
 in {
   # Media services organized by access level
   public = {
-    "calibre-web" = {
+    calibre-web = {
       host = tower;
       port = 6881;
       subdomain = "books";

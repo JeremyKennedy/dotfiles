@@ -15,6 +15,7 @@
 #
 {lib, ...}: let
   bee = "localhost"; # Local host (bee)
+  navi = "navi.sole-bigeye.ts.net"; # Desktop PC
   tower = "tower.sole-bigeye.ts.net"; # Unraid server
   halo = "halo.sole-bigeye.ts.net"; # Hetzner VPS
 in {
@@ -40,11 +41,27 @@ in {
       host = tower;
       port = 3001;
     };
+    netdata-navi = {
+      host = navi;
+      port = 19999;
+    };
+    netdata-bee = {
+      host = bee;
+      port = 19999;
+    };
+    netdata-halo = {
+      host = halo;
+      port = 19999;
+    };
+    netdata-tower = {
+      host = tower;
+      port = 19999;
+    };
     scrutiny = {
       host = tower;
       port = 8088;
     };
-    "speedtest-tracker" = {
+    speedtest-tracker = {
       host = tower;
       port = 8094;
       subdomain = "speedhist";
