@@ -16,6 +16,9 @@
     ./secrets.nix
     ./tailscale-override.nix
 
+    # System modules
+    ../../modules/system/debug-tools.nix
+
     # Services for this host
     ../../modules/services/network/adguard.nix
     ../../modules/services/network/traefik
