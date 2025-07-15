@@ -3,6 +3,7 @@
   config,
   pkgs,
   lib,
+  modulesPath,
   ...
 }: {
   imports = [
@@ -24,4 +25,8 @@
     grub.enable = false;
     generic-extlinux-compatible.enable = true;
   };
+
+  # Disable documentation to avoid man-cache build issues during cross-compilation
+  documentation.enable = false;
+  documentation.man.enable = false;
 }

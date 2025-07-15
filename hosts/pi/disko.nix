@@ -3,7 +3,7 @@
   disko.devices = {
     disk.main = {
       type = "disk";
-      device = "/dev/mmcblk0"; # SD card on Pi
+      device = "/dev/mmcblk1"; # SD card on Pi
       content = {
         type = "gpt";
         partitions = {

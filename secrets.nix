@@ -3,10 +3,10 @@ let
   navi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINkcW6NRwi4Y28F8Zo9rDfwxc+qEt9kxKvLd++q5L2iu root@JeremyDesktop";
   bee = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF6DJdpyEf13a3yHIEaX14VwcFAyYgsxFTHNkD1IBhpt root@bee";
   halo = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM5v8pwspKvNcB3PrEBQV0bQybQ4YyEZeiBFEZ5y7R75 root@halo";
-  # pi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... root@pi";
+  pi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBO/WyGRAoC7fLw8/Pk7wu6BiNy/kbGdiovBCxgjYycg root@pi";
 
   allUsers = [jeremy];
-  allSystems = [navi bee halo];
+  allSystems = [navi bee halo pi];
 in {
   "secrets/hass_token.age".publicKeys = allUsers ++ allSystems;
   "secrets/hass_server.age".publicKeys = allUsers ++ allSystems;

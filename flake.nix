@@ -65,6 +65,24 @@
       };
     });
 
+    # Custom packages
+    packages = {
+      aarch64-linux.pi-sd-image = (nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          inputs.agenix.nixosModules.default
+          ./hosts/pi/default.nix
+          {
+            # Enable SD image building for this variant
+            pi-sd-image.enable = true;
+            # Disable disko for SD image
+            disabledModules = [ ./hosts/pi/disko.nix ];
+          }
+        ];
+      }).config.system.build.sdImage;
+    };
+
     nixosConfigurations = {
       navi = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
@@ -156,7 +174,7 @@
         deployment = {
           targetHost = hosts.pi.ip;
           targetUser = "root";
-          buildOnTarget = true; # Build ARM on Pi itself
+          buildOnTarget = false; # Build locally with emulation
         };
         nixpkgs.system = "aarch64-linux";
         imports = [
