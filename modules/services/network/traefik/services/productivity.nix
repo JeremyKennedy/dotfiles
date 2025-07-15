@@ -89,7 +89,11 @@ in {
     };
     scoredo = {
       host = navi;
-      port = 9000;
+      port = 8000;
+    };
+    scoredo-db = {
+      host = navi;
+      port = 8003;
     };
   };
 }
