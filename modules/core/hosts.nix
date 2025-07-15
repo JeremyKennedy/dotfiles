@@ -37,6 +37,7 @@
 
     # Hetzner VPS
     halo = {
+      ip = "100.78.79.103";  # Use Tailscale IP as primary since it's remote
       publicIp = "46.62.144.212";
       tailscaleIp = "100.78.79.103";
       tailscaleDomain = "halo.sole-bigeye.ts.net";

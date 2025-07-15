@@ -8,23 +8,23 @@ This is a NixOS/home-manager dotfiles repository using Nix flakes. The configura
 
 ### Key Structure
 
-- `flake.nix` - Main flake configuration defining all NixOS hosts (desktop, bee, halo, pi)
+- `flake.nix` - Main flake configuration defining all NixOS hosts (navi, bee, halo, pi)
 - `hosts/` - Host-specific configurations
-  - `navi/` - Desktop workstation (hostname: JeremyDesktop)
+  - `navi/` - Desktop workstation (192.168.1.250)
   - `bee/` - DNS and network services server (192.168.1.245)
   - `halo/` - VPS with monitoring services (46.62.144.212)
   - `pi/` - Raspberry Pi configuration (192.168.1.230)
 - `modules/` - Reusable NixOS modules
-  - `core/` - Modules used by ALL hosts (includes base, boot, networking, security, ssh, tailscale, performance, hardware, shell, git)
+  - `core/` - Modules used by ALL hosts (includes base, boot, networking, security, ssh, tailscale, performance, hardware, shell, git, hosts.nix)
   - `desktop/` - Desktop/GUI modules (hyprland, graphics, audio)
   - `services/` - Service modules (network/, web/, monitoring/, utility/)
-  - `home/` - Home-manager modules (terminal, editors, browsers)
+  - `system/` - Optional system modules (debug-tools.nix)
 - `profiles/` - Composition profiles (server.nix, desktop.nix)
-- `nixos/` - Legacy desktop configuration (being migrated)
 - `home-manager/` - User-level home-manager configuration modules
 - `overlays/` - Package overlays for stable/unstable/master nixpkgs
 - `secrets.json` - Secrets file (referenced in flake)
-- `scripts/` - Deployment and utility scripts (colmena-deploy.sh, deploy-host.sh, test-services.sh)
+- `scripts/` - Deployment and utility scripts (deploy-host.sh, homelab-test/)
+- `docs/` - Documentation (architecture, deployment, networking, services, troubleshooting)
 
 ### Configuration Organization
 
@@ -91,6 +91,18 @@ When implementing new features or debugging issues:
    # Check Nix evaluation
    nix eval .#nixosConfigurations.HOST.config.services.SERVICE --json | jq
    ```
+
+## Service Configuration
+
+**Traefik Services** are organized in `/modules/services/network/traefik/services/`:
+- `media.nix` - Plex, *arr stack, media management
+- `productivity.nix` - Nextcloud, Gitea, document management
+- `monitoring.nix` - Grafana, Uptime Kuma, metrics
+- `network.nix` - Network tools and utilities
+- `gaming.nix` - Game servers
+- `webhost.nix` - Web hosting tools
+
+Services are defined as either `public` (accessible from internet) or `tailscale` (VPN only).
 
 ## Common Commands
 

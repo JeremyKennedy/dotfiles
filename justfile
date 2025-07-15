@@ -69,7 +69,13 @@ gc host:
 
 # SSH to a host
 ssh host:
-    ssh root@{{host}}.sole-bigeye.ts.net
+    #!/usr/bin/env bash
+    ip=$(nix eval --raw --impure --expr "(import ./modules/core/hosts.nix).hosts.{{host}}.ip" 2>/dev/null)
+    if [ -n "$ip" ]; then
+        ssh root@$ip
+    else
+        ssh root@{{host}}
+    fi
 
 # Show system info for all hosts
 info:
