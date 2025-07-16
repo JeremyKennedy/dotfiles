@@ -29,7 +29,9 @@ class TraefikClient:
         self.api_url = api_url.rstrip("/")
         self.timeout = 30.0
 
-    async def get_services(self, service_paths: Dict[str, str] = None) -> List[TraefikService]:
+    async def get_services(
+        self, service_paths: Dict[str, str] = None
+    ) -> List[TraefikService]:
         """Extract all services from Traefik configuration.
 
         This method replicates the bash script's logic for discovering services
@@ -49,7 +51,7 @@ class TraefikClient:
             traefik_services = []
             if service_paths is None:
                 service_paths = {}
-                
+
             for service_name, backend_url in services.items():
                 frontend_domain = self._get_frontend_domain(service_name, routers)
                 routing_type = self._determine_routing_type(backend_url)
@@ -202,6 +204,7 @@ class TraefikClient:
             Friendly host name (e.g., "tower", "bee", "halo")
         """
         import re
+        from .hosts import get_host_mapping
 
         # Extract hostname/IP from URL
         match = re.search(r"https?://([^:/]+)", url)
@@ -209,17 +212,6 @@ class TraefikClient:
             return "unknown"
 
         host = match.group(1)
-
-        # Map to friendly names
-        host_mapping = {
-            "192.168.1.245": "bee",
-            "100.74.102.74": "bee",  # TS bee IP
-            "bee.sole-bigeye.ts.net": "bee",
-            "localhost": "bee",  # Localhost services run on bee
-            "192.168.1.240": "tower",
-            "tower.sole-bigeye.ts.net": "tower",
-            "halo.sole-bigeye.ts.net": "halo",
-            "pi.sole-bigeye.ts.net": "pi",
-        }
+        host_mapping = get_host_mapping()
 
         return host_mapping.get(host, host)  # Return original if not mapped

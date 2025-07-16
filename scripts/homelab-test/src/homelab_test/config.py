@@ -208,8 +208,10 @@ class ConfigManager:
                 routing_type = service_data.get("routing_type")
                 if routing_type is None:
                     # Auto-infer routing type from URL
-                    routing_type = self._infer_routing_type_from_url(service_data["url"])
-                
+                    routing_type = self._infer_routing_type_from_url(
+                        service_data["url"]
+                    )
+
                 config.direct_services.append(
                     DirectServiceConfig(
                         name=service_data["name"],
@@ -248,39 +250,29 @@ class ConfigManager:
 
     def _infer_routing_type_from_url(self, url: str) -> str:
         """Infer routing type from URL using same logic as Traefik client.
-        
+
         Args:
             url: Service URL to analyze
-            
+
         Returns:
             Inferred routing type (host-based)
         """
         import re
-        
+        from .hosts import get_host_mapping
+
         # Extract hostname/IP from URL
         match = re.search(r"https?://([^:/]+)", url)
         if not match:
             return "unknown"
-            
+
         host = match.group(1)
-        
-        # Map to friendly names (same as TraefikClient)
-        host_mapping = {
-            "192.168.1.240": "tower",
-            "192.168.1.245": "bee", 
-            "100.74.102.74": "bee",  # TS bee IP
-            "bee.sole-bigeye.ts.net": "bee",
-            "tower.sole-bigeye.ts.net": "tower",
-            "halo.sole-bigeye.ts.net": "halo",
-            "pi.sole-bigeye.ts.net": "pi",
-            "localhost": "bee",  # Localhost services run on bee
-        }
-        
+        host_mapping = get_host_mapping()
+
         # Check for SWAG proxy port
         if ":18071" in url:
             mapped_host = host_mapping.get(host, host)
             return f"{mapped_host}-swag"
-        
+
         return host_mapping.get(host, host)
 
 

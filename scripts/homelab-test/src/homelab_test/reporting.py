@@ -225,21 +225,24 @@ class RichReporter:
                 status = f"[red]❌ {result.error_message}[/red]"
                 response = result.error_detail if result.error_detail else "-"
 
-            # Color code routing type by host - each host gets its own color
+            # Color code routing type by host using centralized colors
+            from .hosts import get_host_color, get_all_host_names
+            
             routing_type = result.routing_type
-            if "tower" in routing_type.lower():
-                if "swag" in routing_type.lower():
-                    routing_type = f"[yellow]{routing_type}[/yellow]"  # tower-swag
-                else:
-                    routing_type = f"[blue]{routing_type}[/blue]"      # tower
-            elif "bee" in routing_type.lower():
-                routing_type = f"[cyan]{routing_type}[/cyan]"         # bee
-            elif "halo" in routing_type.lower():
-                routing_type = f"[magenta]{routing_type}[/magenta]"   # halo  
-            elif "pi" in routing_type.lower():
-                routing_type = f"[green]{routing_type}[/green]"       # pi
-            else:
-                routing_type = f"[white]{routing_type}[/white]"       # unknown
+            color = "white"  # default
+            
+            # Check each configured host to see if it matches the routing type
+            for host_name in get_all_host_names():
+                if host_name in routing_type.lower():
+                    color = get_host_color(host_name)
+                    break
+            
+            # Special handling for SWAG proxy - keep original color but note it's SWAG
+            if "swag" in routing_type.lower():
+                # Use same color as base host but maybe distinguish in the future
+                pass
+                
+            routing_type = f"[{color}]{routing_type}[/{color}]"
 
             services_table.add_row(
                 result.service_name, status, response, routing_type, result.url
