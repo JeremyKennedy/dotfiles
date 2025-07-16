@@ -79,29 +79,8 @@ ssh host:
 
 # Show system info for all hosts
 info:
-    #!/usr/bin/env bash
-    echo "System Information:"
-    echo "=================="
-    for host in navi bee halo pi; do
-        printf "%-10s" "$host:"
-        state_version=$(nix eval --raw .#nixosConfigurations.$host.config.system.stateVersion 2>/dev/null)
-        if [ $? -eq 0 ]; then
-            printf "%-10s" "$state_version"
-            # Get IP address from hosts.nix
-            ip=$(nix eval --raw --impure --expr "(import ./modules/core/hosts.nix).hosts.$host.ip" 2>/dev/null)
-            if [ -n "$ip" ]; then
-                printf "%-20s" "$ip"
-            else
-                printf "%-20s" "no IP configured"
-            fi
-            # Get architecture
-            arch=$(nix eval --raw .#nixosConfigurations.$host.config.nixpkgs.hostPlatform.system 2>/dev/null)
-            if [ -n "$arch" ]; then
-                echo "$arch"
-            else
-                echo ""
-            fi
-        else
-            echo "configuration not found"
-        fi
-    done
+    cd scripts/homelab-test && nix develop -c python -m homelab_test.cli info
+
+# Show detailed system info for all hosts
+info-full:
+    cd scripts/homelab-test && nix develop -c python -m homelab_test.cli info --full

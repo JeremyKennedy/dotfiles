@@ -12,6 +12,7 @@ from .traefik import TraefikClient
 from .services import ServiceTester
 from .infrastructure import InfrastructureTester
 from .reporting import RichReporter
+from .system_info import run_system_info
 
 
 async def run_full_test(output_format: str = "rich", verbose: bool = False) -> int:
@@ -286,18 +287,31 @@ Examples:
   %(prog)s                          # Full health check
   %(prog)s --core                   # Core infrastructure only
   %(prog)s --output json            # JSON output
+  %(prog)s info                     # System information
+  %(prog)s info --full              # Detailed system information
         """,
     )
 
     parser.add_argument("--output", "-o", choices=["rich", "json", "plain"], default="rich", help="Output format")
     parser.add_argument("--core", action="store_true", help="Test core infrastructure only")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
+    
+    # Add subcommands
+    subparsers = parser.add_subparsers(dest="command", help="Commands")
+    
+    # Info subcommand
+    info_parser = subparsers.add_parser("info", help="Show system information")
+    info_parser.add_argument("--full", action="store_true", help="Show detailed information")
+    info_parser.add_argument("--json", action="store_true", help="Output as JSON")
 
     args = parser.parse_args()
 
     # Run appropriate test mode
     try:
-        if args.core:
+        if args.command == "info":
+            # Run system info command
+            return asyncio.run(run_system_info(args.full, args.json))
+        elif args.core:
             return asyncio.run(run_core_only(args.output, args.verbose))
         else:
             return asyncio.run(run_full_test(args.output, args.verbose))
