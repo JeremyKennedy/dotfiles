@@ -13,17 +13,7 @@
     };
   };
 
-  # Version control tools
-  environment.systemPackages = with pkgs; [
-    # Wrap jujutsu to always use system config
-    (pkgs.writeShellScriptBin "jj" ''
-      export JJ_CONFIG="/etc/jj/config.toml"
-      exec ${pkgs.jujutsu}/bin/jj "$@"
-    '')
-    delta # syntax-highlighting pager for git
-    gh # GitHub CLI
-    ghq # manage remote repository clones
-  ];
+  # Version control packages are now in packages.nix
 
   # Jujutsu configuration
   environment.etc."jj/config.toml".text = ''

@@ -1,7 +1,8 @@
 # Core modules imported by ALL hosts - truly universal
 {...}: {
   imports = [
-    ./base.nix # Essential Nix settings and packages
+    ./base.nix # Essential Nix settings
+    ./packages.nix # Core system packages for all hosts
     ./boot.nix # Boot configuration
     ./networking.nix # Basic network configuration
     ./static-ip.nix # Static IP configuration option
