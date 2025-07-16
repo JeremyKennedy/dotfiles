@@ -128,7 +128,7 @@
 
       bee = {
         deployment = {
-          targetHost = hosts.bee.tailscaleDomain;
+          targetHost = hosts.bee.ip;
           targetUser = "root";
           buildOnTarget = false;
         };
@@ -141,7 +141,7 @@
 
       halo = {
         deployment = {
-          targetHost = hosts.halo.tailscaleDomain;
+          targetHost = hosts.halo.ip;
           targetUser = "root";
           buildOnTarget = false;
         };
