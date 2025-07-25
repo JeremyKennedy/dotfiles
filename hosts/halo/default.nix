@@ -20,6 +20,9 @@
     # Services for this host
     ../../modules/services/monitoring/uptime-kuma.nix
     ../../modules/services/monitoring/netdata.nix
+
+    # System modules
+    ../../modules/system/debug-tools.nix
   ];
 
   system.stateVersion = "24.05";

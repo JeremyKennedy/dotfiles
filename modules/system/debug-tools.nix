@@ -12,6 +12,7 @@ in {
   environment.systemPackages = with pkgs; [
     # Network debugging
     nmap # port scanning and network discovery
+    arp-scan # ARP scanning and fingerprinting
     tcpdump # packet capture and analysis
     wireshark-cli # packet analysis (tshark)
     mtr # combined traceroute and ping

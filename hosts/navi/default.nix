@@ -21,6 +21,9 @@
     # Services for this host
     ../../modules/services/monitoring/netdata.nix
 
+    # System modules
+    ../../modules/system/debug-tools.nix
+
     # Import home-manager's NixOS module
     inputs.home-manager.nixosModules.home-manager
   ];
