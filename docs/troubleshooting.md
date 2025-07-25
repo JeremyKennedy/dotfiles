@@ -116,7 +116,64 @@ openssl s_client -connect service.jeremyk.net:443
 - Verify Cloudflare DNS token is correct
 - Check domain DNS points to correct IP
 - Ensure Let's Encrypt rate limits not hit
-- Wait for rate-limitign to reset
+- Wait for rate-limiting to reset
+
+### Secret Troubleshooting
+
+**Symptoms**: Services fail to authenticate, missing credentials, empty secret files
+
+**Debug**:
+
+```bash
+# Check if secret file is decrypted on host
+ssh root@host 'ls -la /run/agenix/'
+ssh root@host 'cat /run/agenix/secret_name | wc -c'  # Should be >0
+
+# Verify secret is in correct format (env var vs plain text)
+ssh root@host 'head -c 20 /run/agenix/secret_name'
+
+# Check if service is loading the secret
+ssh root@host 'systemctl cat service-name | grep -E "(EnvironmentFile|LoadCredential)"'
+
+# Verify secret is in service environment
+ssh root@host "cat /proc/\$(pgrep service-name)/environ | tr '\\0' '\\n' | grep SECRET_PREFIX"
+```
+
+**Common fixes**:
+
+1. Re-encrypt secrets in correct format (see [secrets guide](./guides/secrets.md))
+2. Ensure secret file permissions match service user
+3. Restart service after secret updates
+4. Check systemd EnvironmentFile syntax
+
+### Traefik Troubleshooting
+
+**Symptoms**: Routes not working, certificates not generating, backend unreachable
+
+**Debug**:
+
+```bash
+# Check loaded routers and services
+curl -s http://bee.sole-bigeye.ts.net:9090/api/http/routers | jq
+curl -s http://bee.sole-bigeye.ts.net:9090/api/http/services | jq
+
+# View Traefik logs for errors
+ssh root@bee 'journalctl -u traefik -f'
+ssh root@bee 'tail -100 /var/lib/traefik/traefik.log | jq'
+
+# Test backend connectivity from Traefik host
+ssh root@bee 'curl -I http://backend-host:port'
+
+# Check middleware and certificates
+curl -s http://bee.sole-bigeye.ts.net:9090/api/http/middlewares | jq
+```
+
+**Common issues**:
+
+- Missing environment variables for providers (DNS challenges, etc.)
+- Incorrect backend host/port in service definitions
+- Middleware configuration errors
+- Certificate provider credentials not loaded
 
 ### Service Won't Start
 
