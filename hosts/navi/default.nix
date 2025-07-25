@@ -34,6 +34,9 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  # Enable binfmt emulation for ARM to deploy to Pi
+  boot.binfmt.emulatedSystems = ["aarch64-linux"];
+
   # Host installation version
   system.stateVersion = "23.05";
 }
