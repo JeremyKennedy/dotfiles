@@ -2,7 +2,7 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     # IDEs and Editors
-    jetbrains.datagrip
+    # jetbrains.datagrip # Temporarily disabled due to build failure
     smartgithg # git client
     vscode # code editor
     code-cursor # AI-powered code editor
