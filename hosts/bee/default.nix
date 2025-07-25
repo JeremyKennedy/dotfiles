@@ -37,8 +37,6 @@
     ethtool
   ];
 
-  # Performance
-  zramSwap.enable = true;
 
   # Nix garbage collection
   nix.gc = {
