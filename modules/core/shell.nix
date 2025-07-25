@@ -15,9 +15,7 @@
       alias v='nvim'
       alias tree='tre'
       
-      # Nix shortcuts
-      alias run='nix run nixpkgs#'
-      alias shell='nix shell nixpkgs#'
+      # Nix shortcuts (moved to abbreviations below for auto-expansion)
       
       # System shortcuts
       alias nr='sudo nixos-rebuild switch'
@@ -53,6 +51,10 @@
           # === DEVELOPMENT TOOLS ===
           abbr --add co "gh copilot" # GitHub Copilot CLI
           abbr --add ha hass-cli     # Home Assistant CLI
+          
+          # === NIX SHORTCUTS ===
+          abbr --add run "nix run nixpkgs#"   # Run package from nixpkgs
+          abbr --add shell "nix shell nixpkgs#" # Enter shell with package
           
           # === SYSTEM SHORTCUTS ===
           # navi-specific shortcuts should be defined in home-manager/shell.nix
