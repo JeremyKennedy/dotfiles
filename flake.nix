@@ -23,6 +23,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -44,6 +45,11 @@
     systems = ["x86_64-linux"];
     forAllSystems = nixpkgs.lib.genAttrs systems;
     inherit (import ./modules/core/hosts.nix) hosts;
+    
+    # Common modules for all hosts
+    commonModules = [
+      inputs.agenix.nixosModules.default
+    ];
   in {
     # Formatter for your nix files, available through 'nix fmt'
     # Other options beside 'alejandra' include 'nixpkgs-fmt'
@@ -70,8 +76,7 @@
       aarch64-linux.pi-sd-image = (nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";
         specialArgs = {inherit inputs outputs;};
-        modules = [
-          inputs.agenix.nixosModules.default
+        modules = commonModules ++ [
           ./hosts/pi/default.nix
           {
             # Enable SD image building for this variant
@@ -86,18 +91,16 @@
     nixosConfigurations = {
       navi = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
-        modules = [
+        modules = commonModules ++ [
           inputs.hyprland.nixosModules.default
           {programs.hyprland.enable = true;}
-          inputs.agenix.nixosModules.default
           ./hosts/navi/default.nix
         ];
       };
 
       bee = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
-        modules = [
-          inputs.agenix.nixosModules.default
+        modules = commonModules ++ [
           inputs.disko.nixosModules.disko
           ./hosts/bee/default.nix
         ];
@@ -105,8 +108,7 @@
 
       halo = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
-        modules = [
-          inputs.agenix.nixosModules.default
+        modules = commonModules ++ [
           inputs.disko.nixosModules.disko
           ./hosts/halo/default.nix
         ];
@@ -115,8 +117,7 @@
       pi = nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";
         specialArgs = {inherit inputs outputs;};
-        modules = [
-          inputs.agenix.nixosModules.default
+        modules = commonModules ++ [
           inputs.disko.nixosModules.disko
           ./hosts/pi/default.nix
         ];
@@ -136,10 +137,9 @@
           targetUser = "root";
           buildOnTarget = false;
         };
-        imports = [
+        imports = commonModules ++ [
           inputs.hyprland.nixosModules.default
           {programs.hyprland.enable = true;}
-          inputs.agenix.nixosModules.default
           ./hosts/navi/default.nix
         ];
       };
@@ -150,8 +150,7 @@
           targetUser = "root";
           buildOnTarget = false;
         };
-        imports = [
-          inputs.agenix.nixosModules.default
+        imports = commonModules ++ [
           inputs.disko.nixosModules.disko
           ./hosts/bee/default.nix
         ];
@@ -163,8 +162,7 @@
           targetUser = "root";
           buildOnTarget = false;
         };
-        imports = [
-          inputs.agenix.nixosModules.default
+        imports = commonModules ++ [
           inputs.disko.nixosModules.disko
           ./hosts/halo/default.nix
         ];
@@ -177,8 +175,7 @@
           buildOnTarget = false; # Build locally with emulation
         };
         nixpkgs.system = "aarch64-linux";
-        imports = [
-          inputs.agenix.nixosModules.default
+        imports = commonModules ++ [
           inputs.disko.nixosModules.disko
           ./hosts/pi/default.nix
         ];

@@ -2,6 +2,7 @@
   config,
   pkgs,
   inputs,
+  outputs,
   ...
 }: {
   nix.settings = {
@@ -28,6 +29,14 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  
+  # Apply overlays
+  nixpkgs.overlays = [
+    outputs.overlays.stable-packages
+    outputs.overlays.unstable-packages
+    outputs.overlays.master-packages
+    outputs.overlays.modifications      # Custom modifications last to take precedence
+  ];
 
   # Set root password for console access (KVM)
   users.users.root.initialPassword = "securenixos";

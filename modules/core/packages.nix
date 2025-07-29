@@ -75,6 +75,6 @@
     lsof # list open files
     
     # === SECRETS MANAGEMENT ===
-    # agenix is available through the overlay
+    agenix-cli # age-encrypted secrets management CLI tool
   ];
 }
