@@ -38,6 +38,7 @@
     cht-sh # command cheatsheet
     glow # markdown previewer in terminal
     tokei # code line counter (cloc replacement)
+    nodejs # JavaScript runtime (includes npm and npx)
     
     # === VERSION CONTROL ===
     # Git enhancements

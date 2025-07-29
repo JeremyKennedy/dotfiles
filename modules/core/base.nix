@@ -30,6 +30,11 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   
+  # Allow specific insecure packages
+  nixpkgs.config.permittedInsecurePackages = [
+    "libsoup-2.74.3" # Required by bambu-studio and orca-slicer (3D printing slicers)
+  ];
+  
   # Apply overlays
   nixpkgs.overlays = [
     outputs.overlays.stable-packages
