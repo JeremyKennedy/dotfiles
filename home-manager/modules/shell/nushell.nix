@@ -4,12 +4,39 @@
   pkgs,
   lib,
   ...
-}: {
+}: 
+let
+  inherit (pkgs) nu_scripts;
+in
+{
+  # Make nu_scripts available in the environment
+  home.packages = [ pkgs.nu_scripts ];
+  
   programs.nushell = {
     enable = true;
     
     # Main configuration
     configFile.text = ''
+      # Directories in this constant are searched by the
+      # `use` and `source` commands.
+      const NU_LIB_DIRS = [
+        '${nu_scripts}/share/nu_scripts'
+      ]
+
+      # Load completions from nu_scripts
+      use custom-completions/curl/curl-completions.nu *
+      use custom-completions/git/git-completions.nu *
+      use custom-completions/glow/glow-completions.nu *
+      use custom-completions/just/just-completions.nu *
+      use custom-completions/man/man-completions.nu *
+      use custom-completions/nix/nix-completions.nu *
+      use custom-completions/ssh/ssh-completions.nu *
+      use custom-completions/tar/tar-completions.nu *
+      use custom-completions/zoxide/zoxide-completions.nu *
+
+      # Load useful modules
+      use modules/argx *
+
       # Load completions
       use ~/.cache/starship/init.nu
       
@@ -91,6 +118,7 @@
       # === ESSENTIALS ===
       alias v = nvim
       alias g = git
+      alias cc = claude
       alias tower = ssh 192.168.1.240
       alias dot = cd ~/dotfiles
       # dotc runs claude in the dotfiles directory
@@ -126,7 +154,7 @@
       }
       
       def tde [container: string, ...args] {
-        ssh 192.168.1.240 -t docker exec -it $container ...$args
+        ssh 192.168.1.240 -t $"docker exec -it ($container) ($args | str join ' ')"
       }
       
       # Nix helpers
