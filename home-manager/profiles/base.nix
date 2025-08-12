@@ -11,6 +11,7 @@
     ../modules/atuin.nix
     ../modules/git.nix
     ../modules/neovim.nix
+    ../modules/helix.nix
     ../modules/tools.nix
   ];
 
