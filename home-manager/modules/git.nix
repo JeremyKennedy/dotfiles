@@ -52,7 +52,10 @@
       };
       ui = {
         default-command = "log";
-        editor = "nvim";
+        editor = "hx";  # Use helix instead of nvim
+        diff-editor = ":builtin";  # Use jj's built-in diff editor (hx can't handle directories)
+        pager = "delta";  # Use delta for paged output (diffs, logs, etc.)
+        paginate = "auto";
       };
     };
   };
