@@ -16,7 +16,12 @@
       enable = true;
       options = {
         navigate = true;
-        syntax-theme = "gruvbox-dark";
+        syntax-theme = "Catppuccin Mocha";  # Use the catppuccin theme from bat
+        line-numbers = true;
+        side-by-side = true;  # Show diffs side-by-side
+        dark = true;
+        plus-style = "syntax #2a2e3b";  # Catppuccin surface0 background
+        minus-style = "syntax #2a2e3b";
       };
     };
     

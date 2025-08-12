@@ -1,9 +1,10 @@
-/* Wofi styling to match Hyprland theme */
+/* Wofi styling with Catppuccin Mocha theme */
+/* From: https://github.com/catppuccin/catppuccin */
 
 window {
     margin: 0px;
-    border: 2px solid #33ccff;
-    background-color: rgba(26, 26, 26, 0.95);
+    border: 2px solid #cba6f7; /* mauve */
+    background-color: rgba(30, 30, 46, 0.95); /* base with transparency */
     border-radius: 10px;
     font-family: "Inter", sans-serif;
     font-size: 14px;
@@ -12,8 +13,8 @@ window {
 #input {
     margin: 5px;
     border: none;
-    color: #ffffff;
-    background-color: rgba(51, 204, 255, 0.1);
+    color: #cdd6f4; /* text */
+    background-color: rgba(69, 71, 90, 0.5); /* surface1 with transparency */
     border-radius: 8px;
     padding: 12px 16px;
     font-size: 16px;
@@ -21,7 +22,7 @@ window {
 }
 
 #input:focus {
-    background-color: rgba(51, 204, 255, 0.2);
+    background-color: rgba(88, 91, 112, 0.6); /* surface2 with transparency */
     outline: none;
 }
 
@@ -45,7 +46,7 @@ window {
 #text {
     margin: 5px;
     border: none;
-    color: #ffffff;
+    color: #cdd6f4; /* text */
     font-weight: 500;
 }
 
@@ -59,16 +60,16 @@ window {
 }
 
 #entry:selected {
-    background-color: rgba(51, 204, 255, 0.2);
-    color: #ffffff;
+    background-color: rgba(203, 166, 247, 0.2); /* mauve with transparency */
+    color: #cdd6f4; /* text */
 }
 
 #entry:hover {
-    background-color: rgba(51, 204, 255, 0.1);
+    background-color: rgba(203, 166, 247, 0.1); /* mauve with transparency */
 }
 
 #entry:selected #text {
-    color: #ffffff;
+    color: #cdd6f4; /* text */
     font-weight: 600;
 }
 
@@ -79,12 +80,12 @@ window {
 
 /* Application name styling */
 #entry #text {
-    color: #ffffff;
+    color: #cdd6f4; /* text */
 }
 
 /* Generic name styling (subtitle) */
 #entry #text.generic {
-    color: #cccccc;
+    color: #a6adc8; /* subtext0 */
     font-size: 12px;
     font-weight: 400;
 }

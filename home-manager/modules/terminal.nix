@@ -14,7 +14,7 @@
       gtk-single-instance = true;
 
       # Appearance
-      theme = "duckbones"; # Popular dark themes: Dracula, catppuccin-mocha, GruvboxDark, nord, GruvboxDarkHard, Oxocarbon, Hardcore
+      theme = "catppuccin-mocha"; # Popular dark themes: Dracula, catppuccin-mocha, GruvboxDark, nord, GruvboxDarkHard, Oxocarbon, Hardcore
 
       # Window
       window-decoration = true;

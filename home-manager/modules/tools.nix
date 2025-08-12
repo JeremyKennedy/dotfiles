@@ -56,6 +56,31 @@
           temperature_type = "c";
           rate = "1s";
         };
+        colors = {
+          # Catppuccin Mocha theme for btop/bottom
+          # From: https://github.com/catppuccin/btop
+          table_header_color = "#f5e0dc";
+          all_cpu_color = "#f5c2e7";
+          avg_cpu_color = "#cba6f7";
+          cpu_core_colors = ["#f38ba8" "#eba0ac" "#fab387" "#f9e2af" "#a6e3a1" "#94e2d5" "#89dceb" "#74c7ec" "#89b4fa" "#b4befe"];
+          ram_color = "#a6e3a1";
+          swap_color = "#fab387";
+          rx_color = "#89dceb";
+          tx_color = "#f5c2e7";
+          widget_title_color = "#cdd6f4";
+          border_color = "#585b70";
+          highlighted_border_color = "#f5c2e7";
+          text_color = "#cdd6f4";
+          graph_color = "#a6adc8";
+          cursor_color = "#f5e0dc";
+          selected_text_color = "#1e1e2e";
+          selected_bg_color = "#b4befe";
+          high_battery_color = "#a6e3a1";
+          medium_battery_color = "#f9e2af";
+          low_battery_color = "#f38ba8";
+          gpu_core_colors = ["#89dceb" "#89b4fa" "#b4befe" "#cba6f7" "#f5c2e7" "#f2cdcd"];
+          arc_color = "#94e2d5";
+        };
       };
     };
     

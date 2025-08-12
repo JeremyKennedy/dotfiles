@@ -1,3 +1,32 @@
+/* Catppuccin Mocha colors */
+/* From: https://github.com/catppuccin/waybar */
+@define-color rosewater #f5e0dc;
+@define-color flamingo #f2cdcd;
+@define-color pink #f5c2e7;
+@define-color mauve #cba6f7;
+@define-color red #f38ba8;
+@define-color maroon #eba0ac;
+@define-color peach #fab387;
+@define-color yellow #f9e2af;
+@define-color green #a6e3a1;
+@define-color teal #94e2d5;
+@define-color sky #89dceb;
+@define-color sapphire #74c7ec;
+@define-color blue #89b4fa;
+@define-color lavender #b4befe;
+@define-color text #cdd6f4;
+@define-color subtext1 #bac2de;
+@define-color subtext0 #a6adc8;
+@define-color overlay2 #9399b2;
+@define-color overlay1 #7f849c;
+@define-color overlay0 #6c7086;
+@define-color surface2 #585b70;
+@define-color surface1 #45475a;
+@define-color surface0 #313244;
+@define-color base #1e1e2e;
+@define-color mantle #181825;
+@define-color crust #11111b;
+
 * {
   border: none;
   border-radius: 0;
@@ -7,44 +36,44 @@
 }
 
 window#waybar {
-  background: rgba(21, 18, 27, 0.98);
-  color: #cdd6f4;
+  background: rgba(21, 18, 27, 0.98);  /* Keep the original darker background */
+  color: @text;
 }
 
 tooltip {
-  background: #1e1e2e;
+  background: @base;
   border-radius: 10px;
   border-width: 2px;
   border-style: solid;
-  border-color: #11111b;
+  border-color: @crust;
 }
 
 #workspaces button {
   padding: 5px;
-  color: #4a4b63;
+  color: @surface1;
   margin-right: 5px;
 }
 
 #workspaces button.active {
-  color: #a6adc8;
+  color: @subtext0;
   font-weight: bold;
 }
 
 #workspaces button.focused {
-  color: #a6adc8;
-  background: #eba0ac;
+  color: @subtext0;
+  background: @maroon;
   border-radius: 10px;
 }
 
 #workspaces button.urgent {
-  color: #11111b;
-  background: #a6e3a1;
+  color: @crust;
+  background: @green;
   border-radius: 10px;
 }
 
 #workspaces button:hover {
-  background: #11111b;
-  color: #cdd6f4;
+  background: @crust;
+  color: @text;
   border-radius: 10px;
 }
 
@@ -58,16 +87,16 @@ tooltip {
 #cpu,
 #memory,
 #temperature {
-  background: #1e1e2e;
+  background: @base;
   padding: 0px 10px;
   margin: 3px 0px;
   margin-top: 3px;
-  border: 1px solid #181825;
+  border: 1px solid @mantle;
   border-radius: 10px;
 }
 
 #workspaces {
-  background: #1e1e2e;
+  background: @base;
   border-radius: 10px;
   margin-left: 10px;
   padding-right: 0px;
@@ -81,35 +110,35 @@ tooltip {
 }
 
 #clock {
-  color: #fab387;
+  color: @peach;
   border-radius: 10px;
   margin-left: 3px;
   margin-right: 3px;
 }
 
 #cpu {
-  color: #94e2d5;
+  color: @teal;
   border-radius: 10px 0 0 10px;
   margin-left: 3px;
   margin-right: 0;
 }
 
 #memory {
-  color: #94e2d5;
+  color: @teal;
   border-radius: 0;
   margin-left: 0;
   margin-right: 0;
 }
 
 #temperature {
-  color: #94e2d5;
+  color: @teal;
   border-radius: 0 10px 10px 0;
   margin-left: 0;
   margin-right: 3px;
 }
 
 #network {
-  color: #f9e2af;
+  color: @yellow;
   border-radius: 10px;
   margin-left: 3px;
   margin-right: 3px;
