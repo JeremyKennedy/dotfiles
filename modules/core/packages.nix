@@ -22,8 +22,7 @@
     
     # === FILE NAVIGATION & SEARCH ===
     # Moved to shell.nix: fzf, zoxide
-    broot # interactive tree navigator
-    nnn # terminal file manager
+    # yazi configured in home-manager/modules/tools.nix (replaces nnn and broot)
     
     # === DEVELOPMENT TOOLS ===
     # Text Editors
@@ -45,6 +44,7 @@
       export JJ_CONFIG="/etc/jj/config.toml"
       exec ${jujutsu}/bin/jj "$@"
     '')
+    jjui # TUI for Jujutsu VCS
     delta # syntax-highlighting pager for git
     gh # GitHub CLI
     ghq # manage remote repository clones
