@@ -6,14 +6,13 @@
   home = {
     packages = with pkgs; [
       # System Tools & Utilities (unique to home-manager)
-      killall # kill processes by name
-      xsel # command line interface to X selections
-      nvd # nixos version diff
       hcloud # Hetzner Cloud CLI
+      killall # kill processes by name
+      nvd # nixos version diff
+      xsel # command line interface to X selections
 
       # Monitoring & System Info (unique to home-manager)
       radeontop # AMD GPU usage monitoring utility
-      # corectrl # AMD GPU control and monitoring (similar to nvidia-settings)
 
       # Graphics
       libva
@@ -21,13 +20,13 @@
       vulkan-tools
 
       # Media utilities
-      sox # Sound processing utility (play command)
       sound-theme-freedesktop # System sounds
+      sox # Sound processing utility (play command)
 
       # User-specific applications
-      nextcloud-client
       kemai # personal productivity app
-      # libreoffice
+      nextcloud-client
+      
 
       # Fun & Miscellaneous
       cowsay # configurable talking cow
@@ -35,9 +34,13 @@
       lolcat # rainbow text
 
       # Backup & Disk Management
-      vorta
       gparted # partition editor
       udiskie # automount disks
+      vorta
+
+      # Disabled/Commented packages
+      # corectrl # AMD GPU control and monitoring (similar to nvidia-settings)
+      # libreoffice
     ];
   };
 }

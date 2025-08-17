@@ -4,21 +4,13 @@
   ...
 }: {
   imports = [
-    ./shell.nix
-    ./packages.nix
-    ./programs.nix
-    ./services.nix
+    # Use the desktop profile which includes everything
+    ./profiles/desktop.nix
+    
+    # Host-specific CLI tools
     ./hass-cli.nix
     ./chatgpt-cli.nix
   ];
-
-  home.pointerCursor = {
-    gtk.enable = true;
-    # x11.enable = true;
-    package = pkgs.bibata-cursors;
-    name = "Bibata-Modern-Classic";
-    size = 24;
-  };
 
   home = {
     username = "jeremy";

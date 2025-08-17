@@ -1,28 +1,17 @@
 {pkgs, ...}: {
+  # Git is now configured in home-manager for richer configuration
+  # Just ensure it's available system-wide
+  environment.systemPackages = with pkgs; [
+    git
+    git-lfs
+  ];
+
+  # Keep basic system git config for root operations
   programs.git = {
     enable = true;
     config = {
-      user.name = "Jeremy Kennedy";
-      user.email = "me@jeremyk.net";
       init.defaultBranch = "main";
-      core.editor = "nvim";
-      diff.tool = "delta";
-      core.pager = "delta";
-      interactive.diffFilter = "delta --color-only";
-      delta.enable = true;
+      safe.directory = "*"; # Allow git operations in any directory
     };
   };
-
-  # Version control packages are now in packages.nix
-
-  # Jujutsu configuration
-  environment.etc."jj/config.toml".text = ''
-    [user]
-    name = "Jeremy Kennedy"
-    email = "me@jeremyk.net"
-
-    [ui]
-    default-command = "log"
-    editor = "nvim"
-  '';
 }

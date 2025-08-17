@@ -332,7 +332,7 @@ Custom overlays provide access to different package versions and custom packages
 This repository now supports multiple NixOS hosts as part of a homelab deployment:
 
 **Hosts**:
-- `JeremyDesktop` - Main desktop workstation (x86_64) - *directory: /hosts/navi/*
+- `navi` - Main desktop workstation (x86_64) - *directory: /hosts/navi/*
 - `bee` - Mini PC for DNS/network services (x86_64)  
 - `halo` - Hetzner VPS for remote services (x86_64)
 - `pi` - Raspberry Pi (aarch64)

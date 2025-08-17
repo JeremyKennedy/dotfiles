@@ -4,41 +4,40 @@
 { pkgs, ... }: {
   environment.systemPackages = with pkgs; [
     # === SHELLS & TERMINAL ===
-    fish
-    any-nix-shell # nix shell manager for fish
+    # Moved to shell.nix: nushell, atuin
     
     # === MODERN CLI REPLACEMENTS ===
-    # These tools have fish abbreviations defined in shell.nix
-    eza # modern ls replacement
     bat # better cat with syntax highlighting
-    fd # better find
-    ripgrep # better grep
-    tre-command # tree command, improved
     btop # modern top replacement
-    dust # disk usage analyzer
-    duf # disk free utility
-    procs # process viewer
-    sd # better sed
     dog # DNS lookup (better dig)
+    duf # disk free utility
+    dust # disk usage analyzer
+    # eza removed - using Nushell's built-in ls instead
+    fd # better find
     hyperfine # benchmarking tool
+    procs # process viewer
+    ripgrep # better grep
+    sd # better sed
+    tre-command # tree command, improved
     
     # === FILE NAVIGATION & SEARCH ===
-    fzf # fuzzy finder
-    nnn # terminal file manager
+    # Moved to shell.nix: fzf, zoxide
     broot # interactive tree navigator
+    nnn # terminal file manager
     
     # === DEVELOPMENT TOOLS ===
     # Text Editors
     claude-code # AI-powered code assistant
-    vim # text editor
+    # vim removed - using nvim with vim aliases instead
     
     # Code Tools
     alejandra # nix formatter
-    devenv # dev environment manager
     cht-sh # command cheatsheet
+    devenv # dev environment manager
     glow # markdown previewer in terminal
-    tokei # code line counter (cloc replacement)
+    just # command runner for project-specific tasks
     nodejs # JavaScript runtime (includes npm and npx)
+    tokei # code line counter (cloc replacement)
     
     # === VERSION CONTROL ===
     # Git enhancements
@@ -72,8 +71,8 @@
     iftop # network monitoring
     iotop # I/O monitoring
     lm_sensors # hardware sensors
-    neofetch # system information
     lsof # list open files
+    neofetch # system information
     
     # === SECRETS MANAGEMENT ===
     agenix-cli # age-encrypted secrets management CLI tool
